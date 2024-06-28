@@ -1,9 +1,7 @@
-import Header from './Header.tsx'
+import Header from "./Header.tsx";
 
 function App() {
-  return(
-    <Header/>
-  );
+  return <Header />;
 }
 
-export default App
+export default App;
