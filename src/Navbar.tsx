@@ -108,12 +108,6 @@ const Navbar = () => {
               </li>
             </ul>
           </li>
-          <li className="nav-item">
-            {/*<!-- Currently disabled -->*/}
-            <a href="index.html" className="nav-link disabled">
-              Login
-            </a>
-          </li>
         </ul>
       </div>
     </div>
