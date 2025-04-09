@@ -3,38 +3,60 @@
   flex-direction: column;
   width: 200px;
   margin: auto;
+  color: var(--text-color);
 }
 
 .login-form label {
   margin-bottom: 5px;
+  color: var(--text-color);
 }
 
 .login-form input {
   margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--button-hover);
   border-radius: 4px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--link-color);
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
 }
 
 .login-form button {
   padding: 10px;
-  background-color: #0d6efd;
+  background-color: var(--link-color);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .login-form button:hover {
-  background-color: #0b5fdd;
+  background-color: var(--link-hover);
 }
 
-#email {
-  background-color: white;
-  color: black;
+/* Ensure inputs are always readable */
+:root.dark .login-form input {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-color: var(--link-color);
 }
 
-#password {
-  background-color: white;
-  color: black;
+:root.dark .login-form {
+  background-color: var(--button-bg);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+:root:not(.dark) .login-form {
+  background-color: var(--background-color);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
