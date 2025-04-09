@@ -2,6 +2,8 @@ import Dropdown from "./Dropdown/Dropdown";
 import Navbar from "./Navbar";
 import SearchBar from "./SearchBar";
 import LoginForm from "./Dropdown/LoginForm";
+import DarkModeToggle from "./dark";
+
 function Header() {
   return (
     <body>
@@ -10,7 +12,10 @@ function Header() {
           <div className="container">
             <Navbar />
             <SearchBar />
-            <Dropdown buttonText="Login" content={<LoginForm />} />
+            <div className="d-flex align-items-center gap-3">
+              <DarkModeToggle />
+              <Dropdown buttonText="Login" content={<LoginForm />} />
+            </div>
           </div>
         </nav>
       </div>
