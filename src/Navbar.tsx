@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom';
+
 const Navbar = () => {
   return (
     <div id="NavContainer">
-      <a href="#">
+      <Link to="/">
         <img
           className="navbar-brand d-line-block align-top"
           src="src/assets/fitness_tracker_logo5.png"
@@ -9,7 +11,7 @@ const Navbar = () => {
           width={125}
           height={125}
         />
-      </a>
+      </Link>
       {/*<!-- Collapsing Navbar if page too small -->*/}
       <button
         type="button"
@@ -25,86 +27,68 @@ const Navbar = () => {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a href="#" className="nav-link">
+            <Link to="/" className="nav-link">
               Home
-            </a>
+            </Link>
           </li>
           <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <Link to="#" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Food Options
-            </a>
+            </Link>
             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   Healthy Options
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   Food Database
-                </a>
+                </Link>
               </li>
             </ul>
           </li>
           <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <Link to="#" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Calculator
-            </a>
+            </Link>
             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   Weight Loss Calculator
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   Body Fat Calculator
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   BMI Calculator
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   Average Calories
-                </a>
+                </Link>
               </li>
             </ul>
           </li>
           <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <Link to="#" className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               About Us
-            </a>
+            </Link>
             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="/about" className="dropdown-item">
                   About Fitness Tracker
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="dropdown-item">
+                <Link to="#" className="dropdown-item">
                   Contact Fitness Tracker
-                </a>
+                </Link>
               </li>
             </ul>
           </li>
