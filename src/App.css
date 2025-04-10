@@ -35,13 +35,25 @@
 
 body {
   margin: 0;
+  padding: 0;
   background-color: var(--background-color);
   color: var(--text-color);
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  margin-top: 60px;
+  position: relative;
+  z-index: 1;
 }
 
 .container {
