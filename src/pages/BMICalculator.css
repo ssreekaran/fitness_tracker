@@ -1,0 +1,122 @@
+.page-container {
+  padding-top: 6rem;
+}
+
+.page-title {
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.bmi-calculator {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bmi-calculator .form-label {
+  color: var(--text-color);
+  display: block;
+  margin: 0;
+  font-size: 1.1rem;
+  min-width: 70px;
+}
+
+.bmi-calculator .form-control {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.bmi-calculator .measurement-input {
+  height: 42px;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  color: var(--text-color) !important;
+  background-color: var(--background-color) !important;
+}
+
+.bmi-calculator .measurement-input::placeholder {
+  color: var(--text-color) !important;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+.bmi-calculator .form-control:focus {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+.bmi-calculator .alert {
+  background-color: var(--dropdown-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+  margin-top: 1.5rem;
+}
+
+.bmi-calculator .calculate-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.bmi-calculator .btn-group {
+  background-color: var(--background-color);
+  margin-left: 1rem;
+}
+
+.bmi-calculator .btn-group .btn {
+  min-width: 45px;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.bmi-calculator .btn-outline-primary {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.bmi-calculator .btn-outline-primary:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.bmi-calculator .form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Make the form fields container wider */
+.bmi-calculator form {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Ensure the input container takes full width */
+.bmi-calculator .d-flex {
+  width: 100%;
+}
+
+/* Add space between label and buttons */
+.bmi-calculator .d-flex .form-label {
+  margin-right: auto;
+}
+
+/* Dark mode specific styles */
+[data-bs-theme="dark"] .bmi-calculator .measurement-input {
+  background-color: #2d2d2d !important;
+  border-color: #444;
+}
+
+[data-bs-theme="dark"] .bmi-calculator .measurement-input::placeholder {
+  color: #e5e5e5 !important;
+}

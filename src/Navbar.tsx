@@ -64,7 +64,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="dropdown-item">
+                <Link to="/bmi-calculator" className="dropdown-item">
                   BMI Calculator
                 </Link>
               </li>
