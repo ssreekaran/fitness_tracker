@@ -24,6 +24,7 @@ function LoginForm({ onSignUpClick }: LoginFormProps) {
       setSuccess(true);
       setEmail("");
       setPassword("");
+      // Optionally redirect: navigate("/profile");
     } catch (err: any) {
       setError(err.message || "Login failed");
     }
