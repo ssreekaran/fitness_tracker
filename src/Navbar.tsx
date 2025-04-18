@@ -59,13 +59,13 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="dropdown-item">
-                  Body Fat Calculator
+                <Link to="/bmi-calculator" className="dropdown-item">
+                  BMI Calculator
                 </Link>
               </li>
               <li>
-                <Link to="/bmi-calculator" className="dropdown-item">
-                  BMI Calculator
+                <Link to="/body-fat-calculator" className="dropdown-item">
+                  Body Fat Calculator
                 </Link>
               </li>
               <li>
@@ -86,8 +86,8 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="dropdown-item">
-                  Contact Fitness Tracker
+                <Link to="/contact" className="dropdown-item">
+                  Contact Us
                 </Link>
               </li>
             </ul>
