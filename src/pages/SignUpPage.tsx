@@ -32,7 +32,7 @@ const SignUpPage: React.FC = () => {
       return;
     }
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       // Set display name
       if (auth.currentUser) {
         await updateProfile(auth.currentUser, { displayName });
