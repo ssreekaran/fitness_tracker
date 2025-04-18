@@ -18,13 +18,13 @@ const DropdownButton = ({
       <span className="toggle-icon">
         {open ? (
           <img
-            src="src/assets/gi-boomerang-icon-up.png"
+            src="/gi-boomerang-icon-up.png"
             width={12}
             height={12}
           />
         ) : (
           <img
-            src="src/assets/gi-boomerang-icon-down.png"
+            src="/gi-boomerang-icon-down.png"
             width={12}
             height={12}
           />
