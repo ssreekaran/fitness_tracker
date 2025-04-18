@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 import "./LoginForm.css";
 
 interface LoginFormProps {
@@ -18,25 +20,12 @@ function LoginForm({ onSignUpClick }: LoginFormProps) {
     setError("");
     setSuccess(false);
     try {
-      const response = await fetch(
-        "https://us-central1-fitness-tracker-00001.cloudfunctions.net/api/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        }
-      );
-      const data = await response.json();
-      if (response.ok) {
-        setSuccess(true);
-        setEmail("");
-        setPassword("");
-      } else {
-        setError(data.error || "Login failed");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
+      await signInWithEmailAndPassword(auth, email, password);
+      setSuccess(true);
+      setEmail("");
+      setPassword("");
+    } catch (err: any) {
+      setError(err.message || "Login failed");
     }
   };
 

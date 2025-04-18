@@ -21,12 +21,18 @@ const Dropdown = ({
   const actualToggle = toggle || (() => setOpen((open) => !open));
 
   // If content is LoginForm, inject close handler for Sign Up
-  const contentWithProps = React.isValidElement(content) && content.type === LoginForm
-    ? React.cloneElement(content, { onSignUpClick: () => {
-        if (toggle) toggle();
-        setOpen(false);
-      } })
-    : content;
+  const contentWithProps =
+    React.isValidElement(content) && content.type === LoginForm
+      ? React.cloneElement(
+          content as React.ReactElement<{ onSignUpClick?: () => void }>,
+          {
+            onSignUpClick: () => {
+              if (toggle) toggle();
+              setOpen(false);
+            },
+          }
+        )
+      : content;
 
   return (
     <div className="dropdown">

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../firebase';
 import './SignUpPage.css';
 
 const MIN_PASSWORD_LENGTH = 6;
 
 const SignUpPage: React.FC = () => {
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,6 +19,10 @@ const SignUpPage: React.FC = () => {
     e.preventDefault();
     setError('');
     setSuccess(false);
+    if (!displayName.trim()) {
+      setError('Name is required.');
+      return;
+    }
     if (password.length < MIN_PASSWORD_LENGTH) {
       setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
       return;
@@ -25,20 +32,15 @@ const SignUpPage: React.FC = () => {
       return;
     }
     try {
-      const response = await fetch('https://us-central1-fitness-tracker-00001.cloudfunctions.net/api/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setSuccess(true);
-        setTimeout(() => navigate('/'), 1500);
-      } else {
-        setError(data.error || 'Sign up failed');
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Set display name
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, { displayName });
       }
-    } catch (err) {
-      setError('Network error. Please try again.');
+      setSuccess(true);
+      setTimeout(() => navigate('/'), 1500);
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
@@ -47,13 +49,22 @@ const SignUpPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="signup-form">
         <h2>Sign Up</h2>
         <div>
+          <label htmlFor="displayName">Name</label>
+          <input
+            id="displayName"
+            type="text"
+            value={displayName}
+            onChange={e => setDisplayName(e.target.value)}
+            autoFocus
+          />
+        </div>
+        <div>
           <label htmlFor="email">Email</label>
           <input
             id="email"
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            autoFocus
           />
         </div>
         <div>
