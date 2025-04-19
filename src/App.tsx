@@ -8,6 +8,7 @@ import BodyFatCalculator from "./pages/BodyFatCalculator";
 import ContactUs from "./pages/ContactUs";
 import FoodDatabase from "./pages/FoodDatabase";
 import WeightLossCalculator from "./pages/WeightLossCalculator";
+import HealthyFood from "./pages/HealthyFood";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/weight-loss-calculator" element={<WeightLossCalculator />} />
+            <Route path="/healthy-food" element={<HealthyFood />} />
           </Routes>
         </main>
       </div>

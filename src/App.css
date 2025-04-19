@@ -19,6 +19,13 @@
   --link-hover: #747bff;
   --button-hover: #646cff;
   --nav-text: #213547;
+  --blog-bg: #fffdfa;
+  --blog-title: #4e3f2c;
+  --blog-intro: #6d5c3d;
+  --blog-card: #f8f5ef;
+  --blog-card-text: #4e3f2c;
+  --blog-card-hover: #f2e7d8;
+  --blog-card-hover-text: #b86b1d;
 }
 
 /* Dark mode */
@@ -31,6 +38,13 @@
   --link-hover: #93c5fd;
   --button-hover: #818cf8;
   --nav-text: #ffffff;
+  --blog-bg: #23201c;
+  --blog-title: #ffe6b2;
+  --blog-intro: #e0c28b;
+  --blog-card: #2d2822;
+  --blog-card-text: #ffe6b2;
+  --blog-card-hover: #3c3227;
+  --blog-card-hover-text: #ffd27c;
 }
 
 body {
