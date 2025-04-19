@@ -28,4 +28,4 @@ dist-ssr
 *.sw?
 
 # secrets
-firebase.ts
+src/firebase.ts
