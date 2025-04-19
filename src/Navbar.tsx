@@ -42,7 +42,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="dropdown-item">
+                <Link to="/food-database" className="dropdown-item">
                   Food Database
                 </Link>
               </li>
@@ -54,7 +54,7 @@ const Navbar = () => {
             </Link>
             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
-                <Link to="#" className="dropdown-item">
+                <Link to="/weight-loss-calculator" className="dropdown-item">
                   Weight Loss Calculator
                 </Link>
               </li>
@@ -66,11 +66,6 @@ const Navbar = () => {
               <li>
                 <Link to="/body-fat-calculator" className="dropdown-item">
                   Body Fat Calculator
-                </Link>
-              </li>
-              <li>
-                <Link to="#" className="dropdown-item">
-                  Average Calories
                 </Link>
               </li>
             </ul>

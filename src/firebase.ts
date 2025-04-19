@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "API_KEY",
+  apiKey: "AIzaSyC1s4yiPp8IqUpLQc64lRPwtdQe8pHyKTg",
   authDomain: "fitness-tracker-00001.firebaseapp.com",
   databaseURL: "https://fitness-tracker-00001-default-rtdb.firebaseio.com",
   projectId: "fitness-tracker-00001",
