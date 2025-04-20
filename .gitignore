@@ -28,4 +28,3 @@ dist-ssr
 *.sw?
 
 # Ignore firebase config file
-src/firebase.ts
