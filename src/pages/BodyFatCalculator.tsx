@@ -70,46 +70,51 @@ const BodyFatCalculator: React.FC = () => {
             />
           </Form.Group>
           <Form.Group className="form-group">
-            <Form.Label>Sex</Form.Label>
-            <ButtonGroup className="mb-2">
-              <Button
-                variant={gender === 'male' ? 'primary' : 'outline-primary'}
-                onClick={e => { e.preventDefault(); setGender('male'); }}
-              >
-                Male
-              </Button>
-              <Button
-                variant={gender === 'female' ? 'primary' : 'outline-primary'}
-                onClick={e => { e.preventDefault(); setGender('female'); }}
-              >
-                Female
-              </Button>
-            </ButtonGroup>
-          </Form.Group>
-          <Form.Group className="form-group">
-            <Form.Label>Height</Form.Label>
-            <div className="d-flex align-items-center">
-              <Form.Control
-                type="number"
-                value={height}
-                onChange={e => setHeight(e.target.value)}
-                required
-                min={50}
-                max={300}
-                placeholder={heightUnit === 'cm' ? 'Height' : 'Height'}
-                className="measurement-input"
-              />
-              <ButtonGroup className="ms-2">
-                <Button
-                  variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
-                  onClick={e => { e.preventDefault(); setHeightUnit('cm'); }}
-                >cm</Button>
-                <Button
-                  variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
-                  onClick={e => { e.preventDefault(); setHeightUnit('in'); }}
-                >in</Button>
-              </ButtonGroup>
+            <div className="d-flex flex-wrap align-items-center gap-3 mb-2">
+              <div className="d-flex align-items-center gap-2">
+                <Form.Label className="mb-0">Sex</Form.Label>
+                <ButtonGroup size="sm">
+                  <Button
+                    variant={gender === 'male' ? 'primary' : 'outline-primary'}
+                    onClick={e => { e.preventDefault(); setGender('male'); }}
+                  >
+                    Male
+                  </Button>
+                  <Button
+                    variant={gender === 'female' ? 'primary' : 'outline-primary'}
+                    onClick={e => { e.preventDefault(); setGender('female'); }}
+                  >
+                    Female
+                  </Button>
+                </ButtonGroup>
+              </div>
             </div>
+            <Form.Group className="form-group">
+              <Form.Label>Height</Form.Label>
+              <div className="d-flex align-items-center gap-2">
+                <Form.Control
+                  type="number"
+                  value={height}
+                  onChange={e => setHeight(e.target.value)}
+                  required
+                  min={50}
+                  max={300}
+                  placeholder={heightUnit === 'cm' ? 'Height' : 'Height'}
+                  className="measurement-input"
+                  style={{ width: '140px' }}
+                />
+                <ButtonGroup size="sm">
+                  <Button
+                    variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
+                    onClick={e => { e.preventDefault(); setHeightUnit('cm'); }}
+                  >cm</Button>
+                  <Button
+                    variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
+                    onClick={e => { e.preventDefault(); setHeightUnit('in'); }}
+                  >in</Button>
+                </ButtonGroup>
+              </div>
+            </Form.Group>
           </Form.Group>
           <Form.Group className="form-group">
             <Form.Label>Neck Circumference</Form.Label>
