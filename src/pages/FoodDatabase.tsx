@@ -1,97 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import Papa from 'papaparse';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { db } from '../firebase';
 import './FoodDatabase.css';
 
-interface FoodName {
-  ID: string;
+interface Nutrient {
+  NutrientID: string;
+  NutrientName: string;
+  NutrientSymbol: string;
+  Unit: string;
+  NutrientValue: string;
+}
+
+interface Food {
   FoodID: string;
   FoodDescription: string;
   FoodGroupID: string;
-}
-
-interface FoodGroup {
-  ID: string;
   FoodGroupName: string;
+  Nutrients: Nutrient[];
 }
-
-interface NutrientAmount {
-  ID: string;
-  FoodID: string;
-  NutrientID: string;
-  NutrientValue: string;
-  Unit?: string;
-}
-
-interface NutrientName {
-  ID: string;
-  NutrientID: string;
-  NutrientSymbol: string;
-  NutrientName: string;
-  Unit: string;
-}
-
-const CSV_PATH = '/cnf-fcen-csv/';
-const FOOD_NAME_CSV = CSV_PATH + 'FOOD NAME.csv';
-const FOOD_GROUP_CSV = CSV_PATH + 'FOOD GROUP.csv';
-const NUTRIENT_AMOUNT_CSV = CSV_PATH + 'NUTRIENT AMOUNT.csv';
-const NUTRIENT_NAME_CSV = CSV_PATH + 'NUTRIENT NAME.csv';
 
 const FoodDatabase: React.FC = () => {
-  const [foods, setFoods] = useState<FoodName[]>([]);
-  const [groups, setGroups] = useState<{ [id: string]: string }>({});
-  const [foodNutrients, setFoodNutrients] = useState<{ [foodID: string]: { [nutrientID: string]: string } }>({});
+  const [foods, setFoods] = useState<Food[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [nutrientList, setNutrientList] = useState<NutrientName[]>([]);
+  const [nutrientList, setNutrientList] = useState<Nutrient[]>([]);
 
   useEffect(() => {
-    async function fetchCSVs() {
+    async function fetchFoods() {
       setLoading(true);
-      // Fetch food groups
-      const groupResp = await fetch(FOOD_GROUP_CSV);
-      const groupText = await groupResp.text();
-      const groupParsed = Papa.parse(groupText, { header: true });
-      const groupMap: { [id: string]: string } = {};
-      (groupParsed.data as FoodGroup[]).forEach((g) => {
-        if (g.ID && g.FoodGroupName) groupMap[g.ID] = g.FoodGroupName;
+      const foodsRef = collection(db, 'foods');
+      const q = query(foodsRef);
+      const snapshot = await getDocs(q);
+      const foodsArr: Food[] = snapshot.docs.map(doc => doc.data() as Food);
+      setFoods(foodsArr);
+      // Collect all unique nutrients for header
+      const nutrientMap: { [nutrientID: string]: Nutrient } = {};
+      foodsArr.forEach(food => {
+        (food.Nutrients || []).forEach(nut => {
+          if (nut.NutrientID && !nutrientMap[nut.NutrientID]) {
+            nutrientMap[nut.NutrientID] = nut;
+          }
+        });
       });
-      setGroups(groupMap);
-
-      // Fetch food names
-      const foodResp = await fetch(FOOD_NAME_CSV);
-      const foodText = await foodResp.text();
-      const foodParsed = Papa.parse(foodText, { header: true });
-      setFoods(foodParsed.data as FoodName[]);
-
-      // Fetch nutrient names
-      const nutNameResp = await fetch(NUTRIENT_NAME_CSV);
-      const nutNameText = await nutNameResp.text();
-      const nutNameParsed = Papa.parse(nutNameText, { header: true });
-      setNutrientList(
-        (nutNameParsed.data as NutrientName[]).filter((n) => n.NutrientID && n.NutrientName)
-      );
-
-      // Fetch nutrient amounts (large file, so only for first 100 foods for now)
-      const nutAmtResp = await fetch(NUTRIENT_AMOUNT_CSV);
-      const nutAmtText = await nutAmtResp.text();
-      const nutAmtParsed = Papa.parse(nutAmtText, { header: true });
-      const foodNut: { [foodID: string]: { [nutrientID: string]: string } } = {};
-      (nutAmtParsed.data as NutrientAmount[]).forEach((na) => {
-        if (!foodNut[na.FoodID]) foodNut[na.FoodID] = {};
-        foodNut[na.FoodID][na.NutrientID] = na.NutrientValue;
-      });
-      setFoodNutrients(foodNut);
-
+      setNutrientList(Object.values(nutrientMap).slice(0, 10));
       setLoading(false);
     }
-    fetchCSVs();
+    fetchFoods();
   }, []);
 
-  const filteredFoods = foods.filter(
-    (f) =>
-      f.FoodDescription?.toLowerCase().includes(search.toLowerCase()) ||
-      f.FoodID?.includes(search)
-  );
+  const filteredFoods = foods.filter((f) => {
+    const descMatch = f.FoodDescription?.toLowerCase().includes(search.toLowerCase());
+    const codeMatch = search === ''
+      ? true
+      : !Number.isNaN(Number(search)) && Number(f.FoodID) === Number(search);
+    return descMatch || codeMatch;
+  });
 
   return (
     <div className="page-container">
@@ -114,24 +77,26 @@ const FoodDatabase: React.FC = () => {
                   <th>Food Code</th>
                   <th>Description</th>
                   <th>Food Group</th>
-                  {nutrientList.slice(0, 10).map((nutrient) => (
+                  {nutrientList.map((nutrient) => (
                     <th key={nutrient.NutrientID}>{nutrient.NutrientSymbol || nutrient.NutrientName}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {filteredFoods.map((food) => (
-                  <tr key={food.FoodID}>
-                    <td>{food.FoodID}</td>
-                    <td>{food.FoodDescription}</td>
-                    <td>{groups[food.FoodGroupID]}</td>
-                    {nutrientList.slice(0, 10).map((nutrient) => (
-                      <td key={nutrient.NutrientID}>
-                        {foodNutrients[food.FoodID]?.[nutrient.NutrientID] ?? ''}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {filteredFoods
+                  .slice()
+                  .sort((a, b) => Number(a.FoodID) - Number(b.FoodID))
+                  .map((food) => (
+                    <tr key={food.FoodID}>
+                      <td>{food.FoodID}</td>
+                      <td>{food.FoodDescription}</td>
+                      <td>{food.FoodGroupName}</td>
+                      {nutrientList.map((nutrient) => {
+                        const found = (food.Nutrients || []).find(n => n.NutrientID === nutrient.NutrientID);
+                        return <td key={nutrient.NutrientID}>{found ? found.NutrientValue : ''}</td>;
+                      })}
+                    </tr>
+                  ))}
               </tbody>
             </table>
             <div style={{ fontSize: 13, color: '#888', marginTop: 8 }}>
