@@ -83,7 +83,7 @@ const SearchBar = () => {
           ref={inputRef}
           style={{ flex: 1 }}
         />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
           Search
         </button>
       </form>
