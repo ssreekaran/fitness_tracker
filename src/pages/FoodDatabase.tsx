@@ -14,8 +14,6 @@ interface Nutrient {
 interface Food {
   FoodID: string;
   FoodDescription: string;
-  FoodGroupID: string;
-  FoodGroupName: string;
   Nutrients: Nutrient[];
 }
 
@@ -76,7 +74,6 @@ const FoodDatabase: React.FC = () => {
                 <tr>
                   <th>Food Code</th>
                   <th>Description</th>
-                  <th>Food Group</th>
                   {nutrientList.map((nutrient) => (
                     <th key={nutrient.NutrientID}>{nutrient.NutrientSymbol || nutrient.NutrientName}</th>
                   ))}
@@ -90,7 +87,6 @@ const FoodDatabase: React.FC = () => {
                     <tr key={food.FoodID}>
                       <td>{food.FoodID}</td>
                       <td>{food.FoodDescription}</td>
-                      <td>{food.FoodGroupName}</td>
                       {nutrientList.map((nutrient) => {
                         const found = (food.Nutrients || []).find(n => n.NutrientID === nutrient.NutrientID);
                         return <td key={nutrient.NutrientID}>{found ? found.NutrientValue : ''}</td>;

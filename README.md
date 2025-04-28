@@ -23,10 +23,6 @@ A modern, full-stack fitness tracker web application built with React, TypeScrip
 - **Performance & Usability**: Faster searching and sorting, improved user experience.
 - **Removed Query Limit**: All food items are now loaded and searchable.
 
-## Screenshots
-
-> _Add screenshots or a short demo GIF here to showcase the UI and features._
-
 ## Tech Stack
 
 - **Frontend**: React, TypeScript, Vite, Bootstrap, React-Bootstrap, React Router, React Icons

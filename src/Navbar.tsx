@@ -6,7 +6,7 @@ const Navbar = () => {
       <Link to="/">
         <img
           className="navbar-brand d-line-block align-top"
-          src="/fitness_tracker_logo5.png"
+          src="/fitness_tracker_logo6.png"
           alt="Fitness Tracker"
           width={125}
           height={125}
