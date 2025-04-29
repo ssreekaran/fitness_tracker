@@ -71,8 +71,8 @@ const SearchBar = () => {
   };
 
   return (
-    <div style={{ position: "relative", width: "180px" }}>
-      <form className="d-flex" onSubmit={handleSubmit} autoComplete="off">
+    <div className="header-search-bar" style={{ position: "relative", width: "340px" }}>
+      <form className="d-flex" onSubmit={handleSubmit} autoComplete="off" style={{ width: "100%" }}>
         <input
           type="text"
           className="form-control me-2"
@@ -81,9 +81,9 @@ const SearchBar = () => {
           onFocus={() => setShowSuggestions(true)}
           placeholder="Search pages..."
           ref={inputRef}
-          style={{ height: 28, fontSize: 13, padding: "2px 8px", width: 110 }}
+          style={{ flex: 1 }}
         />
-        <button type="submit" className="btn btn-primary" style={{ height: 28, fontSize: 13, padding: "2px 10px" }}>
+        <button type="submit" className="btn btn-primary" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
           Search
         </button>
       </form>
@@ -110,13 +110,13 @@ const SearchBar = () => {
               <div
                 key={page.path}
                 onClick={() => handleSuggestionClick(page.path)}
+                className="search-suggestion"
                 style={{
                   padding: "8px 12px",
                   cursor: "pointer",
                   borderBottom: "1px solid #eee",
                   fontWeight: 500,
-                  color: "#2d3a4a",
-                  fontSize: 13
+                  color: "#2d3a4a"
                 }}
                 onMouseDown={e => e.preventDefault()} // Prevents input blur
               >
@@ -126,12 +126,12 @@ const SearchBar = () => {
           ) : (
             <div
               onClick={handleGoogleClick}
+              className="search-suggestion"
               style={{
                 padding: "8px 12px",
                 cursor: "pointer",
                 color: "#4285f4",
-                fontWeight: 500,
-                fontSize: 13
+                fontWeight: 500
               }}
               onMouseDown={e => e.preventDefault()} // Prevents input blur
             >

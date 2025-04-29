@@ -89,6 +89,14 @@ body {
   color: var(--nav-text) !important;
 }
 
+.navbar-nav .nav-link, .navbar-nav .dropdown-toggle {
+  font-size: 1.15rem !important;
+}
+
+.dropdown-menu .dropdown-item {
+  font-size: 1.1rem !important;
+}
+
 a {
   font-weight: 500;
   color: var(--link-color);
@@ -157,4 +165,17 @@ button:focus-visible {
   color: var(--text-color);
   transition: color 0.3s ease;
   display: block;
+}
+
+/* Make the search bar input and button text bigger */
+.header-search-bar input.form-control,
+.header-search-bar button {
+  font-size: 1.15rem !important;
+  height: 32px !important;
+  padding: 4px 14px !important;
+}
+
+/* Optionally, adjust suggestion font size */
+.header-search-bar .search-suggestion {
+  font-size: 1.05rem !important;
 }
