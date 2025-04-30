@@ -1,0 +1,41 @@
+.personal-fitness-container {
+  padding-top: 100px;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.personal-fitness-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.personal-fitness-title {
+  text-align: center;
+  color: var(--text-color);
+  margin-bottom: 2rem;
+}
+
+.personal-fitness-placeholder {
+  text-align: center;
+  color: var(--text-color);
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  opacity: 0.8;
+}
+
+/* Add some spacing for the navbar */
+body {
+  padding-top: 76px;
+}
+
+/* Dark mode specific styles */
+@media (prefers-color-scheme: dark) {
+  .personal-fitness-container {
+    background-color: var(--dark-background-color);
+  }
+  
+  .personal-fitness-placeholder {
+    opacity: 0.7;
+  }
+}

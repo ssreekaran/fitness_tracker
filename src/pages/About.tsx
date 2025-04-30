@@ -29,7 +29,7 @@ const About: React.FC = () => {
         <section className="about-section">
           <h2>Why Choose Us</h2>
           <p>
-            We believe that fitness should be accessible to everyone, so our web application is designed be a simple and free tool for tracking your fitness goals. Other fitness tracking apps are often expensive or ask for a lot of personal information, but our goal is to make fitness accessible to everyone.
+            We believe that fitness should be accessible to everyone, so our web application is designed be a simple and free tool for tracking your fitness goals. Other fitness tracking apps are often expensive or ask for a lot of personal information, but our goal is to make fitness accessible to everyone without being invasive.
           </p>
         </section>
       </div>

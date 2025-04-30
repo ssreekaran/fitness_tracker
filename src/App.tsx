@@ -9,6 +9,8 @@ import ContactUs from "./pages/ContactUs";
 import FoodDatabase from "./pages/FoodDatabase";
 import WeightLossCalculator from "./pages/WeightLossCalculator";
 import HealthyFood from "./pages/HealthyFood";
+import PersonalFitness from "./PersonalFitness";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -28,6 +30,11 @@ function App() {
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/weight-loss-calculator" element={<WeightLossCalculator />} />
             <Route path="/healthy-food" element={<HealthyFood />} />
+            <Route path="/personal-fitness" element={
+              <ProtectedRoute>
+                <PersonalFitness />
+              </ProtectedRoute>
+            } />
           </Routes>
         </main>
       </div>
