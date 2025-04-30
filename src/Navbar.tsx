@@ -87,6 +87,11 @@ const Navbar = () => {
               </li>
             </ul>
           </li>
+          <li className="nav-item">
+            <Link to="/personal-fitness" className="nav-link">
+              Personal Fitness
+            </Link>
+          </li>
         </ul>
       </div>
     </div>
