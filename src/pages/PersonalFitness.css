@@ -1,27 +1,82 @@
 .personal-fitness-container {
-  padding-top: 100px;
+  padding-top: 6rem;
   min-height: 100vh;
   background-color: var(--background-color);
 }
 
 .personal-fitness-content {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
 }
 
 .personal-fitness-title {
-  text-align: center;
   color: var(--text-color);
+  text-align: center;
   margin-bottom: 2rem;
+  font-size: 2.5rem;
 }
 
-.personal-fitness-placeholder {
-  text-align: center;
+.personal-fitness-form {
+  background-color: var(--background-color);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.measurement-input {
+  background-color: var(--background-color);
   color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  width: 100%;
+  color: var(--text-color) !important;
+  background-color: var(--background-color) !important;
+}
+
+.measurement-input::placeholder {
+  color: var(--text-color) !important;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+.measurement-input:focus {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+.calculate-button {
+  width: 100%;
+  padding: 0.75rem;
   font-size: 1.1rem;
-  margin-top: 2rem;
-  opacity: 0.8;
+  margin-top: 1rem;
+}
+
+.btn-group {
+  background-color: var(--background-color);
+  margin-left: 1rem;
+}
+
+.btn-group .btn {
+  min-width: 45px;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-outline-primary {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  color: white;
 }
 
 /* Add some spacing for the navbar */
