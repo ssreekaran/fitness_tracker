@@ -17,7 +17,6 @@ Try it yourself: [Fitness Tracker](https://fitness-tracker-00001.web.app/)
 - **Healthy Food Suggestions**: Explore healthy food options and nutrition tips.
 - **Responsive UI with Dark Mode**: Clean, mobile-friendly design with Bootstrap and custom CSS. Includes a dark mode toggle.
 - **Navigation & Routing**: Multi-page SPA with React Router for seamless navigation.
-- **Contact & About Pages**: Learn more about the project and easily send feedback via email.
 
 ## Recent Improvements
 

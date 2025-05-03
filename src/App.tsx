@@ -9,7 +9,7 @@ import ContactUs from "./pages/ContactUs";
 import FoodDatabase from "./pages/FoodDatabase";
 import WeightLossCalculator from "./pages/WeightLossCalculator";
 import HealthyFood from "./pages/HealthyFood";
-import PersonalFitness from "./PersonalFitness";
+import PersonalFitness from "./pages/PersonalFitness";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
