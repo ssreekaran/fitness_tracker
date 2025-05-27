@@ -1,25 +1,59 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, deleteUser } from "firebase/auth";
 import { auth } from "../firebase";
+import { getFitnessData, getBMICategory } from "../services/fitnessService";
+import { FitnessData } from "../services/fitnessService";
+import { Card, Typography, Space, Button, Divider, Spin, Alert } from "antd";
+import { UserOutlined, EditOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
 
 const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<any>(null);
+  const [fitnessData, setFitnessData] = useState<FitnessData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const data = await getFitnessData();
+        if (isMounted) {
+          setFitnessData(data);
+        }
+      } catch (err) {
+        console.error('Error loading fitness data:', err);
+        if (isMounted) {
+          setError('Failed to load fitness data');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (!firebaseUser) {
         navigate("/", { replace: true });
       } else {
         setUser(firebaseUser);
+        loadData();
       }
     });
-    return () => unsubscribe();
+    
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, [navigate]);
 
   const handleDeleteAccount = async () => {
@@ -43,40 +77,135 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  if (!user) return null;
+  if (!user) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <Spin size="large" />
+  </div>;
+
+  const formatDate = (date: Date | any) => {
+    if (!date) return 'Never';
+    if (date.toDate) {
+      return date.toDate().toLocaleDateString();
+    }
+    return new Date(date).toLocaleDateString();
+  };
 
   return (
     <div className="profile-page" style={{
-      maxWidth: 400,
-      minHeight: 260,
-      margin: "80px auto 0 auto",
-      padding: 32,
-      boxShadow: "0 2px 12px #0003",
-      borderRadius: 12,
-      background: "#232323",
-      color: "#fff",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "center"
+      maxWidth: 800,
+      margin: "80px auto 20px",
+      padding: "16px 24px"
     }}>
-      <h2 style={{marginBottom: 24}}>Profile</h2>
-      <div style={{ margin: "16px 0" }}>
-        <strong>Name:</strong> {user.displayName || "(not set)"}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <Title level={2} style={{ margin: 0 }}>Profile</Title>
+        <Button type="primary" onClick={() => navigate(-1)}>Back</Button>
       </div>
-      <div style={{ margin: "16px 0" }}>
-        <strong>Email:</strong> {user.email}
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+        {/* User Information Card */}
+        <Card 
+          title={
+            <Space>
+              <UserOutlined />
+              <span>Account Information</span>
+            </Space>
+          }
+          style={{ marginBottom: 24 }}
+        >
+          <div style={{ marginBottom: 16 }}>
+            <Text strong>Name:</Text>
+            <div style={{ marginTop: 4 }}>{user.displayName || "(not set)"}</div>
+          </div>
+          
+          <div style={{ marginBottom: 16 }}>
+            <Text strong>Email:</Text>
+            <div style={{ marginTop: 4 }}>{user.email}</div>
+          </div>
+          
+          <div style={{ marginTop: 24 }}>
+            <Button 
+              type="primary" 
+              danger 
+              onClick={handleDeleteAccount}
+              loading={deleting}
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting...' : 'Delete Account'}
+            </Button>
+            {error && <Alert message={error} type="error" style={{ marginTop: 16 }} />}
+            {success && <Alert message={success} type="success" style={{ marginTop: 16 }} />}
+          </div>
+        </Card>
+
+        {/* Fitness Information Card */}
+        <Card 
+          title={
+            <Space>
+              <span>Fitness Information</span>
+              <Link to="/personal-fitness">
+                <Button type="link" icon={<EditOutlined />} size="small">Edit</Button>
+              </Link>
+            </Space>
+          }
+          style={{ marginBottom: 24 }}
+          loading={loading}
+        >
+          {fitnessData ? (
+            <div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                <div>
+                  <Text type="secondary">Age</Text>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>{fitnessData.age} years</div>
+                </div>
+                <div>
+                  <Text type="secondary">Sex</Text>
+                  <div style={{ fontSize: 16, fontWeight: 500, textTransform: 'capitalize' }}>{fitnessData.sex}</div>
+                </div>
+              </div>
+              
+              <Divider style={{ margin: '16px 0' }} />
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                <div>
+                  <Text type="secondary">Height</Text>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>
+                    {fitnessData.height} cm ({(fitnessData.height / 2.54).toFixed(1)} in)
+                  </div>
+                </div>
+                <div>
+                  <Text type="secondary">Weight</Text>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>
+                    {fitnessData.weight} kg ({(fitnessData.weight * 2.20462).toFixed(1)} lbs)
+                  </div>
+                </div>
+              </div>
+              
+              {fitnessData.bmi && (
+                <>
+                  <Divider style={{ margin: '16px 0' }} />
+                  <div>
+                    <Text type="secondary">Body Mass Index (BMI)</Text>
+                    <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 4 }}>
+                      {fitnessData.bmi.toFixed(1)} - {getBMICategory(fitnessData.bmi)}
+                    </div>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      Last updated: {formatDate(fitnessData.lastUpdated)}
+                    </Text>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <Text type="secondary">No fitness data available</Text>
+              <div style={{ marginTop: 16 }}>
+                <Link to="/personal-fitness">
+                  <Button type="primary">Add Fitness Information</Button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </Card>
       </div>
-      <button
-        onClick={handleDeleteAccount}
-        disabled={deleting}
-        style={{ marginTop: 24, padding: "8px 24px", borderRadius: 8, background: "#c0392b", color: "#fff", border: "none", fontWeight: 600, fontSize: 16, cursor: deleting ? "not-allowed" : "pointer" }}
-      >
-        {deleting ? "Deleting..." : "Delete Account"}
-      </button>
-      {error && <div style={{ color: "#ff4d4f", marginTop: 12 }}>{error}</div>}
-      {success && <div style={{ color: "#2ecc40", marginTop: 12 }}>{success}</div>}
-      <button onClick={() => navigate(-1)} style={{ marginTop: 32, padding: "8px 24px", borderRadius: 8, background: "#333", color: "#fff", border: "none", fontWeight: 600, fontSize: 16, cursor: "pointer" }}>Back</button>
     </div>
   );
 };
