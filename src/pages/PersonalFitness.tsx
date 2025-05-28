@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, ButtonGroup, Alert, Card, Spinner } from 'react-bootstrap';
+import { Container, Form, Button, Alert, Card, Spinner } from 'react-bootstrap';
 import { getAuth } from 'firebase/auth';
 import { saveFitnessData, getFitnessData, FitnessData, getBMICategory } from '../services/fitnessService';
 import { useNavigate } from 'react-router-dom';
@@ -178,20 +178,22 @@ const PersonalFitness: React.FC = () => {
                     step="0.1"
                     required
                   />
-                  <ButtonGroup>
-                    <Button
-                      variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
+                  <div className="unit-toggle">
+                    <button
+                      type="button"
+                      className={`unit-toggle-button ${heightUnit === 'cm' ? 'active' : ''}`}
                       onClick={() => setHeightUnit('cm')}
                     >
                       cm
-                    </Button>
-                    <Button
-                      variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
+                    </button>
+                    <button
+                      type="button"
+                      className={`unit-toggle-button ${heightUnit === 'in' ? 'active' : ''}`}
                       onClick={() => setHeightUnit('in')}
                     >
                       in
-                    </Button>
-                  </ButtonGroup>
+                    </button>
+                  </div>
                 </div>
               </Form.Group>
 
@@ -208,20 +210,22 @@ const PersonalFitness: React.FC = () => {
                     step="0.1"
                     required
                   />
-                  <ButtonGroup>
-                    <Button
-                      variant={weightUnit === 'kg' ? 'primary' : 'outline-primary'}
+                  <div className="unit-toggle">
+                    <button
+                      type="button"
+                      className={`unit-toggle-button ${weightUnit === 'kg' ? 'active' : ''}`}
                       onClick={() => setWeightUnit('kg')}
                     >
                       kg
-                    </Button>
-                    <Button
-                      variant={weightUnit === 'lbs' ? 'primary' : 'outline-primary'}
+                    </button>
+                    <button
+                      type="button"
+                      className={`unit-toggle-button ${weightUnit === 'lbs' ? 'active' : ''}`}
                       onClick={() => setWeightUnit('lbs')}
                     >
                       lbs
-                    </Button>
-                  </ButtonGroup>
+                    </button>
+                  </div>
                 </div>
               </Form.Group>
 
