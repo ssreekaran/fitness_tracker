@@ -35,6 +35,13 @@
   margin-bottom: 1.5rem;
 }
 
+.form-group label {
+  color: var(--label-color, #333333);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
 .measurement-input {
   background-color: var(--input-bg, #ffffff) !important;
   color: var(--input-text, #333333) !important;
@@ -173,19 +180,29 @@
   font-weight: 500;
 }
 
+/* Form select styling - match measurement inputs */
 .form-select {
-  background-color: #2d2d2d !important;
-  color: #ffffff !important;
-  border: 1px solid #444;
+  background-color: var(--input-bg, #ffffff) !important;
+  color: var(--input-text, #333333) !important;
+  border: 1px solid var(--input-border, #dddddd) !important;
   padding: 0.75rem 1rem;
   width: 100%;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
+/* Dropdown menu styling */
+.form-select option {
+  background-color: var(--input-bg, #ffffff);
+  color: var(--input-text, #333333);
+  padding: 0.5rem;
+}
+
+/* Focus state */
 .form-select:focus {
-  border-color: #4a9eff;
-  box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25);
+  background-color: var(--input-focus-bg, #ffffff) !important;
+  border-color: var(--primary-color, #4a9eff) !important;
+  box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25) !important;
   outline: none;
 }
 
@@ -253,6 +270,7 @@ body {
   --toggle-button-hover-border: #5a5a5a;
   --primary-color: #4a9eff;
   --primary-hover: #5aa8ff;
+  --label-color: #e0e0e0;
 }
 
 /* Light mode overrides */
@@ -273,6 +291,7 @@ body {
   --toggle-button-hover-border: #cccccc;
   --primary-color: #4a9eff;
   --primary-hover: #3a8bef;
+  --label-color: #333333;
 }
 
 @media (max-width: 768px) {
