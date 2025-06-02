@@ -35,34 +35,37 @@
   margin-bottom: 1.5rem;
 }
 
-.form-group label {
+.form-group label,
+.form-label {
   color: var(--label-color, #333333);
   font-weight: 500;
   margin-bottom: 0.5rem;
   display: block;
 }
 
-.measurement-input {
+.measurement-input,
+.form-select {
   background-color: var(--input-bg, #ffffff) !important;
   color: var(--input-text, #333333) !important;
   border: 1px solid var(--input-border, #dddddd);
   padding: 0.75rem 1rem;
   width: 100%;
+  border-radius: 4px;
   transition: all 0.3s ease;
+}
+
+.measurement-input:focus,
+.form-select:focus {
+  background-color: var(--input-focus-bg, #ffffff) !important;
+  border-color: var(--primary-color, #4a9eff) !important;
+  box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25) !important;
+  outline: none;
 }
 
 .measurement-input::placeholder {
   color: #aaa !important;
   opacity: 0.8;
   font-weight: 400;
-}
-
-.measurement-input:focus {
-  background-color: var(--input-focus-bg, #ffffff) !important;
-  color: var(--input-text, #333333) !important;
-  border-color: var(--primary-color, #4a9eff);
-  box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25);
-  outline: none;
 }
 
 .calculate-button {
@@ -147,7 +150,7 @@
   padding: 0.5rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   text-align: center;
   font-weight: 500;
 }
@@ -173,32 +176,14 @@
   box-shadow: none;
 }
 
-.form-label {
-  color: #e0e0e0;
-  margin-bottom: 0.5rem;
-  display: block;
-  font-weight: 500;
-}
 
-/* Form select styling - match measurement inputs */
-.form-select {
-  background-color: var(--input-bg, #ffffff) !important;
-  color: var(--input-text, #333333) !important;
-  border: 1px solid var(--input-border, #dddddd) !important;
-  padding: 0.75rem 1rem;
-  width: 100%;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
 
-/* Dropdown menu styling */
+/* Form select dropdown menu */
 .form-select option {
   background-color: var(--input-bg, #ffffff);
   color: var(--input-text, #333333);
   padding: 0.5rem;
 }
-
-/* Focus state */
 .form-select:focus {
   background-color: var(--input-focus-bg, #ffffff) !important;
   border-color: var(--primary-color, #4a9eff) !important;
@@ -246,7 +231,7 @@
   color: white;
 }
 
-/* Add some spacing for the navbar */
+/* Global body spacing */
 body {
   padding-top: 76px;
 }
