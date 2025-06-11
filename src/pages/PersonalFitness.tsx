@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Alert, Card, Spinner } from 'react-bootstrap';
+import { Container, Form, Button, Alert, Card, Spinner, Collapse } from 'react-bootstrap';
 import { getAuth } from 'firebase/auth';
 import { saveFitnessData, getFitnessData, FitnessData, getBMICategory } from '../services/fitnessService';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,7 @@ const PersonalFitness: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [fitnessData, setFitnessData] = useState<FitnessData | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -117,41 +118,57 @@ const PersonalFitness: React.FC = () => {
     <Container className="personal-fitness-container">
       <div className="personal-fitness-content">
         <h1 className="personal-fitness-title">Personal Fitness Tracker</h1>
-        
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
 
-        <Card className="mb-4">
-          <Card.Body>
-            <Card.Title>Your Fitness Stats</Card.Title>
-            {fitnessData ? (
-              <div className="fitness-stats">
-                <p><strong>BMI:</strong> {fitnessData.bmi?.toFixed(1)} <small>({getBMICategory(fitnessData.bmi || 0)})</small></p>
-                <p><strong>Height:</strong> {fitnessData.height} cm ({(fitnessData.height / 2.54).toFixed(1)} in)</p>
-                <p><strong>Weight:</strong> {fitnessData.weight} kg ({(fitnessData.weight * 2.20462).toFixed(1)} lbs)</p>
-                <p><strong>Age:</strong> {fitnessData.age}</p>
-                <p><strong>Sex:</strong> {fitnessData.sex.charAt(0).toUpperCase() + fitnessData.sex.slice(1)}</p>
-                <p className="text-muted">
-                  Last updated: {fitnessData.lastUpdated ? 
-                    (fitnessData.lastUpdated instanceof Date ? 
-                      fitnessData.lastUpdated.toLocaleString() : 
-                      'toDate' in fitnessData.lastUpdated ? 
-                        fitnessData.lastUpdated.toDate().toLocaleString() : 
-                        'Unknown') : 
-                    'Unknown'}
-                </p>
-              </div>
-            ) : (
-              <p>No fitness data saved yet. Please fill out the form below.</p>
-            )}
-          </Card.Body>
-        </Card>
+        <div className="d-flex gap-4 flex-column flex-md-row align-items-start">
+          <Card className="mb-4" style={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start' }}>
+            <Card.Body>
+              <Card.Title>Your Fitness Stats</Card.Title>
+              {fitnessData ? (
+                <div className="fitness-stats">
+                  <p><strong>BMI:</strong> {fitnessData.bmi?.toFixed(1)} <small>({getBMICategory(fitnessData.bmi || 0)})</small></p>
+                  <p><strong>Height:</strong> {fitnessData.height} cm ({(fitnessData.height / 2.54).toFixed(1)} in)</p>
+                  <p><strong>Weight:</strong> {fitnessData.weight} kg ({(fitnessData.weight * 2.20462).toFixed(1)} lbs)</p>
+                  <p><strong>Age:</strong> {fitnessData.age}</p>
+                  <p><strong>Sex:</strong> {fitnessData.sex.charAt(0).toUpperCase() + fitnessData.sex.slice(1)}</p>
+                  <p className="text-muted">
+                    Last updated: {fitnessData.lastUpdated ? 
+                      (fitnessData.lastUpdated instanceof Date ? 
+                        fitnessData.lastUpdated.toLocaleString() : 
+                        'toDate' in fitnessData.lastUpdated ? 
+                          fitnessData.lastUpdated.toDate().toLocaleString() : 
+                          'Unknown') : 
+                      'Unknown'}
+                  </p>
+                </div>
+              ) : (
+                <p>No fitness data saved yet. Please fill out the form below.</p>
+              )}
+            </Card.Body>
+          </Card>
 
-        <Card>
-          <Card.Body>
-            <Card.Title>Update Your Information</Card.Title>
-            <Form onSubmit={handleSubmit} className="personal-fitness-form">
-              <Form.Group className="form-group mb-3">
+          <Card className="mb-4" style={{ width: '100%', maxWidth: '500px', alignSelf: 'flex-start' }}>
+          <Card.Body 
+            onClick={() => setIsFormOpen(!isFormOpen)}
+            style={{ cursor: 'pointer' }}
+            className="d-flex justify-content-between align-items-center"
+            aria-controls="update-form-collapse"
+            aria-expanded={isFormOpen}
+          >
+            <Card.Title className="mb-0">Update Your Information</Card.Title>
+            <span className="toggle-icon">
+              {isFormOpen ? (
+                <img src="/gi-boomerang-icon-up.png" width={12} height={12} alt="Collapse" />
+              ) : (
+                <img src="/gi-boomerang-icon-down.png" width={12} height={12} alt="Expand" />
+              )}
+            </span>
+          </Card.Body>
+          <Collapse in={isFormOpen}>
+            <Card.Body id="update-form-collapse">
+              <Form onSubmit={handleSubmit} className="personal-fitness-form" onClick={e => e.stopPropagation()}>
+                <Form.Group className="form-group mb-3">
                 <Form.Label>Age</Form.Label>
                 <Form.Control
                   type="number"
@@ -247,7 +264,9 @@ const PersonalFitness: React.FC = () => {
               </Button>
             </Form>
           </Card.Body>
-        </Card>
+        </Collapse>
+          </Card>
+        </div>
       </div>
     </Container>
   );
