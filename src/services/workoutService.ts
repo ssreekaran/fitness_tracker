@@ -7,7 +7,7 @@ export interface WorkoutLog {
   userId: string;
   exercise: string;
   duration: number;
-  intensity: 'low' | 'moderate' | 'high';
+  intensity?: 'low' | 'moderate' | 'high';  // Made optional
   caloriesBurned: number;
   date: Date | Timestamp;
   createdAt?: Date | Timestamp;
