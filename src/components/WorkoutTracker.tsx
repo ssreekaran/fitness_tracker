@@ -121,21 +121,43 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timeRange, setTimeRange] = useState<number>(7); // Default to 7 days
+  // Function to get current local datetime in format YYYY-MM-DDThh:mm
+  const getLocalDateTimeString = () => {
+    const now = new Date();
+    // Get local timezone offset in minutes and convert to milliseconds
+    const tzOffset = now.getTimezoneOffset() * 60000;
+    // Create a new date adjusted for timezone
+    const localDate = new Date(now.getTime() - tzOffset);
+    // Return in format YYYY-MM-DDThh:mm
+    return localDate.toISOString().slice(0, 16);
+  };
+
   const [formData, setFormData] = useState<WorkoutFormData>({
     exercise: '',
     duration: 30,
-    date: new Date().toISOString().substr(0, 16)
+    date: getLocalDateTimeString()
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    
+    const selectedDate = new Date(formData.date);
+    const currentDate = new Date();
+    
+    // Check if the selected date is in the future
+    if (selectedDate > currentDate) {
+      setError('Cannot log workouts in the future. Please select a date and time that is not in the future.');
+      setLoading(false);
+      return;
+    }
+    
     try {
       const workout: Omit<WorkoutLog, 'id' | 'userId' | 'createdAt'> = {
         ...formData,
         caloriesBurned: calculateCaloriesBurned(formData.exercise, formData.duration, userWeight),
-        date: new Date(formData.date)
+        date: selectedDate
       };
       
       await saveWorkout(workout);
@@ -144,11 +166,11 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
       const userWorkouts = await getUserWorkouts();
       setWorkouts(userWorkouts);
       
-      // Reset form
+      // Reset form with current local time
       setFormData({
         exercise: '',
         duration: 30,
-        date: new Date().toISOString().substr(0, 16)
+        date: getLocalDateTimeString()
       });
       
       setError('');
