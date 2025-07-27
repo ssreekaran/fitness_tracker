@@ -25,8 +25,9 @@ function LoginForm({ onSignUpClick }: LoginFormProps) {
       setEmail("");
       setPassword("");
       // Optionally redirect: navigate("/profile");
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error?.message || "Login failed");
     }
   };
 

@@ -49,9 +49,10 @@ const PersonalFitness: React.FC = () => {
           sex: data.sex
         });
       }
-    } catch (err: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       setError('Failed to load fitness data');
-      console.error('Error loading fitness data:', err);
+      console.error('Error loading fitness data:', err.message || error);
     }
   };
 

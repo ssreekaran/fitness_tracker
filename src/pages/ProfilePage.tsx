@@ -7,11 +7,12 @@ import { getFitnessData, getBMICategory } from "../services/fitnessService";
 import { FitnessData } from "../services/fitnessService";
 import { Card, Typography, Space, Button, Divider, Spin, Alert } from "antd";
 import { UserOutlined, EditOutlined } from "@ant-design/icons";
+import { User } from "firebase/auth";
 
 const { Title, Text } = Typography;
 
 const ProfilePage: React.FC = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [fitnessData, setFitnessData] = useState<FitnessData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
@@ -57,16 +58,17 @@ const ProfilePage: React.FC = () => {
   }, [navigate]);
 
   const handleDeleteAccount = async () => {
-    setError("");
-    setSuccess("");
-    setDeleting(true);
+    if (!user) return;
+    
     try {
-      if (user) {
-        await deleteUser(user);
-        setSuccess("Account deleted successfully.");
-        setTimeout(() => navigate("/"), 1500);
-      }
-    } catch (err: any) {
+      setDeleting(true);
+      // First delete user data
+      // Then delete the user account
+      await deleteUser(user);
+      setSuccess('Your account has been deleted successfully.');
+      setTimeout(() => navigate('/'), 2000);
+    } catch (error: unknown) {
+      const err = error as { code?: string; message?: string };
       if (err.code === "auth/requires-recent-login") {
         setError("Please log out and log in again to delete your account.");
       } else {

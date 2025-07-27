@@ -18,8 +18,8 @@ const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
-  const inputRef = useRef(null);
-  const suggestionRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionRef = useRef<HTMLDivElement>(null);
 
   // Filtered suggestions based on query
   const filteredPages = query.trim()
@@ -29,11 +29,12 @@ const SearchBar = () => {
   // Hide suggestions on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
+      const target = e.target as Node;
       if (
         inputRef.current &&
-        !(inputRef.current as any).contains(e.target) &&
+        !inputRef.current.contains(target) &&
         suggestionRef.current &&
-        !(suggestionRef.current as any).contains(e.target)
+        !suggestionRef.current.contains(target)
       ) {
         setShowSuggestions(false);
       }

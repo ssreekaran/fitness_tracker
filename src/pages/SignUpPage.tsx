@@ -39,8 +39,9 @@ const SignUpPage: React.FC = () => {
       }
       setSuccess(true);
       setTimeout(() => navigate('/'), 1500);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      setError(err.message || 'Failed to create account');
     }
   };
 

@@ -51,9 +51,9 @@ const WeightLossCalculator: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Convert all to metric for calculation
-    let heightCm = heightUnit === 'cm' ? height : height * 2.54;
-    let weightKg = weightUnit === 'kg' ? weight : weight * 0.453592;
-    let goalKg = goalUnit === 'kg' ? goal : goal * 0.453592;
+    const heightCm = heightUnit === 'cm' ? height : height * 2.54;
+    const weightKg = weightUnit === 'kg' ? weight : weight * 0.453592;
+    const goalKg = goalUnit === 'kg' ? goal : goal * 0.453592;
     const bmr = calculateBMR(gender, weightKg, heightCm, age);
     const tdee = bmr * activity;
     // 1 kg fat ≈ 7700 kcal, so goalKg/week = (goalKg*7700)/7 kcal deficit/day

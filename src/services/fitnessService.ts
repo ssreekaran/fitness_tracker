@@ -43,7 +43,7 @@ export const saveFitnessData = async (
     const heightInMeters = heightInCm / 100;
     const bmi = weightInKg / (heightInMeters * heightInMeters);
 
-    const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated: any } = {
+    const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated: ReturnType<typeof serverTimestamp> } = {
       userId: user.uid,
       age: data.age,
       height: parseFloat(heightInCm.toFixed(1)),
@@ -137,7 +137,7 @@ export const getFitnessData = async (): Promise<FitnessData | null> => {
     }
     
     // Safely extract data with type checking
-    const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated?: any } = {
+    const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated?: Timestamp | Date } = {
       userId: data.userId || user.uid,
       age: typeof data.age === 'number' ? data.age : 0,
       height: typeof data.height === 'number' ? data.height : 0,
