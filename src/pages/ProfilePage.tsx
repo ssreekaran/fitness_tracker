@@ -83,12 +83,15 @@ const ProfilePage: React.FC = () => {
     <Spin size="large" />
   </div>;
 
-  const formatDate = (date: Date | any) => {
+  const formatDate = (date: Date | { toDate: () => Date } | null | undefined) => {
     if (!date) return 'Never';
-    if (date.toDate) {
-      return date.toDate().toLocaleDateString();
+    try {
+      const dateObj = date instanceof Date ? date : date.toDate();
+      return dateObj.toLocaleDateString();
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid date';
     }
-    return new Date(date).toLocaleDateString();
   };
 
   return (
