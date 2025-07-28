@@ -5,8 +5,10 @@ import * as matchers from '@testing-library/jest-dom/matchers';
 
 // Extend Vitest's expect with jest-dom matchers
 Object.entries(matchers).forEach(([key, value]) => {
-  // Use type assertion to handle dynamic property access
-  (expect as any).extend({ [key]: value });
+  // Use type assertion with a more specific type
+  (expect as typeof expect & {
+    extend(matchers: Record<string, unknown>): void;
+  }).extend({ [key]: value });
 });
 
 // Mock window.matchMedia which is not implemented in JSDOM
