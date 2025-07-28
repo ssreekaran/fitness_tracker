@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import SearchBar from "./SearchBar";
 import LoginForm from "./Dropdown/LoginForm";
 import UserDropdownContent from "./Dropdown/UserDropdownContent";
-import DarkModeToggle from "./Dark";
+import DarkModeToggle from "./Dark.tsx";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
 
