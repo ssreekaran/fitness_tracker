@@ -6,39 +6,129 @@ Try it yourself: [Fitness Tracker](https://fitness-tracker-00001.web.app/)
 
 ## Features
 
-- **User Authentication**: Sign up and login with Firebase Authentication. Users can create an account, set a display name, and manage their profile (including account deletion).
-- **BMI Calculator**: Calculate Body Mass Index (BMI) with support for metric and imperial units, and see your BMI category.
-- **Body Fat Calculator**: Estimate body fat percentage using the U.S. Navy method, supporting both male and female users and multiple units.
-- **Weight Loss Calculator**: Get personalized daily calorie recommendations based on your age, sex, height, weight, activity level, and weight loss goals.
-- **Food Database**:
-  - Search and browse a comprehensive Canadian food nutrient database, with nutritional info for hundreds of foods (data from Health Canada, parsed on the client side, stored on the server side).
-  - **Numerical Sorting**: Foods are sorted numerically by Food Code for intuitive browsing.
-  - **Improved Search**: Search works for both food names (partial match) and Food Codes (exact numeric match).
-- **Healthy Food Suggestions**: Explore healthy food options and nutrition tips.
-- **Responsive UI with Dark Mode**: Clean, mobile-friendly design with Bootstrap and custom CSS. Includes a dark mode toggle.
-- **Navigation & Routing**: Multi-page SPA with React Router for seamless navigation.
-
-## Recent Improvements
-
-- **Food Database Table**: Now displays foods sorted numerically by Food Code, with robust search for both codes and names.
-- **Performance & Usability**: Faster searching and sorting, improved user experience.
+- **User Authentication**: Secure sign up, log in, and profile management with Firebase Authentication
+- **Health Calculators**:
+  - BMI Calculator with category classification
+  - Body Fat Percentage Calculator
+  - Weight Loss Calculator
+- **Workout Tracking**: Log and monitor your fitness routines
+- **Personal Profile**: View and manage your fitness profile
+- **Responsive Design**: Mobile-friendly interface with dark mode support
+- **Modern UI**: Built with Ant Design and Bootstrap for a clean, professional look
 
 ## Tech Stack
 
-- **Frontend**: React, TypeScript, Vite, Bootstrap, React-Bootstrap, React Router, React Icons
-- **Backend/Auth**: Firebase Hosting, Firebase Authentication, Firebase Firestore
-- **Data**: Canadian Nutrient File (CSV), parsed client-side with PapaParse
+### Frontend
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **UI Components**: 
+  - Ant Design (antd)
+  - React Bootstrap
+  - Bootstrap Icons
+  - React Icons
+- **State Management**: React Hooks
+- **Routing**: React Router v6
+- **Testing**: 
+  - Vitest
+  - React Testing Library
+  - Coverage reporting with @vitest/coverage-v8
 
-## Future Improvements
+### Backend & Infrastructure
+- **Hosting**: Firebase Hosting
+- **Authentication**: Firebase Authentication
+- **Database**: Firebase Firestore
+- **CI/CD**: GitHub Actions
 
-- **Performance & Usability**: Add pagination to the food database table to improve performance and usability.
-- **Personal Fitness**: Add a personal fitness dashboard to track progress and set goals.
-- **Mobile Responsiveness**: Add mobile-responsive design to improve user experience on mobile devices.
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Firebase CLI (for deployment)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/fitness-tracker.git
+   cd fitness-tracker/fitness_tracker
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up Firebase:
+   - Create a new Firebase project
+   - Enable Authentication and Firestore
+   - Create a `.env` file with your Firebase config
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+- `npm test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate test coverage report
+- `npm run test:ui` - Launch test UI
+- `npm run lint` - Run ESLint
+
+## Project Structure
+
+```
+src/
+├── components/      # Reusable UI components
+├── pages/          # Page components
+├── services/       # API and business logic
+├── utils/          # Utility functions and helpers
+├── App.tsx         # Main application component
+├── main.tsx        # Application entry point
+└── firebase.ts     # Firebase configuration
+```
+
+## Testing
+
+The project includes unit tests for utility functions and components. To run tests:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+
+# Launch test UI
+npm run test:ui
+```
+
+## Deployment
+
+The application is configured for deployment to Firebase Hosting. To deploy:
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Deploy to Firebase:
+   ```bash
+   firebase deploy --only hosting
+   ```
 
 ## Contact
 
 For questions or feedback, please email: [fitness.tracker.00001@gmail.com](mailto:fitness.tracker.00001@gmail.com)
 
 ---
-
 **Created by Sarmilan Sreekaran**
