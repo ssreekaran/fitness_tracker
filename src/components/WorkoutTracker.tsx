@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Form, Table, Collapse, Alert, Spinner, Row, Col } from 'react-bootstrap';
 import { WorkoutLog, saveWorkout, getUserWorkouts, deleteWorkout } from '../services/workoutService';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 
 interface WorkoutFormData {
   exercise: string;
