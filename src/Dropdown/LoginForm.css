@@ -11,20 +11,51 @@
   color: var(--text-color);
 }
 
-.login-form input {
-  margin-bottom: 10px;
-  padding: 10px;
+/* Reset all input styles first */
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  all: revert;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  
+  /* Basic styling */
+  width: 100%;
+  margin: 0 0 10px 0;
+  padding: 8px 12px;
   border: 1px solid var(--button-hover);
   border-radius: 4px;
   background-color: var(--background-color);
   color: var(--text-color);
-  transition: border-color 0.3s, background-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  
+  /* Ensure no text indentation */
+  text-indent: 0;
+  text-align: left;
+  
+  /* Remove any browser-specific styling */
+  -webkit-padding-start: 12px;
+  -moz-padding-start: 12px;
+  padding-inline-start: 12px;
+  
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  margin-block: 0;
+  margin-inline: 0;
 }
 
-.login-form input:focus {
+.login-form input[type="email"]:focus,
+.login-form input[type="password"]:focus {
   outline: none;
   border-color: var(--link-color);
   box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+  text-indent: 0;
 }
 
 .login-form button {
