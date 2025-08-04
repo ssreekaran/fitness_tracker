@@ -3,6 +3,7 @@ import About from "./pages/About";
 import Home from "./pages/Home";
 import BMICalculator from "./pages/BMICalculator";
 import SignUpPage from "./pages/SignUpPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import BodyFatCalculator from "./pages/BodyFatCalculator";
 import ContactUs from "./pages/ContactUs";
@@ -26,6 +27,7 @@ function App() {
             <Route path="/body-fat-calculator" element={<BodyFatCalculator />} />
             <Route path="/food-database" element={<FoodDatabase />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/weight-loss-calculator" element={<WeightLossCalculator />} />

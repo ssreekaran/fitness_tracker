@@ -58,6 +58,23 @@ function LoginForm({ onSignUpClick }: LoginFormProps) {
 
       <button type="submit">Log In</button>
       <button type="button" style={{marginTop: 8, width: '100%'}} onClick={handleSignUp}>Sign Up</button>
+      <div style={{ textAlign: 'center', marginTop: 8 }}>
+        <button 
+          type="button" 
+          onClick={() => navigate('/forgot-password')}
+          style={{ 
+            background: 'none',
+            border: 'none',
+            color: '#007bff',
+            cursor: 'pointer',
+            padding: '4px 0',
+            fontSize: '0.9em',
+            textDecoration: 'underline'
+          }}
+        >
+          Forgot Password?
+        </button>
+      </div>
       {success && <div style={{ color: "green", marginTop: 8 }}>Logged in successfully!</div>}
       {error && <div style={{ color: "red", marginTop: 8 }}>{error}</div>}
     </form>
