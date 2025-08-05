@@ -181,23 +181,87 @@ export const getFitnessData = async (): Promise<FitnessData | null> => {
 
 export const updateFitnessData = async (updates: Partial<Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi'>>) => {
   try {
+    console.log('Starting updateFitnessData with updates:', updates);
+    
     const auth = getAuth();
     const user = auth.currentUser;
     
     if (!user) {
-      throw new Error('User not authenticated');
+      const error = new Error('User not authenticated');
+      console.error('Authentication error:', error);
+      throw error;
     }
 
+    console.log(`Updating fitness data for user: ${user.uid}`);
     const userDocRef = doc(db, 'users', user.uid);
     const fitnessDataRef = doc(collection(userDocRef, 'fitnessData'), 'current');
     
-    await updateDoc(fitnessDataRef, {
+    console.log('Firestore document path:', `users/${user.uid}/fitnessData/current`);
+    
+    const updateData = {
       ...updates,
       lastUpdated: serverTimestamp()
+    };
+    
+    console.log('Attempting to update document with:', updateData);
+    
+    try {
+      await updateDoc(fitnessDataRef, updateData);
+      console.log('Successfully updated fitness data');
+    } catch (firestoreError: any) {
+      console.error('Firestore update error:', {
+        code: firestoreError.code,
+        message: firestoreError.message,
+        stack: firestoreError.stack,
+        updateData: updateData
+      });
+      
+      // Check if document exists
+      const docSnap = await getDoc(fitnessDataRef);
+      if (!docSnap.exists()) {
+        console.log('Document does not exist, trying to create it...');
+        try {
+          // If document doesn't exist, try to create it with the full fitness data
+          await setDoc(fitnessDataRef, {
+            ...updates,
+            userId: user.uid,
+            bmi: 0, // Will be calculated on next read
+            lastUpdated: serverTimestamp()
+          });
+          console.log('Successfully created new fitness data document');
+          return; // Successfully created document
+        } catch (createError: any) {
+          console.error('Error creating fitness data document:', {
+            code: createError.code,
+            message: createError.message,
+            stack: createError.stack
+          });
+          throw new Error(`Failed to create fitness data: ${createError.message}`);
+        }
+      }
+      
+      // If we get here, there was an error and it wasn't because the document didn't exist
+      throw new Error(`Firestore error: ${firestoreError.message}`);
+    }
+  } catch (error: any) {
+    console.error('Error in updateFitnessData:', {
+      error: error,
+      errorString: String(error),
+      errorStack: error?.stack,
+      errorCode: error?.code,
+      updates: updates
     });
-  } catch (error) {
-    console.error('Error updating fitness data:', error);
-    throw new Error('Failed to update fitness data. Please try again.');
+    
+    // Provide more specific error messages for common cases
+    if (error.code === 'permission-denied') {
+      throw new Error('You do not have permission to update fitness data. Please make sure you are logged in and have the correct permissions.');
+    } else if (error.code === 'not-found') {
+      throw new Error('Could not find your fitness data. Please try updating your profile again.');
+    } else if (error.message.includes('network-request-failed')) {
+      throw new Error('Network error. Please check your internet connection and try again.');
+    }
+    
+    throw new Error(`Failed to update fitness data: ${error.message || 'Unknown error'}`);
   }
 };
 
