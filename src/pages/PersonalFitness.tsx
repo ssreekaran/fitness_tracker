@@ -58,16 +58,32 @@ const PersonalFitness: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId) return;
+    if (!userId) {
+      setError('User not authenticated');
+      return;
+    }
     
     try {
+      console.log('Attempting to update fitness data with:', formData);
       await updateFitnessData(formData);
+      console.log('Fitness data updated successfully, reloading...');
       await loadFitnessData();
       setSuccess('Fitness data updated successfully!');
+      setError('');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
-      setError('Failed to update fitness data');
-      console.error('Error updating fitness data:', err);
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Failed to update fitness data';
+      setError(`Error: ${errorMessage}`);
+      console.error('Detailed error updating fitness data:', {
+        error: err,
+        errorString: String(err),
+        errorStack: err?.stack,
+        errorCode: err?.code,
+        formData: formData
+      });
+      
+      // Clear error after 5 seconds
+      setTimeout(() => setError(''), 5000);
     }
   };
 
