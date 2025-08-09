@@ -198,10 +198,22 @@ export const updateFitnessData = async (updates: Partial<Omit<FitnessData, 'user
     
     console.log('Firestore document path:', `users/${user.uid}/fitnessData/current`);
     
-    const updateData = {
-      ...updates,
-      lastUpdated: serverTimestamp()
-    };
+    // Get current data to check if we need to recalculate BMI
+    const currentData = await getFitnessData();
+    let updateData: any = { ...updates, lastUpdated: serverTimestamp() };
+    
+    // Recalculate BMI if height or weight is being updated
+    if ((updates.height !== undefined || updates.weight !== undefined) && currentData) {
+      const height = updates.height !== undefined ? updates.height : currentData.height;
+      const weight = updates.weight !== undefined ? updates.weight : currentData.weight;
+      
+      if (height > 0 && weight > 0) {
+        const bmi = calculateBMI(weight, height, 'kg', 'cm');
+        updateData.bmi = bmi;
+      } else {
+        updateData.bmi = 0; // Set to 0 if height or weight is invalid
+      }
+    }
     
     console.log('Attempting to update document with:', updateData);
     
@@ -222,10 +234,16 @@ export const updateFitnessData = async (updates: Partial<Omit<FitnessData, 'user
         console.log('Document does not exist, trying to create it...');
         try {
           // If document doesn't exist, try to create it with the full fitness data
+          // Calculate BMI for new document if both height and weight are provided
+          let bmi = 0;
+          if (updates.height && updates.height > 0 && updates.weight && updates.weight > 0) {
+            bmi = calculateBMI(updates.weight, updates.height, 'kg', 'cm');
+          }
+          
           await setDoc(fitnessDataRef, {
             ...updates,
             userId: user.uid,
-            bmi: 0, // Will be calculated on next read
+            bmi: bmi,
             lastUpdated: serverTimestamp()
           });
           console.log('Successfully created new fitness data document');
