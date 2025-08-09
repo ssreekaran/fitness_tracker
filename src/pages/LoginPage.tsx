@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle } from 'react-icons/fa';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
 import './LoginPage.css';
 
@@ -43,8 +43,20 @@ const LoginPage: React.FC = () => {
 
     try {
       setIsLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to the previous page or home
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Check if email is verified
+      if (!user.emailVerified) {
+        // Sign out the user if email is not verified
+        await auth.signOut();
+        // Offer to resend verification email
+        setError('Please verify your email before logging in. Check your inbox or click here to resend the verification email.');
+        // Add click handler to the error message
+        return;
+      }
+      
+      // Email is verified, proceed with login
       const from = locationState?.from?.pathname || '/';
       navigate(from, { replace: true });
     } catch (error: unknown) {
@@ -83,7 +95,30 @@ const LoginPage: React.FC = () => {
         {error && (
           <div className="error-message">
             <FaExclamationCircle className="error-icon" />
-            {error}
+            {error.includes('resend') ? (
+              <span>
+                {error.split('click here')[0]}
+                <button 
+                  className="resend-link"
+                  onClick={async () => {
+                    try {
+                      const user = auth.currentUser;
+                      if (user) {
+                        await sendEmailVerification(user);
+                        setError('Verification email sent! Please check your inbox.');
+                      }
+                    } catch (err) {
+                      setError('Failed to resend verification email. Please try again.');
+                    }
+                  }}
+                >
+                  click here
+                </button>
+                {error.split('click here')[1]}
+              </span>
+            ) : (
+              error
+            )}
           </div>
         )}
 

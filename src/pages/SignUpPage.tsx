@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaUser, FaEnvelope, FaLock, FaCheckCircle } from 'react-icons/fa';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
 import './SignUpPage.css';
 
@@ -15,6 +15,7 @@ const SignUpPage: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,15 +38,21 @@ const SignUpPage: React.FC = () => {
     
     try {
       setIsLoading(true);
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
       
       // Set display name
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, { displayName });
-      }
+      await updateProfile(user, { displayName });
       
+      // Send verification email
+      await sendEmailVerification(user);
+      
+      setVerificationSent(true);
       setSuccess(true);
-      setTimeout(() => navigate('/'), 3000); // Give user time to read success message
+      // Redirect to login page after 3 seconds
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       let errorMessage = 'Failed to create account';
@@ -160,16 +167,33 @@ const SignUpPage: React.FC = () => {
               </button>
             </form>
           ) : (
-            <div className="success-state">
+            <div className="success-message">
               <FaCheckCircle className="success-icon" />
-              <h3>Account Created!</h3>
-              <p className="success-message">
-                Welcome to our community, <strong>{displayName}</strong>! 
-                Your account has been created successfully.
-              </p>
-              <p className="redirect-message">
-                Redirecting you to the home page...
-              </p>
+              <h3>{verificationSent ? 'Verify Your Email' : 'Account Created Successfully!'}</h3>
+              {verificationSent ? (
+                <>
+                  <p>We've sent a verification email to <strong>{email}</strong>.</p>
+                  <p>Please check your inbox and click the verification link to activate your account.</p>
+                  <p>Didn't receive the email? <button 
+                    type="button" 
+                    className="resend-button"
+                    onClick={async () => {
+                      if (auth.currentUser) {
+                        try {
+                          await sendEmailVerification(auth.currentUser);
+                          setError('');
+                        } catch (err) {
+                          setError('Failed to resend verification email. Please try again.');
+                        }
+                      }
+                    }}
+                  >
+                    Resend Verification Email
+                  </button></p>
+                </>
+              ) : (
+                <p>You will be redirected to the login page shortly...</p>
+              )}
             </div>
           )}
 
