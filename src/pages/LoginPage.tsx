@@ -107,7 +107,7 @@ const LoginPage: React.FC = () => {
                         await sendEmailVerification(user);
                         setError('Verification email sent! Please check your inbox.');
                       }
-                    } catch (err) {
+                    } catch {
                       setError('Failed to resend verification email. Please try again.');
                     }
                   }}

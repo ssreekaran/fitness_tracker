@@ -71,15 +71,15 @@ const PersonalFitness: React.FC = () => {
       setSuccess('Fitness data updated successfully!');
       setError('');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to update fitness data';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update fitness data';
       setError(`Error: ${errorMessage}`);
       console.error('Detailed error updating fitness data:', {
-        error: err,
-        errorString: String(err),
-        errorStack: err?.stack,
-        errorCode: err?.code,
-        formData: formData
+        error,
+        errorString: String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        errorCode: error && typeof error === 'object' && 'code' in error ? (error as { code?: string }).code : undefined,
+        formData
       });
       
       // Clear error after 5 seconds

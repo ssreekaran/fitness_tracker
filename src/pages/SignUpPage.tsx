@@ -182,7 +182,7 @@ const SignUpPage: React.FC = () => {
                         try {
                           await sendEmailVerification(auth.currentUser);
                           setError('');
-                        } catch (err) {
+                        } catch {
                           setError('Failed to resend verification email. Please try again.');
                         }
                       }

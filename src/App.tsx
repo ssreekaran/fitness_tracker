@@ -1,19 +1,23 @@
+import { lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from "./Header.tsx";
-import About from "./pages/About";
-import Home from "./pages/Home";
-import BMICalculator from "./pages/BMICalculator";
-import SignUpPage from "./pages/SignUpPage";
-import LoginPage from "./pages/LoginPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ProfilePage from "./pages/ProfilePage";
-import BodyFatCalculator from "./pages/BodyFatCalculator";
-import ContactUs from "./pages/ContactUs";
-import FoodDatabase from "./pages/FoodDatabase";
-import WeightLossCalculator from "./pages/WeightLossCalculator";
-import HealthyFood from "./pages/HealthyFood";
-import PersonalFitness from "./pages/PersonalFitness";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoadingSpinner from './components/LoadingSpinner.tsx';
+
+// Lazy load all page components
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const BMICalculator = lazy(() => import('./pages/BMICalculator'));
+const SignUpPage = lazy(() => import('./pages/SignUpPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const BodyFatCalculator = lazy(() => import('./pages/BodyFatCalculator'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
+const FoodDatabase = lazy(() => import('./pages/FoodDatabase'));
+const WeightLossCalculator = lazy(() => import('./pages/WeightLossCalculator'));
+const HealthyFood = lazy(() => import('./pages/HealthyFood'));
+const PersonalFitness = lazy(() => import('./pages/PersonalFitness'));
 
 function App() {
   return (
@@ -21,25 +25,32 @@ function App() {
       <div className="app">
         <Header />
         <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/bmi-calculator" element={<BMICalculator />} />
-            <Route path="/body-fat-calculator" element={<BodyFatCalculator />} />
-            <Route path="/food-database" element={<FoodDatabase />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/contact" element={<ContactUs />} />
-            <Route path="/weight-loss-calculator" element={<WeightLossCalculator />} />
-            <Route path="/healthy-food" element={<HealthyFood />} />
-            <Route path="/personal-fitness" element={
-              <ProtectedRoute>
-                <PersonalFitness />
-              </ProtectedRoute>
-            } />
-          </Routes>
+          <Suspense fallback={
+            <div className="page-loading">
+              <LoadingSpinner />
+              <p>Loading...</p>
+            </div>
+          }>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/bmi-calculator" element={<BMICalculator />} />
+              <Route path="/body-fat-calculator" element={<BodyFatCalculator />} />
+              <Route path="/food-database" element={<FoodDatabase />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/weight-loss-calculator" element={<WeightLossCalculator />} />
+              <Route path="/healthy-food" element={<HealthyFood />} />
+              <Route path="/personal-fitness" element={
+                <ProtectedRoute>
+                  <PersonalFitness />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </Router>
