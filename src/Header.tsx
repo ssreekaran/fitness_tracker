@@ -1,4 +1,5 @@
 import React from 'react';
+import { Capacitor } from '@capacitor/core';
 import Dropdown from "./Dropdown/Dropdown";
 import Navbar from "./Navbar";
 import SearchBar from "./SearchBar";
@@ -12,11 +13,14 @@ function Header() {
   // State to control dropdown open/close from parent
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [user, setUser] = React.useState<User | null>(null);
+  const [isNative, setIsNative] = React.useState(false);
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
     });
+    // Check if running on native platform
+    setIsNative(Capacitor.isNativePlatform());
     return () => unsubscribe();
   }, []);
 
@@ -25,7 +29,7 @@ function Header() {
       <nav className="navbar fixed-top navbar-expand-md navbar-light bg-transparent">
         <div className="container">
           <Navbar />
-          <SearchBar />
+          {!isNative && <SearchBar />}
           <div className="d-flex align-items-center gap-3">
             <DarkModeToggle />
             <Dropdown
