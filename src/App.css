@@ -210,3 +210,60 @@ button:focus-visible {
 .navbar-toggler:hover {
   background-color: var(--button-bg);
 }
+
+/* Adjust hamburger dropdown menu positioning */
+.navbar-collapse {
+  margin-left: 15px; /* Add left margin to the entire collapsible area */
+}
+
+/* Ensure dropdown menus have proper spacing */
+.navbar-nav .dropdown-menu {
+  margin-left: 15px; /* Add left margin to dropdown menus */
+  margin-top: 8px; /* Add top margin to prevent overlap with navbar */
+  border: 1px solid var(--button-bg); /* Add subtle border */
+  border-radius: 4px; /* Match your app's border radius */
+  padding: 0.5rem 0; /* Add some vertical padding */
+}
+
+/* Adjust the navbar collapse for mobile */
+.navbar-collapse {
+  margin-left: 15px;
+  margin-top: 10px; /* Add top margin to push content below navbar */
+}
+
+/* Ensure the hamburger menu has proper spacing below navbar */
+.navbar-toggler {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Adjust the collapsed navbar menu positioning */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-color);
+    padding: 0 15px 15px;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Ensure dropdowns are visible and clickable */
+  .navbar-nav .dropdown-menu {
+    position: static !important;
+    float: none;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Style dropdown items */
+.dropdown-item {
+  padding: 0.5rem 1.5rem; /* Increase padding for better touch targets */
+  transition: background-color 0.2s ease; /* Smooth hover effect */
+}
+
+.dropdown-item:hover {
+  background-color: var(--button-bg); /* Use theme color for hover */
+}

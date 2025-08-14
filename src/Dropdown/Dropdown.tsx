@@ -18,7 +18,7 @@ const Dropdown = ({
 }: DropdownProps) => {
   const [open, setOpen] = useState(false);
   const actualOpen = typeof isOpen === 'boolean' ? isOpen : open;
-  const actualToggle = toggle || (() => setOpen((open) => !open));
+  const actualToggle = toggle || (() => setOpen(open => !open));
 
   // If content is LoginForm, inject close handler for Sign Up
   const contentWithProps =
@@ -29,6 +29,7 @@ const Dropdown = ({
             onSignUpClick: () => {
               if (toggle) toggle();
               setOpen(false);
+              document.body.classList.remove('dropdown-open');
             },
           }
         )
