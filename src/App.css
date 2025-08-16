@@ -65,9 +65,11 @@ body {
 
 .main-content {
   flex: 1;
-  margin-top: 60px;
+  padding-top: 80px;
   position: relative;
   z-index: 1;
+  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
 }
 
 .container {
