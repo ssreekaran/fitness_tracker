@@ -13,14 +13,19 @@ function Header() {
   // State to control dropdown open/close from parent
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [user, setUser] = React.useState<User | null>(null);
-  const [isNative, setIsNative] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
     });
-    // Check if running on native platform
-    setIsNative(Capacitor.isNativePlatform());
+    
+    // Check if running on native platform or mobile browser
+    const isNativePlatform = Capacitor.isNativePlatform();
+    const isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    setIsMobile(isNativePlatform || isMobileBrowser);
+    
     return () => unsubscribe();
   }, []);
 
@@ -29,7 +34,7 @@ function Header() {
       <nav className="navbar fixed-top navbar-expand-md navbar-light bg-transparent">
         <div className="container">
           <Navbar />
-          {!isNative && <SearchBar />}
+          {!isMobile && <SearchBar />}
           <div className="d-flex align-items-center gap-3">
             <DarkModeToggle />
             <Dropdown
