@@ -1,129 +1,326 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { FaSearch, FaMoon, FaSun, FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { auth } from './firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import './Navbar.css';
+
+const pages = [
+  { title: 'Home', path: '/' },
+  { title: 'About', path: '/about' },
+  { title: 'BMI Calculator', path: '/bmi-calculator' },
+  { title: 'Body Fat Calculator', path: '/body-fat-calculator' },
+  { title: 'Food Database', path: '/food-database' },
+  { title: 'Sign Up', path: '/signup' },
+  { title: 'Profile', path: '/profile' },
+  { title: 'Contact Us', path: '/contact' },
+  { title: 'Weight Loss Calculator', path: '/weight-loss-calculator' },
+  { title: 'Healthy Food', path: '/healthy-food' },
+  { title: 'Personal Fitness', path: '/personal-fitness' },
+];
 
 const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const location = useLocation();
-  const navbarRef = useRef<HTMLDivElement>(null);
-  const togglerRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+  const navRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionRef = useRef<HTMLDivElement>(null);
 
-  // Close mobile menu when clicking outside or when route changes
+  // Filtered suggestions based on query (matching original SearchBar behavior)
+  const filteredPages = searchQuery.trim()
+    ? pages.filter(p => p.title.toLowerCase().includes(searchQuery.trim().toLowerCase()))
+    : [];
+
+  // Toggle dark mode
   useEffect(() => {
-    const closeMenu = () => {
-      const mobileMenu = document.getElementById('navbarNav');
-      if (mobileMenu?.classList.contains('show') && togglerRef.current) {
-        togglerRef.current.click(); // Simulate click to close
-      }
-    };
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
-    // Close menu when clicking outside
+  // Set up auth state listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Close menu when clicking outside or when route changes
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (navbarRef.current && 
-          togglerRef.current && 
-          !navbarRef.current.contains(target) && 
-          !togglerRef.current.contains(target)) {
-        closeMenu();
+      const target = event.target as Node;
+      
+      if (navRef.current && !navRef.current.contains(target)) {
+        setIsMenuOpen(false);
+      }
+      
+      if (suggestionRef.current && !suggestionRef.current.contains(target) &&
+          inputRef.current && !inputRef.current.contains(target)) {
+        setShowSuggestions(false);
+      }
+
+      // Close user menu when clicking outside
+      const userMenu = document.querySelector('.user-menu');
+      if (userMenu && !userMenu.contains(target)) {
+        setShowUserMenu(false);
       }
     };
 
-    // Close menu when route changes
-    closeMenu();
+    // Close menus when route changes
+    setIsMenuOpen(false);
+    setShowSuggestions(false);
+    setShowUserMenu(false);
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [location.pathname]); // Re-run when route changes
+  }, [location.pathname]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Focus the search input when suggestions are shown
+  useEffect(() => {
+    if (showSuggestions) {
+      inputRef.current?.focus();
+    }
+  }, [showSuggestions]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (filteredPages.length > 0) {
+      // If there are matching pages, navigate to the first one
+      navigate(filteredPages[0].path);
+    } else if (searchQuery.trim()) {
+      // If no matches, search on Google
+      const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+      window.open(googleUrl, '_blank');
+    }
+    // Clear the search and close suggestions
+    setSearchQuery('');
+    setShowSuggestions(false);
+  };
+
+  // Handle search input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowSuggestions(true);
+  };
+
+  const handleSuggestionClick = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(path);
+    setSearchQuery('');
+    setShowSuggestions(false);
+  };
+
+  const handleGoogleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const googleUrl = `https://www.google.com/search?q=site:${window.location.hostname}+${encodeURIComponent(searchQuery)}`;
+    window.open(googleUrl, '_blank');
+    setSearchQuery('');
+    setShowSuggestions(false);
+  };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container-fluid">
-        <Link to="/" className="navbar-brand">
-          <img
-            src="/fitness_tracker_logo6.png"
-            alt="Fitness Tracker"
-            width="125"
-            height="125"
-            className="d-inline-block align-top"
-          />
-        </Link>
-        <button
-          ref={togglerRef}
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
+    <header className="navbar-container" ref={navRef}>
+      <div className="navbar">
+        <div className="navbar-brand">
+          <Link to="/" className="logo-link">
+            <img
+              src="/fitness_tracker_logo6.png"
+              alt="Fitness Tracker"
+              className="logo"
+            />
+          </Link>
+        </div>
+
+        <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle menu">
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav" ref={navbarRef}>
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link to="/" className="nav-link">Home</Link>
-            </li>
+
+        <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+          <div className="nav-left">
+            <Link to="/" className="nav-link">Home</Link>
             
-            <li className="nav-item dropdown">
-              <Link 
-                className="nav-link dropdown-toggle" 
-                to="#" 
-                id="foodDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
-                Food Options
-              </Link>
-              <ul className="dropdown-menu" aria-labelledby="foodDropdown">
-                <li><Link to="/healthy-food" className="dropdown-item">Healthy Options</Link></li>
-                <li><Link to="/food-database" className="dropdown-item">Food Database</Link></li>
-              </ul>
-            </li>
+            <div className="dropdown">
+              <button className="dropdown-btn">Food Options</button>
+              <div className="dropdown-content">
+                <Link to="/healthy-food" className="dropdown-link">Healthy Options</Link>
+                <Link to="/food-database" className="dropdown-link">Food Database</Link>
+              </div>
+            </div>
 
-            <li className="nav-item dropdown">
-              <Link 
-                className="nav-link dropdown-toggle" 
-                to="#" 
-                id="calculatorDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
-                Calculator
-              </Link>
-              <ul className="dropdown-menu" aria-labelledby="calculatorDropdown">
-                <li><Link to="/weight-loss-calculator" className="dropdown-item">Weight Loss Calculator</Link></li>
-                <li><Link to="/bmi-calculator" className="dropdown-item">BMI Calculator</Link></li>
-                <li><Link to="/body-fat-calculator" className="dropdown-item">Body Fat Calculator</Link></li>
-              </ul>
-            </li>
+            <div className="dropdown">
+              <button className="dropdown-btn">Calculator</button>
+              <div className="dropdown-content">
+                <Link to="/weight-loss-calculator" className="dropdown-link">Weight Loss</Link>
+                <Link to="/bmi-calculator" className="dropdown-link">BMI Calculator</Link>
+                <Link to="/body-fat-calculator" className="dropdown-link">Body Fat</Link>
+              </div>
+            </div>
 
-            <li className="nav-item dropdown">
-              <Link 
-                className="nav-link dropdown-toggle" 
-                to="#" 
-                id="aboutDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
-                About Us
-              </Link>
-              <ul className="dropdown-menu" aria-labelledby="aboutDropdown">
-                <li><Link to="/about" className="dropdown-item">About Fitness Tracker</Link></li>
-                <li><Link to="/contact" className="dropdown-item">Contact Us</Link></li>
-              </ul>
-            </li>
+            <div className="dropdown">
+              <button className="dropdown-btn">About Us</button>
+              <div className="dropdown-content">
+                <Link to="/about" className="dropdown-link">About Us</Link>
+                <Link to="/contact" className="dropdown-link">Contact</Link>
+              </div>
+            </div>
 
-            <li className="nav-item">
-              <Link to="/personal-fitness" className="nav-link">Personal Fitness</Link>
-            </li>
-          </ul>
+            <Link to="/personal-fitness" className="nav-link">Personal Fitness</Link>
+          </div>
+
+          <div className="nav-right">
+            <div className="search-container" ref={searchRef}>
+              <form onSubmit={handleSearch} className="search-form">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                  onFocus={() => setShowSuggestions(true)}
+                  placeholder="Search..."
+                  className="search-input"
+                  aria-label="Search"
+                />
+                <button type="submit" className="search-button" aria-label="Submit search">
+                  <FaSearch />
+                </button>
+                {showSuggestions && searchQuery.trim() && (
+                  <div 
+                    ref={suggestionRef}
+                    className="search-suggestions"
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      right: 0,
+                      background: 'var(--background)',
+                      border: '1px solid var(--border-color)',
+                      borderTop: 'none',
+                      borderRadius: '0 0 4px 4px',
+                      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                      zIndex: 1000,
+                      maxHeight: '300px',
+                      overflowY: 'auto',
+                    }}
+                  >
+                    {filteredPages.length > 0 ? (
+                      filteredPages.map((page) => (
+                        <div
+                          key={page.path}
+                          onClick={(e) => handleSuggestionClick(e, page.path)}
+                          className="search-suggestion"
+                          style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            borderBottom: '1px solid var(--border-color)',
+                            transition: 'background-color 0.2s',
+                            fontSize: '0.95rem',
+                          }}
+                          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--background-secondary)')}
+                          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                        >
+                          {page.title}
+                        </div>
+                      ))
+                    ) : (
+                      <div
+                        onClick={handleGoogleClick}
+                        className="search-suggestion"
+                        style={{
+                          padding: '8px 12px',
+                          cursor: 'pointer',
+                          color: 'var(--primary-color)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          fontSize: '0.95rem',
+                        }}
+                        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'var(--background-secondary)')}
+                        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                        onMouseDown={(e) => e.preventDefault()} // Prevents input blur
+                      >
+                        <span>Search "{searchQuery}" on Google</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </form>
+            </div>
+
+            <button 
+              className="icon-button" 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDarkMode ? <FaSun /> : <FaMoon />}
+            </button>
+
+            {currentUser ? (
+              <div className="user-menu-container">
+                <button 
+                  className="user-button" 
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  aria-label={`User menu for ${currentUser.displayName || 'User'}`}
+                >
+                  <FaUser className="user-icon" />
+                  <div className="user-name">
+                    {currentUser.displayName || 'User'}
+                  </div>
+                  <div className={`dropdown-arrow ${showUserMenu ? 'rotate' : ''}`}>
+                    ▼
+                  </div>
+                </button>
+                {showUserMenu && (
+                  <div className="user-dropdown">
+                    <Link to="/profile" className="dropdown-item">
+                      Profile
+                    </Link>
+                    <button 
+                      className="dropdown-item"
+                      onClick={async () => {
+                        try {
+                          await auth.signOut();
+                          setShowUserMenu(false);
+                          navigate('/');
+                        } catch (error) {
+                          console.error('Error signing out:', error);
+                        }
+                      }}
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="login-button-container">
+                <Link to="/login" className="login-button" aria-label="Login">
+                  <FaUser />
+                  <span>Login</span>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 
