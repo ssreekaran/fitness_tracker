@@ -95,7 +95,8 @@ const Navbar: React.FC = () => {
           </button>
         </div>
 
-        <div className={`nav-content ${isMenuOpen ? 'active' : ''}`}>
+        {/* Desktop Navigation - Hidden on mobile */}
+        <div className="nav-content desktop-only">
           <nav className="nav-links-container">
             <NavLinks links={navLinks} user={user} isMobile={false} />
           </nav>
@@ -135,6 +136,7 @@ const Navbar: React.FC = () => {
           onLinkClick={toggleMenu} 
         />
         <div className="mobile-actions">
+          <UserMenu user={user} onSignOut={handleSignOut} />
           <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
         </div>
       </MobileMenu>
