@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from "./Header.tsx";
+import { Navbar } from './components';
 import ProtectedRoute from "./components/ProtectedRoute";
-import LoadingSpinner from './components/LoadingSpinner.tsx';
+import LoadingSpinner from './components/LoadingSpinner';
+import './App.css';
 
 // Lazy load all page components
 const Home = lazy(() => import('./pages/Home'));
@@ -23,7 +24,7 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Header />
+        <Navbar />
         <main className="main-content">
           <Suspense fallback={
             <div className="page-loading">

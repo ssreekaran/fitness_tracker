@@ -1,0 +1,145 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from './hooks/useAuth';
+import { useTheme } from './hooks/useTheme';
+import useSearch from './hooks/useSearch';
+import { auth } from '../../firebase';
+import { NavLinkItem } from './types';
+import NavLinks from './components/NavLinks';
+import SearchBar from './components/SearchBar';
+import ThemeToggle from './components/ThemeToggle';
+import UserMenu from './components/UserMenu';
+import MobileMenu from './components/MobileMenu';
+import './styles.css';
+
+const Navbar: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const { isDarkMode, toggleTheme } = useTheme();
+  const { user } = useAuth();
+  
+  const handleSignOut = async () => {
+    await auth.signOut();
+  };
+  
+  // Navigation links with dropdowns
+  const navLinks: NavLinkItem[] = [
+    { title: 'Home', path: '/' },
+    { 
+      title: 'Food Options', 
+      path: '#',
+      children: [
+        { title: 'Healthy Food', path: '/healthy-food' },
+        { title: 'Food Database', path: '/food-database' },
+      ]
+    },
+    { 
+      title: 'Calculators', 
+      path: '#',
+      children: [
+        { title: 'BMI Calculator', path: '/bmi-calculator' },
+        { title: 'Body Fat Calculator', path: '/body-fat-calculator' },
+        { title: 'Weight Loss Calculator', path: '/weight-loss-calculator' },
+      ]
+    },
+    { 
+      title: 'About Us', 
+      path: '#',
+      children: [
+        { title: 'About', path: '/about' },
+        { title: 'Contact Us', path: '/contact' },
+      ]
+    },
+    { title: 'Personal Fitness', path: '/personal-fitness' },
+  ];
+
+  // Search functionality
+  const {
+    searchQuery,
+    showSuggestions,
+    suggestions,
+    handleSearchChange,
+    handleSearchSubmit,
+    handleSuggestionClick,
+  } = useSearch();
+
+  // Close mobile menu when location changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <header className="navbar">
+      <div className="navbar-container">
+        <div className="navbar-header">
+          <Link to="/" className="logo">
+            <img 
+              src="/fitness_tracker_logo6.png" 
+              alt="Fitness Tracker" 
+              className="logo-img"
+            />
+          </Link>
+
+          <button 
+            className="menu-toggle" 
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+          >
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
+        <div className={`nav-content ${isMenuOpen ? 'active' : ''}`}>
+          <nav className="nav-links-container">
+            <NavLinks links={navLinks} user={user} isMobile={false} />
+          </nav>
+
+          <div className="nav-actions">
+            <SearchBar
+              searchQuery={searchQuery}
+              onSearchChange={handleSearchChange}
+              onSearchSubmit={handleSearchSubmit}
+              showSuggestions={showSuggestions}
+              suggestions={suggestions}
+              onSuggestionClick={handleSuggestionClick}
+            />
+
+            <div className="nav-actions-group">
+              <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+              <UserMenu user={user} onSignOut={handleSignOut} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <MobileMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}>
+        <SearchBar
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+          onSearchSubmit={handleSearchSubmit}
+          showSuggestions={showSuggestions}
+          suggestions={suggestions}
+          onSuggestionClick={handleSuggestionClick}
+        />
+        <NavLinks 
+          links={navLinks} 
+          user={user} 
+          isMobile={true} 
+          onLinkClick={toggleMenu} 
+        />
+        <div className="mobile-actions">
+          <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+        </div>
+      </MobileMenu>
+    </header>
+  );
+};
+
+export default Navbar;
