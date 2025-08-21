@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { User } from 'firebase/auth';
 import { NavLinkItem } from '../../types';
 import './styles.css';
 
@@ -7,7 +8,7 @@ interface NavLinksProps {
   links: NavLinkItem[];
   onLinkClick?: () => void;
   isMobile?: boolean;
-  user: any; // Replace 'any' with your User type
+  user: User | null;
 }
 
 const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = false, user }) => {
