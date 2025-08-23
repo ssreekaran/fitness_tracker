@@ -102,14 +102,16 @@ const Navbar: React.FC = () => {
           </nav>
 
           <div className="nav-actions">
-            <SearchBar
-              searchQuery={searchQuery}
-              onSearchChange={handleSearchChange}
-              onSearchSubmit={handleSearchSubmit}
-              showSuggestions={showSuggestions}
-              suggestions={suggestions}
-              onSuggestionClick={handleSuggestionClick}
-            />
+            <div className="search-bar-desktop">
+              <SearchBar
+                searchQuery={searchQuery}
+                onSearchChange={handleSearchChange}
+                onSearchSubmit={handleSearchSubmit}
+                showSuggestions={showSuggestions}
+                suggestions={suggestions}
+                onSuggestionClick={handleSuggestionClick}
+              />
+            </div>
 
             <div className="nav-actions-group">
               <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
@@ -121,14 +123,6 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       <MobileMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}>
-        <SearchBar
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-          onSearchSubmit={handleSearchSubmit}
-          showSuggestions={showSuggestions}
-          suggestions={suggestions}
-          onSuggestionClick={handleSuggestionClick}
-        />
         <NavLinks 
           links={navLinks} 
           user={user} 
