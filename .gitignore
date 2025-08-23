@@ -32,7 +32,18 @@ bundle-analysis.html
 
 # Firebase
 .firebase/*
+!.firebase/.gitkeep
 
 # Android/Capacitor generated files
-.android/capacitor.settings.gradle
-.android/app/capacitor.build.gradle
+android/capacitor.settings.gradle
+android/app/capacitor.build.gradle
+android/app/build/
+
+# Ignore all .gradle files in android directory
+android/**/*.gradle
+
+# Ignore specific cache files
+.firebase/hosting.*
+.firebase/hosting*.*
+.firebase/*.cache
+.firebase/*.cache.*

@@ -1,0 +1,17 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Firebase cache files
+.firebase/*.cache binary
+.firebase/*.cache.* binary
+
+# Android build files
+android/capacitor.settings.gradle binary
+android/app/capacitor.build.gradle binary
+
+# Build output
+bundle-analysis.html binary
+
+# Ensure these files are treated as binary
+*.gradle binary
+*.cache binary
