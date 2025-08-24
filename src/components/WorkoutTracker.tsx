@@ -224,6 +224,27 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     }
   };
 
+  const handleDeleteAllInTimeRange = async () => {
+    if (filteredWorkouts.length === 0) return;
+    
+    const timeRangeLabel = timeRanges.find(r => r.value === timeRange)?.label || 'selected time range';
+    if (window.confirm(`Are you sure you want to delete all ${filteredWorkouts.length} workouts in the ${timeRangeLabel.toLowerCase()}? This action cannot be undone.`)) {
+      try {
+        setLoading(true);
+        // Delete all workouts in the filtered list
+        await Promise.all(filteredWorkouts.map(workout => deleteWorkout(workout.id!)));
+        // Refresh the workouts list after deletion
+        const userWorkouts = await getUserWorkouts();
+        setWorkouts(userWorkouts);
+      } catch (err) {
+        setError('Failed to delete workouts. Please try again.');
+        console.error('Error deleting workouts:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   // Filter workouts based on the selected time range
   const getFilteredWorkouts = () => {
     if (!workouts.length) return [];
@@ -382,6 +403,7 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
         ) : filteredWorkouts.length === 0 ? (
           <Alert variant="info">No workouts found for the selected time period. Try adjusting the time range.</Alert>
         ) : (
+          <div className="table-responsive" style={{ maxWidth: '100vw', overflowX: 'auto' }}>
           <Table striped bordered hover size="sm">
             <thead>
               <tr>
@@ -395,7 +417,24 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
             <tbody>
               {filteredWorkouts.map((workout) => (
                 <tr key={workout.id}>
-                  <td>{(workout.date instanceof Date ? workout.date : workout.date.toDate()).toLocaleString()}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <div>{
+                        (workout.date instanceof Date ? workout.date : workout.date.toDate()).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric',
+                          year: 'numeric'
+                        })
+                      }</div>
+                      <div style={{ fontSize: '0.8em', opacity: 0.8 }}>
+                        {(workout.date instanceof Date ? workout.date : workout.date.toDate()).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })}
+                      </div>
+                    </div>
+                  </td>
                   <td>{workout.exercise}</td>
                   <td>{workout.duration} min</td>
                   <td>{Math.round(workout.caloriesBurned || 0)}</td>
@@ -413,12 +452,23 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={3} className="text-end"><strong>Total:</strong></td>
-                <td><strong>{Math.round(workouts.reduce((sum, w) => sum + (w.caloriesBurned || 0), 0))}</strong></td>
-                <td></td>
+                <td colSpan={2} className="text-end"><strong>Total ({timeRanges.find(r => r.value === timeRange)?.label || 'Selected Period'}):</strong></td>
+                <td><strong>{filteredWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0)} min</strong></td>
+                <td><strong>{Math.round(filteredWorkouts.reduce((sum, w) => sum + (w.caloriesBurned || 0), 0))}</strong></td>
+                <td>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={handleDeleteAllInTimeRange}
+                    disabled={filteredWorkouts.length === 0 || loading}
+                  >
+                    <strong>DELETE ALL</strong>
+                  </Button>
+                </td>
               </tr>
             </tfoot>
           </Table>
+          </div>
         )}
       </Card.Body>
     </Card>
