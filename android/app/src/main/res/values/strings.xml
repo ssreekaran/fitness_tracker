@@ -1,6 +1,5 @@
-<style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-    <item name="android:windowBackground">@drawable/launch_screen</item>
-    <item name="windowNoTitle">true</item>
-    <item name="windowActionBar">false</item>
-    <item name="android:windowFullscreen">true</item>
-</style>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fitness Tracker</string>
+    <string name="title_activity_main">Fitness Tracker</string>
+</resources>
