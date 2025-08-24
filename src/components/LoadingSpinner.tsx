@@ -5,8 +5,14 @@ const fitnessLogo = '/fitness_tracker_logo6.png';
 
 const LoadingSpinner: React.FC = () => {
   const [progress, setProgress] = useState(0);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // Only show loading spinner if loading takes more than 300ms
+    const timer = setTimeout(() => {
+      setShow(true);
+    }, 300);
+
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -17,8 +23,15 @@ const LoadingSpinner: React.FC = () => {
       });
     }, 300);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, []);
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <div className="app-loading-screen">
