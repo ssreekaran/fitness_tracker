@@ -47,3 +47,7 @@ android/**/*.gradle
 .firebase/hosting*.*
 .firebase/*.cache
 .firebase/*.cache.*
+
+# Keystore files
+*.jks
+*.keystore

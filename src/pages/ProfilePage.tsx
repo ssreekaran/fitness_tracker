@@ -162,8 +162,8 @@ const ProfilePage: React.FC = () => {
                   <div style={{ fontSize: 16, fontWeight: 500 }}>{fitnessData.age} years</div>
                 </div>
                 <div>
-                  <Text type="secondary">Sex</Text>
-                  <div style={{ fontSize: 16, fontWeight: 500, textTransform: 'capitalize' }}>{fitnessData.sex}</div>
+                  <Text type="secondary">Gender</Text>
+                  <div style={{ fontSize: 16, fontWeight: 500, textTransform: 'capitalize' }}>{fitnessData.gender}</div>
                 </div>
               </div>
               

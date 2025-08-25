@@ -1,4 +1,4 @@
-/* Weight Loss Calculator Styles */
+/* Body Fat Calculator Styles */
 .page-container {
   padding-top: 6rem;
 }
@@ -10,7 +10,7 @@
   font-size: 2.5rem;
 }
 
-.weight-loss-calculator {
+.bodyfat-calculator {
   max-width: 900px;
   margin: 0 auto 2rem;
   padding: 2rem 1.5rem;
@@ -19,19 +19,19 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.weight-loss-calculator .form-group {
+.bodyfat-calculator .form-group {
   margin-bottom: 1.75rem;
   padding: 0 0.5rem;
 }
 
-.weight-loss-calculator .form-label {
+.bodyfat-calculator .form-label {
   color: var(--text-color);
   display: block;
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
 }
 
-.weight-loss-calculator .form-control {
+.bodyfat-calculator .form-control {
   background-color: var(--background-color);
   color: var(--text-color);
   border: 1px solid var(--border-color);
@@ -42,7 +42,7 @@
   font-size: 1rem;
 }
 
-.weight-loss-calculator .alert {
+.bodyfat-calculator .alert {
   background-color: var(--dropdown-bg);
   border-color: var(--border-color);
   color: var(--text-color);
@@ -51,28 +51,28 @@
   border-radius: 8px;
 }
 
-.weight-loss-calculator .btn-group {
+.bodyfat-calculator .btn-group {
   margin-left: 0.5rem;
 }
 
-.weight-loss-calculator .btn {
+.bodyfat-calculator .btn {
   min-width: 45px;
   font-size: 0.9rem;
   padding: 0.25rem 0.5rem;
 }
 
-.weight-loss-calculator .btn-outline-primary {
+.bodyfat-calculator .btn-outline-primary {
   border-color: var(--primary);
   color: var(--primary);
 }
 
-.weight-loss-calculator .btn-outline-primary:hover,
-.weight-loss-calculator .btn-outline-primary.active {
+.bodyfat-calculator .btn-outline-primary:hover,
+.bodyfat-calculator .btn-outline-primary.active {
   background-color: var(--primary);
   color: white;
 }
 
-.weight-loss-calculator .calculate-button {
+.bodyfat-calculator .calculate-button {
   width: calc(100% - 1rem);
   padding: 0.75rem;
   font-size: 1.1rem;
@@ -82,15 +82,15 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .weight-loss-calculator {
+  .bodyfat-calculator {
     padding: 1.5rem 1rem;
   }
   
-  .weight-loss-calculator .form-group {
+  .bodyfat-calculator .form-group {
     margin-bottom: 1.5rem;
   }
   
-  .weight-loss-calculator .form-label {
+  .bodyfat-calculator .form-label {
     font-size: 1rem;
   }
 }

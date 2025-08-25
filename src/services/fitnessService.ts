@@ -16,7 +16,7 @@ export interface FitnessData {
   age: number;
   height: number; // in cm
   weight: number; // in kg
-  sex: 'male' | 'female';
+  gender: 'male' | 'female';
   bmi?: number;
   lastUpdated: Timestamp | Date;
 }
@@ -58,7 +58,7 @@ export const saveFitnessData = async (
       age: data.age,
       height: parseFloat(heightInCm.toFixed(1)),
       weight: parseFloat(weightInKg.toFixed(1)),
-      sex: data.sex,
+      gender: data.gender,
       bmi: parseFloat(bmi.toFixed(1)),
       lastUpdated: serverTimestamp()
     };
@@ -152,7 +152,7 @@ export const getFitnessData = async (): Promise<FitnessData | null> => {
       age: typeof data.age === 'number' ? data.age : 0,
       height: typeof data.height === 'number' ? data.height : 0,
       weight: typeof data.weight === 'number' ? data.weight : 0,
-      sex: data.sex === 'male' || data.sex === 'female' ? data.sex : 'male',
+      gender: data.gender === 'male' || data.gender === 'female' ? data.gender : 'male',
       bmi: typeof data.bmi === 'number' ? data.bmi : undefined,
     };
     
