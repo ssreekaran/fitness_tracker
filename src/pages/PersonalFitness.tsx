@@ -20,7 +20,7 @@ const PersonalFitness: React.FC = () => {
     height: 170,
     weight: 70,
     age: 25,
-    sex: 'male'
+    gender: 'male'
   });
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const PersonalFitness: React.FC = () => {
           height: data.height,
           weight: data.weight,
           age: data.age,
-          sex: data.sex
+          gender: data.gender
         });
       }
     } catch (error: unknown) {
@@ -107,7 +107,7 @@ const PersonalFitness: React.FC = () => {
                 <p><strong>Height:</strong> {fitnessData.height} cm ({(fitnessData.height / 2.54).toFixed(1)} in)</p>
                 <p><strong>Weight:</strong> {fitnessData.weight} kg ({(fitnessData.weight * 2.20462).toFixed(1)} lbs)</p>
                 <p><strong>Age:</strong> {fitnessData.age}</p>
-                <p><strong>Sex:</strong> {fitnessData.sex.charAt(0).toUpperCase() + fitnessData.sex.slice(1)}</p>
+                <p><strong>Gender:</strong> {fitnessData.gender.charAt(0).toUpperCase() + fitnessData.gender.slice(1)}</p>
                 <p className="text-muted small mt-3 mb-0">
                   Last updated: {fitnessData.lastUpdated ? 
                     (fitnessData.lastUpdated instanceof Date ? 
@@ -186,11 +186,11 @@ const PersonalFitness: React.FC = () => {
                 </div>
                 <div className="col-md-6">
                   <Form.Group className="mb-3">
-                    <Form.Label>Sex</Form.Label>
+                    <Form.Label>Gender</Form.Label>
                     <Form.Select 
-                      name="sex" 
-                      value={formData.sex}
-                      onChange={(e) => setFormData({...formData, sex: e.target.value as 'male' | 'female'})}
+                      name="gender" 
+                      value={formData.gender}
+                      onChange={(e) => setFormData({...formData, gender: e.target.value as 'male' | 'female'})}
                     >
                       <option value="male">Male</option>
                       <option value="female">Female</option>

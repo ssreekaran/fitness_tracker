@@ -72,7 +72,7 @@ const BodyFatCalculator: React.FC = () => {
           <Form.Group className="form-group">
             <div className="d-flex flex-wrap align-items-center gap-3 mb-2">
               <div className="d-flex align-items-center gap-2">
-                <Form.Label className="mb-0">Sex</Form.Label>
+                <Form.Label className="mb-0">Gender</Form.Label>
                 <ButtonGroup size="sm">
                   <Button
                     variant={gender === 'male' ? 'primary' : 'outline-primary'}
