@@ -94,6 +94,24 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  const calculateAge = (dateString: string): number => {
+    // Parse the date string (YYYY-MM-DD format)
+    const [year, month, day] = dateString.split('-').map(Number);
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // 1-12
+    const currentDay = today.getDate();
+    
+    let age = currentYear - year;
+    
+    // Adjust age if birthday hasn't occurred yet this year
+    if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+      age--;
+    }
+    
+    return age;
+  };
+
   return (
     <div className="profile-page" style={{
       maxWidth: 800,
@@ -159,7 +177,11 @@ const ProfilePage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                 <div>
                   <Text type="secondary">Age</Text>
-                  <div style={{ fontSize: 16, fontWeight: 500 }}>{fitnessData.age} years</div>
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>
+                    {fitnessData?.dateOfBirth ? 
+                      `${calculateAge(fitnessData.dateOfBirth)} years` : 
+                      'Not set'}
+                  </div>
                 </div>
                 <div>
                   <Text type="secondary">Gender</Text>
