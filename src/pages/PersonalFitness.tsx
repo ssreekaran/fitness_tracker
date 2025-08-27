@@ -1,28 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Card, Alert, Form, Tabs, Tab } from 'react-bootstrap';
-import { getFitnessData, updateFitnessData, FitnessData } from '../services/fitnessService';
+import { getFitnessData, saveFitnessData, FitnessData } from '../services/fitnessService';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import WorkoutTracker from '../components/WorkoutTracker';
-import { Timestamp } from 'firebase/firestore';
 
-interface UserFitnessData extends Omit<FitnessData, 'lastUpdated'> {
-  lastUpdated?: Timestamp | Date;
+interface FormState {
+  height: string;
+  weight: string;
+  age: string;
+  gender: string;
 }
 
 const PersonalFitness: React.FC = () => {
-  const [fitnessData, setFitnessData] = useState<UserFitnessData | null>(null);
+  const [fitnessData, setFitnessData] = useState<FitnessData | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [userId, setUserId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [formData, setFormData] = useState<Partial<FitnessData>>({
-    height: 170,
-    weight: 70,
-    age: 25,
-    gender: 'male'
-  });
+  
+  // Refs for form inputs
+  const heightRef = useRef<HTMLInputElement>(null);
+  const weightRef = useRef<HTMLInputElement>(null);
+  const ageRef = useRef<HTMLInputElement>(null);
+  const genderRef = useRef<HTMLSelectElement>(null);
 
+  // Load user data on mount
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -33,7 +36,6 @@ const PersonalFitness: React.FC = () => {
         setFitnessData(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -42,17 +44,10 @@ const PersonalFitness: React.FC = () => {
       const data = await getFitnessData();
       if (data) {
         setFitnessData(data);
-        setFormData({
-          height: data.height,
-          weight: data.weight,
-          age: data.age,
-          gender: data.gender
-        });
       }
-    } catch (error: unknown) {
-      const err = error as { message?: string };
+    } catch (error) {
       setError('Failed to load fitness data');
-      console.error('Error loading fitness data:', err.message || error);
+      console.error('Error loading fitness data:', error);
     }
   };
 
@@ -64,25 +59,48 @@ const PersonalFitness: React.FC = () => {
     }
     
     try {
-      console.log('Attempting to update fitness data with:', formData);
-      await updateFitnessData(formData);
-      console.log('Fitness data updated successfully, reloading...');
+      // Get values directly from refs
+      const height = heightRef.current?.value || '';
+      const weight = weightRef.current?.value || '';
+      const age = ageRef.current?.value || '';
+      const gender = genderRef.current?.value || 'male';
+
+      const heightValue = parseFloat(height);
+      const weightValue = parseFloat(weight);
+      const ageValue = parseInt(age);
+
+      if (isNaN(heightValue) || isNaN(weightValue) || isNaN(ageValue)) {
+        throw new Error('Please enter valid numbers for all fields');
+      }
+
+      // Save the data
+      await saveFitnessData(
+        {
+          height: heightValue,
+          weight: weightValue,
+          age: ageValue,
+          gender: gender as 'male' | 'female'
+        },
+        'cm',  // heightUnit
+        'kg'   // weightUnit
+      );
+
+      // Reload the data to update the UI
       await loadFitnessData();
+      
+      // Reset form
+      if (heightRef.current) heightRef.current.value = '';
+      if (weightRef.current) weightRef.current.value = '';
+      if (ageRef.current) ageRef.current.value = '';
+      if (genderRef.current) genderRef.current.value = 'male';
+      
       setSuccess('Fitness data updated successfully!');
       setError('');
       setTimeout(() => setSuccess(''), 3000);
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update fitness data';
-      setError(`Error: ${errorMessage}`);
-      console.error('Detailed error updating fitness data:', {
-        error,
-        errorString: String(error),
-        errorStack: error instanceof Error ? error.stack : undefined,
-        errorCode: error && typeof error === 'object' && 'code' in error ? (error as { code?: string }).code : undefined,
-        formData
-      });
-      
-      // Clear error after 5 seconds
+      setError(errorMessage);
+      console.error('Error updating fitness data:', error);
       setTimeout(() => setError(''), 5000);
     }
   };
@@ -96,7 +114,6 @@ const PersonalFitness: React.FC = () => {
 
   const DashboardTab = () => (
     <div className="row g-4">
-      {/* Left Column - Fitness Stats */}
       <div className="col-md-4">
         <Card className="h-100">
           <Card.Body>
@@ -124,8 +141,6 @@ const PersonalFitness: React.FC = () => {
           </Card.Body>
         </Card>
       </div>
-
-      {/* Right Column - Workout Tracker */}
       <div className="col-md-8">
         <WorkoutTracker userWeight={fitnessData?.weight || 70} />
       </div>
@@ -144,13 +159,14 @@ const PersonalFitness: React.FC = () => {
                   <Form.Group className="mb-3">
                     <Form.Label>Height (cm)</Form.Label>
                     <Form.Control 
-                      type="number" 
-                      name="height" 
-                      value={formData.height || ''}
-                      onChange={(e) => setFormData({...formData, height: parseFloat(e.target.value) || 0})}
+                      type="number"
+                      ref={heightRef}
+                      defaultValue={fitnessData?.height || ''}
                       min="100"
                       max="250"
                       step="0.1"
+                      required
+                      className="measurement-input"
                     />
                   </Form.Group>
                 </div>
@@ -158,13 +174,14 @@ const PersonalFitness: React.FC = () => {
                   <Form.Group className="mb-3">
                     <Form.Label>Weight (kg)</Form.Label>
                     <Form.Control 
-                      type="number" 
-                      name="weight" 
-                      value={formData.weight || ''}
-                      onChange={(e) => setFormData({...formData, weight: parseFloat(e.target.value) || 0})}
+                      type="number"
+                      ref={weightRef}
+                      defaultValue={fitnessData?.weight || ''}
                       min="30"
                       max="300"
                       step="0.1"
+                      required
+                      className="measurement-input"
                     />
                   </Form.Group>
                 </div>
@@ -175,12 +192,13 @@ const PersonalFitness: React.FC = () => {
                   <Form.Group className="mb-3">
                     <Form.Label>Age</Form.Label>
                     <Form.Control 
-                      type="number" 
-                      name="age" 
-                      value={formData.age || ''}
-                      onChange={(e) => setFormData({...formData, age: parseInt(e.target.value) || 0})}
+                      type="number"
+                      ref={ageRef}
+                      defaultValue={fitnessData?.age || ''}
                       min="1"
                       max="120"
+                      required
+                      className="measurement-input"
                     />
                   </Form.Group>
                 </div>
@@ -188,9 +206,9 @@ const PersonalFitness: React.FC = () => {
                   <Form.Group className="mb-3">
                     <Form.Label>Gender</Form.Label>
                     <Form.Select 
-                      name="gender" 
-                      value={formData.gender}
-                      onChange={(e) => setFormData({...formData, gender: e.target.value as 'male' | 'female'})}
+                      ref={genderRef}
+                      defaultValue={fitnessData?.gender || 'male'}
+                      className="form-select"
                     >
                       <option value="male">Male</option>
                       <option value="female">Female</option>

@@ -3,7 +3,7 @@
   min-height: 100vh;
   background-color: var(--background-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: none !important;
 }
 
 .personal-fitness-content {
@@ -28,7 +28,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color, #e0e0e0);
   color: var(--text-color);
-  transition: all 0.3s ease;
+  transition: none !important;
 }
 
 .form-group {
@@ -51,7 +51,15 @@
   padding: 0.75rem 1rem;
   width: 100%;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  transition: none !important;
+}
+
+.measurement-input::-webkit-outer-spin-button,
+.measurement-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .measurement-input:focus,
@@ -176,19 +184,11 @@
   box-shadow: none;
 }
 
-
-
 /* Form select dropdown menu */
 .form-select option {
   background-color: var(--input-bg, #ffffff);
   color: var(--input-text, #333333);
   padding: 0.5rem;
-}
-.form-select:focus {
-  background-color: var(--input-focus-bg, #ffffff) !important;
-  border-color: var(--primary-color, #4a9eff) !important;
-  box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25) !important;
-  outline: none;
 }
 
 .alert {
