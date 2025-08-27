@@ -119,7 +119,7 @@ const ProfilePage: React.FC = () => {
       padding: "16px 24px"
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <Title level={2} style={{ margin: 0 }}>Profile</Title>
+        <Title level={2} style={{ margin: 0, color: 'var(--text-color)' }}>Profile</Title>
         <Button type="primary" onClick={() => navigate(-1)}>Back</Button>
       </div>
 
