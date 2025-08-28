@@ -77,10 +77,11 @@ jobs:
         npm run build
         cd android
         chmod +x gradlew
-        ./gradlew init --type basic --dsl groovy --project-name fitness_tracker --no-daemon
-        ./gradlew assembleRelease -Dorg.gradle.java.home=$JAVA_HOME
+        export GRADLE_OPTS="-Dorg.gradle.java.home=$JAVA_HOME"
+        ./gradlew assembleRelease
       env:
         UPLOAD_STORE_PASSWORD: ${{ secrets.UPLOAD_STORE_PASSWORD }}
         UPLOAD_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
         ANDROID_HOME: ${{ secrets.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ secrets.ANDROID_SDK_ROOT }}
+        JAVA_HOME: ${{ env.JAVA_HOME }}
