@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         rm -rf node_modules package-lock.json
-        npm ci --no-optional
+        npm install --no-optional
     
     - name: Run TypeScript type check
       run: npx tsc --noEmit
