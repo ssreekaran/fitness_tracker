@@ -49,13 +49,48 @@ android/**/*.gradle
 *.env
 .env.local
 
+# Google API Keys and sensitive configuration
+google-services.json
+GoogleService-Info.plist
+
+# Firebase configuration
+firebase-debug.log
+firebase-debug.*.log
+
+# Android/Capacitor sensitive files
+android/app/google-services.json
+android/app/google-services.json.enc
+android/app/google-services.json.encrypted
+android/app/google-services.json.gpg
+
+# iOS/Capacitor sensitive files
+ios/App/App/GoogleService-Info.plist
+ios/App/App/GoogleService-Info-Debug.plist
+ios/App/App/GoogleService-Info-Release.plist
+
+# Local development overrides
+local.properties
+local-overrides.gradle
+
 # Keystore files
 *.jks
 *.keystore
+*.p12
+*.pk8
+*.der
+*.pfx
 android/app/debug.keystore
 
-# Local development files
-.local
+# Secrets
+secrets.*
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.der
+*.pfx
+*.gpg
 
 # IDE specific files
 .idea/
@@ -65,3 +100,9 @@ android/app/debug.keystore
 *.njsproj
 *.sln
 *.sw?
+
+# Build files
+build/
+dist/
+dist-ssr/
+node_modules/
