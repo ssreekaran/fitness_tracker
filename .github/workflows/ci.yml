@@ -21,13 +21,14 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
     
     - name: Install dependencies
       run: |
         rm -rf node_modules package-lock.json
         npm install --no-optional
+        npm install -D @rollup/wasm-node
         npx rollup --version
       env:
         ROLLUP_PLATFORM: node
