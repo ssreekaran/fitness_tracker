@@ -27,8 +27,10 @@ jobs:
     - name: Install dependencies
       run: |
         rm -rf node_modules package-lock.json
-        npm config set @rollup:platform=node
+        npm config set @rollup:platform=${ROLLUP_PLATFORM}
         npm install --no-optional --no-audit --prefer-offline
+      env:
+        ROLLUP_PLATFORM: node
     
     - name: Run TypeScript type check
       run: npx tsc --noEmit
