@@ -245,12 +245,67 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     }
   };
 
+  const handleExportCSV = () => {
+    // Filter workouts based on selected time range
+    const filteredWorkouts = timeRange === 0 
+      ? workouts 
+      : workouts.filter(workout => {
+          const workoutDate = workout.date instanceof Date ? workout.date : workout.date.toDate();
+          const cutoffDate = new Date();
+          if (timeRange === 7) {
+            cutoffDate.setDate(cutoffDate.getDate() - 7);
+          } else if (timeRange === 14) {
+            cutoffDate.setDate(cutoffDate.getDate() - 14);
+          } else if (timeRange === 30) {
+            cutoffDate.setDate(cutoffDate.getDate() - 30);
+          } else if (timeRange === 60) {
+            cutoffDate.setDate(cutoffDate.getDate() - 60);
+          } else if (timeRange === 90) {
+            cutoffDate.setDate(cutoffDate.getDate() - 90);
+          } else if (timeRange === 180) {
+            cutoffDate.setDate(cutoffDate.getDate() - 180);
+          } else if (timeRange === 365) {
+            cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
+          }
+          return workoutDate >= cutoffDate;
+        });
+
+    // Get time range label for filename
+    const timeRangeLabel = timeRanges.find(r => r.value === timeRange)?.label || 'all-time';
+    const safeTimeRangeLabel = timeRangeLabel.toLowerCase().replace(/\s+/g, '-');
+
+    // Create CSV content
+    const headers = ['Date', 'Exercise', 'Duration (min)', 'Calories Burned'];
+    const csvRows = [
+      headers.join(','),
+      ...filteredWorkouts.map(workout => {
+        const date = workout.date instanceof Date ? workout.date : workout.date.toDate();
+        return [
+          `"${date.toLocaleString()}"`,
+          `"${workout.exercise}"`,
+          workout.duration,
+          workout.caloriesBurned
+        ].join(',');
+      })
+    ].join('\n');
+
+    // Create download link with time range in filename
+    const blob = new Blob([csvRows], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `workouts_${safeTimeRangeLabel}_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Filter workouts based on the selected time range
   const getFilteredWorkouts = () => {
     if (!workouts.length) return [];
     
     const now = new Date();
-    const cutoffDate = new Date(now);
+    const cutoffDate = new Date();
     
     // Set the cutoff date based on the selected time range
     if (timeRange === 7) {
@@ -349,7 +404,7 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
                 </Form.Group>
               </Col>
               
-<Col md={3}>
+              <Col md={3}>
                 <Form.Group className="mb-3">
                   <Form.Label>Date & Time</Form.Label>
                   <Form.Control 
@@ -379,19 +434,30 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
       <Card.Body>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="mb-0">Recent Workouts</h5>
-          <Form.Group className="mb-0" style={{ width: '200px' }}>
-            <Form.Select 
+          <div className="d-flex align-items-center">
+            <Button 
+              variant="outline-primary" 
+              size="sm" 
+              onClick={handleExportCSV}
+              disabled={workouts.length === 0 || loading}
+              className="me-2"
+            >
+              {loading ? <Spinner animation="border" size="sm" /> : 'Export to CSV'}
+            </Button>
+            <Form.Select
+              size="sm"
               value={timeRange}
               onChange={(e) => setTimeRange(Number(e.target.value))}
-              size="sm"
+              style={{ width: 'auto' }}
+              disabled={loading}
             >
-              {timeRanges.map(range => (
+              {timeRanges.map((range) => (
                 <option key={range.value} value={range.value}>
                   {range.label}
                 </option>
               ))}
             </Form.Select>
-          </Form.Group>
+          </div>
         </div>
         
         {error && <Alert variant="danger">{error}</Alert>}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle, FaGoogle } from 'react-icons/fa';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, signInWithGoogle } from '../firebase';
 import './LoginPage.css';
 
 interface LocationState {
@@ -31,6 +31,21 @@ const LoginPage: React.FC = () => {
       setError(locationState.error);
     }
   }, [locationState]);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      await signInWithGoogle();
+      const from = locationState?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      console.error("Google sign in error:", error);
+      setError(error.message || 'Failed to sign in with Google. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,6 +136,20 @@ const LoginPage: React.FC = () => {
             )}
           </div>
         )}
+
+        <div className="social-login">
+          <button 
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className="google-signin-button"
+          >
+            <FaGoogle className="google-icon" />
+            {isLoading ? 'Signing in...' : 'Continue with Google'}
+          </button>
+          <div className="divider">
+            <span>or</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">

@@ -6,7 +6,7 @@ import { auth } from "../firebase";
 import { getFitnessData, getBMICategory } from "../services/fitnessService";
 import { FitnessData } from "../services/fitnessService";
 import { Card, Typography, Space, Button, Divider, Spin, Alert } from "antd";
-import { UserOutlined, EditOutlined } from "@ant-design/icons";
+import { UserOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { User } from "firebase/auth";
 
 const { Title, Text } = Typography;
@@ -147,6 +147,16 @@ const ProfilePage: React.FC = () => {
           <div style={{ marginTop: 24 }}>
             <Button 
               type="primary" 
+              onClick={() => navigate('/forgot-password')}
+              style={{ marginRight: 16 }}
+            >
+              Reset Password
+            </Button>
+            <div style={{ margin: '8px 0', fontSize: '12px', color: '#666' }}>
+              <Text strong>Note:</Text> If you don't see the reset email, please check your spam or junk folder.
+            </div>
+            <Button 
+              type="primary" 
               danger 
               onClick={handleDeleteAccount}
               loading={deleting}
@@ -154,6 +164,10 @@ const ProfilePage: React.FC = () => {
             >
               {deleting ? 'Deleting...' : 'Delete Account'}
             </Button>
+            <div style={{ margin: '8px 0', fontSize: '12px', color: '#ff4d4f', maxWidth: '400px' }}>
+              <ExclamationCircleOutlined style={{ marginRight: '4px' }} />
+              Warning: This will permanently delete your account and all associated data. This action cannot be undone.
+            </div>
             {error && <Alert message={error} type="error" style={{ marginTop: 16 }} />}
             {success && <Alert message={success} type="success" style={{ marginTop: 16 }} />}
           </div>

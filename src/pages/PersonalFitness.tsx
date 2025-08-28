@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Card, Alert, Form, Tabs, Tab } from 'react-bootstrap';
-import { getFitnessData, saveFitnessData, FitnessData } from '../services/fitnessService';
+import { Container, Card, Alert, Form, Tabs, Tab, Button, Modal } from 'react-bootstrap';
+import { getFitnessData, saveFitnessData, clearFitnessData, FitnessData } from '../services/fitnessService';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import WorkoutTracker from '../components/WorkoutTracker';
@@ -11,6 +11,7 @@ const PersonalFitness: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [userId, setUserId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showClearModal, setShowClearModal] = useState(false);
   
   // Refs for form inputs
   const heightRef = useRef<HTMLInputElement>(null);
@@ -143,6 +144,22 @@ const PersonalFitness: React.FC = () => {
     return date.toISOString().split('T')[0];
   };
 
+  const handleClearData = async () => {
+    try {
+      await clearFitnessData();
+      setFitnessData(null);
+      setSuccess('Your personal data has been cleared successfully.');
+      setError('');
+      setShowClearModal(false);
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to clear personal data';
+      setError(errorMessage);
+      console.error('Error clearing personal data:', error);
+      setTimeout(() => setError(''), 5000);
+    }
+  };
+
   const DashboardTab = () => {
     const formatDate = (dateString: string) => {
       const date = new Date(dateString);
@@ -160,7 +177,16 @@ const PersonalFitness: React.FC = () => {
         <div className="col-md-4">
           <Card className="h-100">
             <Card.Body>
-              <Card.Title>Your Fitness Stats</Card.Title>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <Card.Title className="mb-0">Your Fitness Stats</Card.Title>
+                <Button 
+                  variant="outline-danger" 
+                  size="sm"
+                  onClick={() => setShowClearModal(true)}
+                >
+                  <i className="bi bi-trash me-1"></i> Clear Data
+                </Button>
+              </div>
               {fitnessData ? (
                 <div className="fitness-stats">
                   <p><strong>BMI:</strong> {fitnessData.bmi?.toFixed(1)} <small>({getBMICategory(fitnessData.bmi || 0)})</small></p>
@@ -290,7 +316,7 @@ const PersonalFitness: React.FC = () => {
           <h1 className="mb-4 text-center" style={{ margin: '0 0 2rem', fontSize: '2.5rem', fontWeight: 'bold' }}>Personal Fitness Tracker</h1>
           {error && <Alert variant="danger" style={{ maxWidth: '800px' }}>{error}</Alert>}
           {success && <Alert variant="success" style={{ maxWidth: '800px' }}>{success}</Alert>}
-
+          
           <Tabs
             activeKey={activeTab}
             onSelect={(k) => setActiveTab(k || 'dashboard')}
@@ -304,6 +330,25 @@ const PersonalFitness: React.FC = () => {
               <UpdateInfoTab />
             </Tab>
           </Tabs>
+
+          {/* Clear Data Confirmation Modal */}
+          <Modal show={showClearModal} onHide={() => setShowClearModal(false)}>
+            <Modal.Header closeButton className="text-dark">
+              <Modal.Title>Clear Personal Data</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="text-dark">
+              <p className="mb-2">Are you sure you want to clear all your personal fitness data? This action cannot be undone.</p>
+              <p className="mb-0">This will remove your height, weight, date of birth, and gender information.</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowClearModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={handleClearData}>
+                Yes, Clear My Data
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </Container>
     </div>

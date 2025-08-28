@@ -327,3 +327,32 @@ export const calculateBMI = (weight: number, height: number, weightUnit: 'kg' | 
   // Calculate and return BMI
   return parseFloat((weightInKg / (heightInMeters * heightInMeters)).toFixed(1));
 };
+
+export const clearFitnessData = async (): Promise<void> => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+
+    const userDocRef = doc(db, 'users', user.uid);
+    const fitnessDataRef = doc(collection(userDocRef, 'fitnessData'), 'current');
+    
+    await setDoc(fitnessDataRef, {
+      height: null,
+      weight: null,
+      dateOfBirth: null,
+      gender: null,
+      bmi: null,
+      age: null,
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    console.log('Fitness data cleared successfully');
+  } catch (error) {
+    console.error('Error clearing fitness data:', error);
+    throw new Error('Failed to clear fitness data');
+  }
+};

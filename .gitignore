@@ -12,10 +12,6 @@ dist
 dist-ssr
 *.local
 
-.env
-*.env
-.env.local
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -48,6 +44,24 @@ android/**/*.gradle
 .firebase/*.cache
 .firebase/*.cache.*
 
+# Environment variables
+.env
+*.env
+.env.local
+
 # Keystore files
 *.jks
 *.keystore
+android/app/debug.keystore
+
+# Local development files
+.local
+
+# IDE specific files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

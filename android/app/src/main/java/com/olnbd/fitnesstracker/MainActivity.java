@@ -1,4 +1,4 @@
-package com.example.fitnesstracker;
+package com.olnbd.fitnesstracker;
 
 import com.getcapacitor.BridgeActivity;
 

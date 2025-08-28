@@ -40,7 +40,7 @@ const ContactUs: React.FC = () => {
         <a href="mailto:fitness.tracker.00001@gmail.com">fitness.tracker.00001@gmail.com</a>
         <p style={{ marginTop: 32 }}>
           We value your input and will do our best to respond as soon as possible! <br />
-          Please note, if you have requested a password reset and it has not arrived, please check your spam folder.
+          <strong>Please note, if you have requested a password reset and it has not arrived, please check your spam folder.</strong>
         </p>
       </div>
     </div>
