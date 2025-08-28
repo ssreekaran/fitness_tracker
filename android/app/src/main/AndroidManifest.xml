@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-=======
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.olnbd.fitnesstracker">
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 
     <application
         android:allowBackup="true"

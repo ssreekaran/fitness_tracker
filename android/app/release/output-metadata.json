@@ -4,11 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-<<<<<<< HEAD
-  "applicationId": "com.example.fitnesstracker",
-=======
   "applicationId": "com.olnbd.fitnesstracker",
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   "variantName": "release",
   "elements": [
     {

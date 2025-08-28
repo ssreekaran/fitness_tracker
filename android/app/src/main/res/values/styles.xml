@@ -16,11 +16,7 @@
 
     <!-- Splash screen theme (Android 11 and below) -->
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-<<<<<<< HEAD
         <item name="android:windowBackground">@drawable/splash_background</item>
-=======
-        <item name="android:windowBackground">@drawable/splash</item>
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
