@@ -58,6 +58,7 @@ body {
 }
 
 .app {
+<<<<<<< HEAD
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -65,11 +66,24 @@ body {
 
 .main-content {
   flex: 1;
+=======
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1 0 auto;
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   padding-top: 80px;
   position: relative;
   z-index: 1;
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
+<<<<<<< HEAD
+=======
+  padding-bottom: 2rem;
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 }
 
 .container {
@@ -269,3 +283,21 @@ button:focus-visible {
 .dropdown-item:hover {
   background-color: var(--button-bg); /* Use theme color for hover */
 }
+<<<<<<< HEAD
+=======
+
+/* Legal Pages */
+.legal-page {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.legal-iframe {
+  width: 100%;
+  min-height: 80vh;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+}
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8

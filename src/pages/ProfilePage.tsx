@@ -6,7 +6,11 @@ import { auth } from "../firebase";
 import { getFitnessData, getBMICategory } from "../services/fitnessService";
 import { FitnessData } from "../services/fitnessService";
 import { Card, Typography, Space, Button, Divider, Spin, Alert } from "antd";
+<<<<<<< HEAD
 import { UserOutlined, EditOutlined } from "@ant-design/icons";
+=======
+import { UserOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 import { User } from "firebase/auth";
 
 const { Title, Text } = Typography;
@@ -94,6 +98,27 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const calculateAge = (dateString: string): number => {
+    // Parse the date string (YYYY-MM-DD format)
+    const [year, month, day] = dateString.split('-').map(Number);
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // 1-12
+    const currentDay = today.getDate();
+    
+    let age = currentYear - year;
+    
+    // Adjust age if birthday hasn't occurred yet this year
+    if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+      age--;
+    }
+    
+    return age;
+  };
+
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   return (
     <div className="profile-page" style={{
       maxWidth: 800,
@@ -101,7 +126,11 @@ const ProfilePage: React.FC = () => {
       padding: "16px 24px"
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+<<<<<<< HEAD
         <Title level={2} style={{ margin: 0 }}>Profile</Title>
+=======
+        <Title level={2} style={{ margin: 0, color: 'var(--text-color)' }}>Profile</Title>
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
         <Button type="primary" onClick={() => navigate(-1)}>Back</Button>
       </div>
 
@@ -129,6 +158,19 @@ const ProfilePage: React.FC = () => {
           <div style={{ marginTop: 24 }}>
             <Button 
               type="primary" 
+<<<<<<< HEAD
+=======
+              onClick={() => navigate('/forgot-password')}
+              style={{ marginRight: 16 }}
+            >
+              Reset Password
+            </Button>
+            <div style={{ margin: '8px 0', fontSize: '12px', color: '#666' }}>
+              <Text strong>Note:</Text> If you don't see the reset email, please check your spam or junk folder.
+            </div>
+            <Button 
+              type="primary" 
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
               danger 
               onClick={handleDeleteAccount}
               loading={deleting}
@@ -136,6 +178,13 @@ const ProfilePage: React.FC = () => {
             >
               {deleting ? 'Deleting...' : 'Delete Account'}
             </Button>
+<<<<<<< HEAD
+=======
+            <div style={{ margin: '8px 0', fontSize: '12px', color: '#ff4d4f', maxWidth: '400px' }}>
+              <ExclamationCircleOutlined style={{ marginRight: '4px' }} />
+              Warning: This will permanently delete your account and all associated data. This action cannot be undone.
+            </div>
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
             {error && <Alert message={error} type="error" style={{ marginTop: 16 }} />}
             {success && <Alert message={success} type="success" style={{ marginTop: 16 }} />}
           </div>
@@ -159,7 +208,15 @@ const ProfilePage: React.FC = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                 <div>
                   <Text type="secondary">Age</Text>
+<<<<<<< HEAD
                   <div style={{ fontSize: 16, fontWeight: 500 }}>{fitnessData.age} years</div>
+=======
+                  <div style={{ fontSize: 16, fontWeight: 500 }}>
+                    {fitnessData?.dateOfBirth ? 
+                      `${calculateAge(fitnessData.dateOfBirth)} years` : 
+                      'Not set'}
+                  </div>
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
                 </div>
                 <div>
                   <Text type="secondary">Gender</Text>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Solid background -->
+    <item>
+        <color android:color="#242424"/>
+    </item>
+    
+    <!-- Logo centered -->
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/fitness_tracker_logo6"
+            android:scaleType="fitCenter" />
+    </item>
+</layer-list>

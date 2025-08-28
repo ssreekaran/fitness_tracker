@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle } from 'react-icons/fa';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
+=======
+import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle, FaGoogle } from 'react-icons/fa';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { auth, signInWithGoogle } from '../firebase';
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 import './LoginPage.css';
 
 interface LocationState {
@@ -32,6 +38,24 @@ const LoginPage: React.FC = () => {
     }
   }, [locationState]);
 
+<<<<<<< HEAD
+=======
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      await signInWithGoogle();
+      const from = locationState?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      console.error("Google sign in error:", error);
+      setError(error.message || 'Failed to sign in with Google. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -122,6 +146,23 @@ const LoginPage: React.FC = () => {
           </div>
         )}
 
+<<<<<<< HEAD
+=======
+        <div className="social-login">
+          <button 
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className="google-signin-button"
+          >
+            <FaGoogle className="google-icon" />
+            {isLoading ? 'Signing in...' : 'Continue with Google'}
+          </button>
+          <div className="divider">
+            <span>or</span>
+          </div>
+        </div>
+
+>>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
