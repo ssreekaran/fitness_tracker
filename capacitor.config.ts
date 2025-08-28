@@ -1,14 +1,4 @@
 import type { CapacitorConfig } from '@capacitor/cli';
-<<<<<<< HEAD
-
-const config: CapacitorConfig = {
-  appId: 'com.example.fitnesstracker',
-  appName: 'Fitness Tracker',
-  webDir: 'dist'
-};
-
-export default config;
-=======
 import { config } from 'dotenv';
 
 // Load environment variables
@@ -38,4 +28,3 @@ const capacitorConfig: CapacitorConfig = {
 };
 
 export default capacitorConfig;
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
