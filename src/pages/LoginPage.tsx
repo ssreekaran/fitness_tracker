@@ -39,9 +39,10 @@ const LoginPage: React.FC = () => {
       await signInWithGoogle();
       const from = locationState?.from?.pathname || '/';
       navigate(from, { replace: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Google sign in error:", error);
-      setError(error.message || 'Failed to sign in with Google. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to sign in with Google. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
