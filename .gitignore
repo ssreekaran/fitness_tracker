@@ -27,6 +27,7 @@ dist-ssr
 bundle-analysis.html
 
 # Firebase
+.firebase
 .firebase/*
 !.firebase/.gitkeep
 
