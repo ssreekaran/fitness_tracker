@@ -45,13 +45,8 @@ const ForgotPasswordPage: React.FC = () => {
             <div className="icon-container">
               <FaEnvelope className="envelope-icon" />
             </div>
-<<<<<<< HEAD
             <h2>Forgot Password?</h2>
             <p className="subtitle">No worries, we'll send you reset instructions</p>
-=======
-            <h2>Reset Password</h2>
-            <p className="subtitle">Enter your email to receive a password reset link</p>
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
           </div>
 
           {!success ? (
@@ -92,15 +87,11 @@ const ForgotPasswordPage: React.FC = () => {
               <h3>Email Sent!</h3>
               <p className="success-message">
                 We've sent instructions to reset your password to <strong>{email}</strong>.
-<<<<<<< HEAD
-                Please check your inbox and follow the link provided.
-=======
                 Please check your inbox and follow the link provided. If you don't see the email,
                 please check your spam or junk folder as it may have been filtered there.
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
               </p>
               <p className="check-spam">
-                Didn't receive the email? Check your spam folder or <button onClick={handleSubmit}>resend</button>.
+                Didn't receive the email? Check your spam folder or <button type="button" onClick={handleSubmit}>resend</button>.
               </p>
             </div>
           )}

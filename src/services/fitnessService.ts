@@ -14,10 +14,7 @@ import { db } from '../firebase';
 export interface FitnessData {
   userId: string;
   age: number;
-<<<<<<< HEAD
-=======
   dateOfBirth: string;
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   height: number; // in cm
   weight: number; // in kg
   gender: 'male' | 'female';
@@ -25,16 +22,10 @@ export interface FitnessData {
   lastUpdated: Timestamp | Date;
 }
 
-<<<<<<< HEAD
-type UpdateFitnessData = Partial<Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi'>> & {
-  bmi?: number;
-  lastUpdated?: ReturnType<typeof serverTimestamp> | Timestamp | Date;
-=======
 type UpdateFitnessData = Partial<Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi' | 'age'>> & {
   bmi?: number;
   lastUpdated?: ReturnType<typeof serverTimestamp> | Timestamp | Date;
   age?: number;
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 };
 
 function isFirestoreError(error: unknown): error is FirestoreError {
@@ -42,18 +33,12 @@ function isFirestoreError(error: unknown): error is FirestoreError {
 }
 
 export const saveFitnessData = async (
-<<<<<<< HEAD
-  data: Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi'> & { weight: number },
-=======
   data: Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi' | 'age'> & { 
     weight: number;
     dateOfBirth: string; 
     height: number;
     gender: 'male' | 'female';
   },
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
-  heightUnit: 'cm' | 'in' = 'cm',
-  weightUnit: 'kg' | 'lbs' = 'kg'
 ): Promise<FitnessData> => {
   try {
     const auth = getAuth();
@@ -63,8 +48,6 @@ export const saveFitnessData = async (
       throw new Error('User not authenticated');
     }
 
-<<<<<<< HEAD
-=======
     // Calculate age from date of birth
     const birthDate = new Date(data.dateOfBirth);
     const today = new Date();
@@ -74,26 +57,16 @@ export const saveFitnessData = async (
       age--;
     }
 
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
     // Convert height to cm if needed
-    const heightInCm = heightUnit === 'in' ? data.height * 2.54 : data.height;
+    const heightInCm = data.height;
     
     // Convert weight to kg if needed
-    const weightInKg = weightUnit === 'lbs' ? data.weight / 2.20462 : data.weight;
+    const weightInKg = data.weight;
 
-<<<<<<< HEAD
     // Calculate BMI
     const heightInMeters = heightInCm / 100;
     const bmi = weightInKg / (heightInMeters * heightInMeters);
 
-    const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated: ReturnType<typeof serverTimestamp> } = {
-      userId: user.uid,
-      age: data.age,
-      height: parseFloat(heightInCm.toFixed(1)),
-      weight: parseFloat(weightInKg.toFixed(1)),
-      gender: data.gender,
-      bmi: parseFloat(bmi.toFixed(1)),
-=======
     const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated: ReturnType<typeof serverTimestamp> } = {
       userId: user.uid,
       age,
@@ -101,8 +74,7 @@ export const saveFitnessData = async (
       height: parseFloat(heightInCm.toFixed(1)),
       weight: parseFloat(weightInKg.toFixed(1)),
       gender: data.gender,
-      bmi: parseFloat((weightInKg / (heightInCm / 100 * heightInCm / 100)).toFixed(1)),
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
+      bmi: parseFloat(bmi.toFixed(1)),
       lastUpdated: serverTimestamp()
     };
 
@@ -193,10 +165,7 @@ export const getFitnessData = async (): Promise<FitnessData | null> => {
     const fitnessData: Omit<FitnessData, 'lastUpdated'> & { lastUpdated?: Timestamp | Date } = {
       userId: data.userId || user.uid,
       age: typeof data.age === 'number' ? data.age : 0,
-<<<<<<< HEAD
-=======
       dateOfBirth: data.dateOfBirth,
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
       height: typeof data.height === 'number' ? data.height : 0,
       weight: typeof data.weight === 'number' ? data.weight : 0,
       gender: data.gender === 'male' || data.gender === 'female' ? data.gender : 'male',
@@ -236,11 +205,7 @@ export const getFitnessData = async (): Promise<FitnessData | null> => {
   }
 };
 
-<<<<<<< HEAD
-export const updateFitnessData = async (updates: Partial<Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi'>>) => {
-=======
 export const updateFitnessData = async (updates: Partial<Omit<FitnessData, 'userId' | 'lastUpdated' | 'bmi' | 'age'>>) => {
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   try {
     console.log('Starting updateFitnessData with updates:', updates);
     
@@ -364,8 +329,6 @@ export const calculateBMI = (weight: number, height: number, weightUnit: 'kg' | 
   // Calculate and return BMI
   return parseFloat((weightInKg / (heightInMeters * heightInMeters)).toFixed(1));
 };
-<<<<<<< HEAD
-=======
 
 export const clearFitnessData = async (): Promise<void> => {
   try {
@@ -395,4 +358,3 @@ export const clearFitnessData = async (): Promise<void> => {
     throw new Error('Failed to clear fitness data');
   }
 };
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8

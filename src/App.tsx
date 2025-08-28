@@ -1,10 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components';
-<<<<<<< HEAD
-=======
 import Footer from './components/Footer';
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from './components/LoadingSpinner';
 import './App.css';
@@ -23,8 +20,6 @@ const FoodDatabase = lazy(() => import('./pages/FoodDatabase'));
 const WeightLossCalculator = lazy(() => import('./pages/WeightLossCalculator'));
 const HealthyFood = lazy(() => import('./pages/HealthyFood'));
 const PersonalFitness = lazy(() => import('./pages/PersonalFitness'));
-<<<<<<< HEAD
-=======
 
 // Legal pages
 const PrivacyPolicy = () => (
@@ -46,7 +41,6 @@ const TermsOfService = () => (
     />
   </div>
 );
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 
 function App() {
   return (
@@ -73,11 +67,8 @@ function App() {
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/weight-loss-calculator" element={<WeightLossCalculator />} />
               <Route path="/healthy-food" element={<HealthyFood />} />
-<<<<<<< HEAD
-=======
               <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/legal/terms-of-service" element={<TermsOfService />} />
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
               <Route path="/personal-fitness" element={
                 <ProtectedRoute>
                   <PersonalFitness />
@@ -86,10 +77,7 @@ function App() {
             </Routes>
           </Suspense>
         </main>
-<<<<<<< HEAD
-=======
         <Footer />
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
       </div>
     </Router>
   );

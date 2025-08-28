@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle } from 'react-icons/fa';
-import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth } from '../firebase';
-=======
 import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle, FaGoogle } from 'react-icons/fa';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth, signInWithGoogle } from '../firebase';
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 import './LoginPage.css';
 
 interface LocationState {
@@ -38,8 +32,6 @@ const LoginPage: React.FC = () => {
     }
   }, [locationState]);
 
-<<<<<<< HEAD
-=======
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
@@ -55,7 +47,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -146,8 +137,6 @@ const LoginPage: React.FC = () => {
           </div>
         )}
 
-<<<<<<< HEAD
-=======
         <div className="social-login">
           <button 
             onClick={handleGoogleSignIn}
@@ -162,7 +151,6 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
 
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
@@ -199,21 +187,17 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className="auth-button" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <div className="spinner"></div>
-                Signing in...
-              </>
-            ) : 'Sign In'}
+          <button 
+            type="submit" 
+            className="login-button"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          Don't have an account?{' '}
-          <Link to="/signup" className="auth-link">
-            Sign up
-          </Link>
+        <div className="signup-link">
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </div>
       </div>
     </div>

@@ -279,8 +279,6 @@
   animation: spin 1s ease-in-out infinite;
 }
 
-<<<<<<< HEAD
-=======
 /* Social Login Styles */
 .social-login {
   width: 100%;
@@ -363,7 +361,6 @@
   background-color: #333333;
 }
 
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

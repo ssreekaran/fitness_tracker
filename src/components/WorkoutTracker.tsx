@@ -245,8 +245,6 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     }
   };
 
-<<<<<<< HEAD
-=======
   const handleExportCSV = () => {
     // Filter workouts based on selected time range
     const filteredWorkouts = timeRange === 0 
@@ -302,17 +300,12 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     document.body.removeChild(link);
   };
 
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
   // Filter workouts based on the selected time range
   const getFilteredWorkouts = () => {
     if (!workouts.length) return [];
     
     const now = new Date();
-<<<<<<< HEAD
     const cutoffDate = new Date(now);
-=======
-    const cutoffDate = new Date();
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
     
     // Set the cutoff date based on the selected time range
     if (timeRange === 7) {
@@ -411,11 +404,7 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
                 </Form.Group>
               </Col>
               
-<<<<<<< HEAD
-<Col md={3}>
-=======
               <Col md={3}>
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
                 <Form.Group className="mb-3">
                   <Form.Label>Date & Time</Form.Label>
                   <Form.Control 
@@ -445,15 +434,6 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
       <Card.Body>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="mb-0">Recent Workouts</h5>
-<<<<<<< HEAD
-          <Form.Group className="mb-0" style={{ width: '200px' }}>
-            <Form.Select 
-              value={timeRange}
-              onChange={(e) => setTimeRange(Number(e.target.value))}
-              size="sm"
-            >
-              {timeRanges.map(range => (
-=======
           <div className="d-flex align-items-center">
             <Button 
               variant="outline-primary" 
@@ -472,17 +452,12 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
               disabled={loading}
             >
               {timeRanges.map((range) => (
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
                 <option key={range.value} value={range.value}>
                   {range.label}
                 </option>
               ))}
             </Form.Select>
-<<<<<<< HEAD
-          </Form.Group>
-=======
           </div>
->>>>>>> 8eb212013a2b3467f5b307b8afb116c39294d8e8
         </div>
         
         {error && <Alert variant="danger">{error}</Alert>}
