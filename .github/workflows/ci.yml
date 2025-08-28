@@ -77,7 +77,7 @@ jobs:
         npm run build
         cd android
         chmod +x gradlew
-        ./gradlew assembleRelease -Dorg.gradle.java.home=$JAVA_HOME
+        ./gradlew -p ./ assembleRelease -Dorg.gradle.java.home=$JAVA_HOME
       env:
         UPLOAD_STORE_PASSWORD: ${{ secrets.UPLOAD_STORE_PASSWORD }}
         UPLOAD_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
