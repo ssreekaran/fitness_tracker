@@ -28,7 +28,7 @@ jobs:
       run: |
         rm -rf node_modules package-lock.json
         npm install --no-optional
-        npm install -D @rollup/wasm-node
+        npm install -D @rollup/wasm-node jsdom
         npx rollup --version
       env:
         ROLLUP_PLATFORM: node
