@@ -58,9 +58,10 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
       with:
-        # Use default command line tools version
-        # Install additional packages needed for building
         packages: 'build-tools;34.0.0 platform-tools platform;android-34 ndk;25.1.8937393 cmake;3.22.1'
+      env:
+        ANDROID_HOME: ${{ github.workspace }}/android-sdk
+        ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
         
     - name: Initialize Android project
       working-directory: ./fitness_tracker
@@ -69,8 +70,19 @@ jobs:
         rm -rf android
         # Initialize Android project
         npx cap add android
+        
+        # Navigate to android directory and set up Gradle wrapper
         cd android
         ./gradlew wrapper --gradle-version=8.0 --distribution-type=all
+        
+        # Create local.properties with Android SDK path
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        
+        # Ensure gradlew is executable
+        chmod +x gradlew
+        
+        # Sync Gradle to download dependencies
+        ./gradlew --version
         
     - name: Build Android App Bundle
       working-directory: ./fitness_tracker/android
@@ -80,7 +92,6 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
       run: |
-        chmod +x gradlew
         ./gradlew clean bundleRelease --info --stacktrace --no-daemon
         
     - name: Upload AAB
