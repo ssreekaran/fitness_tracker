@@ -10,6 +10,7 @@ env:
   NODE_VERSION: '20'  # Or your preferred Node.js version
   JAVA_VERSION: '21'   # Using Java 21
   GRADLE_OPTS: -Dorg.gradle.daemon=false
+  WORKING_DIR: 'fitness_tracker'  # Add working directory
 
 jobs:
   build-and-deploy:
@@ -32,10 +33,21 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         
     - name: Install dependencies
+      working-directory: ${{ env.WORKING_DIR }}
       run: |
         npm ci
         
     - name: Build web assets
+      working-directory: ${{ env.WORKING_DIR }}
+      env:
+        VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+        VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+        VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+        VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+        VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+        VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+        VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+        NODE_ENV: production
       run: |
         npm run build
         
@@ -43,12 +55,12 @@ jobs:
       uses: android-actions/setup-android@v2
       
     - name: Build Android App Bundle
+      working-directory: ${{ env.WORKING_DIR }}
       env:
         KEYSTORE_PATH: ${{ secrets.KEYSTORE_PATH }}
         KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
-        NODE_ENV: production
       run: |
         cd android
         ./gradlew clean bundleRelease
@@ -57,7 +69,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: app-release
-        path: android/app/build/outputs/bundle/release/app-release.aab
+        path: ${{ env.WORKING_DIR }}/android/app/build/outputs/bundle/release/app-release.aab
         retention-days: 7
         
     # Uncomment and configure these steps if you want to deploy to Google Play
