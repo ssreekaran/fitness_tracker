@@ -68,11 +68,20 @@ jobs:
       run: |
         # Remove existing android directory
         rm -rf android
-        # Initialize Android project
-        npx cap add android
         
-        # Navigate to android directory and set up Gradle wrapper
+        # Ensure web build exists
+        if [ ! -d "dist" ]; then
+          echo "Error: Web build not found. Please check the build step."
+          exit 1
+        fi
+        
+        # Initialize Android project
+        npx cap add android || (echo "Capacitor Android initialization failed" && exit 1)
+        
+        # Navigate to android directory
         cd android
+        
+        # Set up Gradle wrapper
         ./gradlew wrapper --gradle-version=8.0 --distribution-type=all
         
         # Create local.properties with Android SDK path
@@ -81,7 +90,7 @@ jobs:
         # Ensure gradlew is executable
         chmod +x gradlew
         
-        # Sync Gradle to download dependencies
+        # Verify Gradle setup
         ./gradlew --version
         
     - name: Build Android App Bundle
