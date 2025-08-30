@@ -58,41 +58,48 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
       with:
-        packages: 'build-tools;34.0.0 platform-tools platform;android-34 ndk;25.1.8937393 cmake;3.22.1'
+        packages: 'build-tools;34.0.0 platform-tools platform;android-34 ndk;25.1.8937393 cmake;3.22.1 cmdline-tools;latest'
       env:
         ANDROID_HOME: ${{ github.workspace }}/android-sdk
         ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
-        
-    - name: Initialize Android project
+
+    - name: Check Android project
+      id: check_android
       working-directory: ./fitness_tracker
       run: |
-        # Remove existing android directory
-        rm -rf android
-        
-        # Ensure web build exists
-        if [ ! -d "dist" ]; then
-          echo "Error: Web build not found. Please check the build step."
-          exit 1
+        if [ -d "android/app/src/main" ]; then
+          echo "ANDROID_EXISTS=true" >> $GITHUB_OUTPUT
+        else
+          echo "ANDROID_EXISTS=false" >> $GITHUB_OUTPUT
         fi
-        
-        # Initialize Android project
-        npx cap add android || (echo "Capacitor Android initialization failed" && exit 1)
-        
-        # Navigate to android directory
+
+    - name: Initialize Android project (if needed)
+      if: steps.check_android.outputs.ANDROID_EXISTS == 'false'
+      working-directory: ./fitness_tracker
+      run: |
+        echo "Android project not found. Initializing..."
+        npx cap add android
         cd android
-        
-        # Set up Gradle wrapper
         ./gradlew wrapper --gradle-version=8.0 --distribution-type=all
-        
-        # Create local.properties with Android SDK path
         echo "sdk.dir=$ANDROID_HOME" > local.properties
-        
-        # Ensure gradlew is executable
         chmod +x gradlew
+        ./gradlew --version
+
+    - name: Configure Android project
+      working-directory: ./fitness_tracker/android
+      run: |
+        # Ensure local.properties exists with correct SDK path
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        chmod +x gradlew
+        
+        # Generate Gradle wrapper if missing
+        if [ ! -f "gradlew" ]; then
+          ./gradlew wrapper --gradle-version=8.0 --distribution-type=all
+        fi
         
         # Verify Gradle setup
         ./gradlew --version
-        
+
     - name: Build Android App Bundle
       working-directory: ./fitness_tracker/android
       env:
