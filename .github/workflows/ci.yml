@@ -39,10 +39,28 @@ jobs:
     - name: Run linter
       run: npm run lint
     
-    - name: Run tests
-      run: npm test
+    - name: Run tests with detailed output
+      run: |
+        npm test -- --reporter=verbose
+        npm test -- --reporter=junit --outputFile=junit.xml
       env:
         NODE_ENV: test
+        
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: junit.xml
+        retention-days: 7
+        
+    - name: Show test summary
+      if: always()
+      run: |
+        echo "Test Summary:"
+        echo "-------------"
+        echo "View the detailed test output above in the 'Run tests with detailed output' step"
+        echo "Test results are also available as a downloadable artifact named 'test-results'"
     
     - name: Generate coverage report
       run: npx vitest run --coverage
