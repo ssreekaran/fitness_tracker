@@ -56,16 +56,7 @@ jobs:
         file: ./coverage/lcov.info
         fail_ci_if_error: false
     
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '21'
-        
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
-      
-    - name: Build application
+    - name: Build web application
       run: |
         echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> .env
         echo "VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" >> .env
@@ -75,13 +66,3 @@ jobs:
         echo "VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}" >> .env
         echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}" >> .env
         npm run build
-        cd android
-        chmod +x gradlew
-        export GRADLE_OPTS="-Dorg.gradle.java.home=$JAVA_HOME"
-        ./gradlew assembleRelease
-      env:
-        UPLOAD_STORE_PASSWORD: ${{ secrets.UPLOAD_STORE_PASSWORD }}
-        UPLOAD_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
-        ANDROID_HOME: ${{ secrets.ANDROID_HOME }}
-        ANDROID_SDK_ROOT: ${{ secrets.ANDROID_SDK_ROOT }}
-        JAVA_HOME: ${{ env.JAVA_HOME }}
