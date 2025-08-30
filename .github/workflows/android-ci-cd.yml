@@ -12,7 +12,6 @@ env:
   GRADLE_OPTS: -Dorg.gradle.daemon=false
   ANDROID_HOME: /usr/local/lib/android/sdk
   ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-  WORKING_DIR: 'fitness_tracker'
 
 jobs:
   build-and-deploy:
@@ -38,12 +37,12 @@ jobs:
       uses: android-actions/setup-android@v3
       
     - name: Install dependencies
-      working-directory: ${{ env.WORKING_DIR }}
+      working-directory: ./fitness_tracker
       run: |
         npm ci
         
     - name: Build web assets
-      working-directory: ${{ env.WORKING_DIR }}
+      working-directory: ./fitness_tracker
       env:
         VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
         VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -56,12 +55,12 @@ jobs:
         npm run build
         
     - name: Sync Android project
-      working-directory: ${{ env.WORKING_DIR }}
+      working-directory: ./fitness_tracker
       run: |
         npx cap sync android
         
     - name: Build Android App Bundle
-      working-directory: ${{ env.WORKING_DIR }}/android
+      working-directory: ./fitness_tracker/android
       env:
         KEYSTORE_PATH: ${{ secrets.KEYSTORE_PATH }}
         KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
@@ -75,5 +74,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: app-release
-        path: ${{ env.WORKING_DIR }}/android/app/build/outputs/bundle/release/app-release.aab
+        path: ./fitness_tracker/android/app/build/outputs/bundle/release/app-release.aab
         retention-days: 7
