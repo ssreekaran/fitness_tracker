@@ -7,10 +7,12 @@ on:
   workflow_dispatch:  # Allow manual triggers
 
 env:
-  NODE_VERSION: '20'  # Or your preferred Node.js version
-  JAVA_VERSION: '21'   # Using Java 21
+  NODE_VERSION: '20'
+  JAVA_VERSION: '21'
   GRADLE_OPTS: -Dorg.gradle.daemon=false
-  WORKING_DIR: 'fitness_tracker'  # Add working directory
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+  WORKING_DIR: 'fitness_tracker'
 
 jobs:
   build-and-deploy:
@@ -32,6 +34,9 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+      
     - name: Install dependencies
       working-directory: ${{ env.WORKING_DIR }}
       run: |
@@ -47,22 +52,23 @@ jobs:
         VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
         VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
         VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-        NODE_ENV: production
       run: |
         npm run build
         
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
-      
-    - name: Build Android App Bundle
+    - name: Sync Android project
       working-directory: ${{ env.WORKING_DIR }}
+      run: |
+        npx cap sync android
+        
+    - name: Build Android App Bundle
+      working-directory: ${{ env.WORKING_DIR }}/android
       env:
         KEYSTORE_PATH: ${{ secrets.KEYSTORE_PATH }}
         KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
       run: |
-        cd android
+        chmod +x gradlew
         ./gradlew clean bundleRelease
         
     - name: Upload AAB
@@ -71,22 +77,3 @@ jobs:
         name: app-release
         path: ${{ env.WORKING_DIR }}/android/app/build/outputs/bundle/release/app-release.aab
         retention-days: 7
-        
-    # Uncomment and configure these steps if you want to deploy to Google Play
-    # - name: Deploy to Google Play
-    #   uses: r0adkll/sign-android-release@v1
-    #   with:
-    #     releaseDir: android/app/build/outputs/bundle/release
-    #     signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-    #     alias: ${{ secrets.KEYSTORE_ALIAS }}
-    #     keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-    #     keyPassword: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
-    #     
-    # - name: Upload to Google Play
-    #   uses: r0adkll/upload-google-play@v1
-    #   with:
-    #     serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
-    #     packageName: com.olnbd.fitnesstracker
-    #     releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-    #     track: internal  # or alpha, beta, production
-    #     inAppUpdatePriority: 3
