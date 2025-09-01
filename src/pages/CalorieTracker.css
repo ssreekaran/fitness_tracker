@@ -1,0 +1,303 @@
+/* Calorie Tracker Styles */
+.calorie-tracker {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.page-header h2 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+}
+
+.page-header p {
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Card Styling */
+.card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.25rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 500;
+  border-radius: 10px 10px 0 0 !important;
+  padding: 1rem 1.25rem;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: var(--text-color, #213547); /* Use theme text color */
+  font-size: 0.9rem;
+}
+
+.form-control {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  color: inherit; /* Inherit text color from parent */
+}
+
+/* Style for placeholder text */
+.form-control::placeholder {
+  color: inherit;
+  opacity: 0.7; /* Slightly transparent to differentiate from actual input */
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .form-control {
+    background-color: var(--bs-dark-bg-subtle, #2b3035);
+    border-color: var(--bs-dark-border-color, #495057);
+    color: var(--bs-body-color, #f8f9fa);
+  }
+  
+  .form-control:focus {
+    background-color: var(--bs-dark-bg-subtle, #2b3035);
+    border-color: var(--primary-color);
+    color: var(--bs-body-color, #f8f9fa);
+  }
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* Table Styling */
+.table {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 600;
+  color: #495057;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+/* Button Styling */
+.btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+/* Card Content Padding */
+.card-body {
+  padding: 1.25rem;
+}
+
+/* Summary Items */
+.summary-item {
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  font-size: 0.9rem;
+  color: #000000; /* Force black text */
+}
+
+.summary-item:last-child {
+  margin-bottom: 0;
+}
+
+.summary-item span {
+  color: #000000; /* Force black text for labels */
+  font-weight: 500;
+}
+
+.summary-item strong {
+  color: #000000; /* Force black text for values */
+  font-weight: 600;
+}
+
+/* Ensure text remains black in dark mode */
+[data-bs-theme="dark"] .summary-item,
+[data-bs-theme="dark"] .summary-item span,
+[data-bs-theme="dark"] .summary-item strong {
+  color: #000000 !important;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+  border-color: #dee2e6;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Summary Section */
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.summary-item:hover {
+  background-color: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.summary-item:last-child {
+  margin-bottom: 0;
+}
+
+.summary-item strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+  transform: translateY(-1px);
+}
+
+.btn-outline-danger {
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+  .calorie-tracker {
+    padding: 1rem 0;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .table-responsive {
+    border: none;
+  }
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .card {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .card-header {
+  background-color: #2c5282;
+}
+
+[data-theme="dark"] .table {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .table thead th {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  border-color: #4a5568;
+}
+
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+  border-color: #4a5568;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  background-color: #2d3748;
+  border-color: #4a5568;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+  background-color: #2d3748;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 0.25rem rgba(66, 153, 225, 0.25);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .summary-item {
+  border-bottom-color: #4a5568;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+  color: #e2e8f0;
+  border-color: #4a5568;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: #4a5568;
+  border-color: #4a5568;
+}
+
+/* Dark mode modal text */
+[data-theme="dark"] .modal-content {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+  border-color: #4a5568;
+}
+
+[data-theme="dark"] .modal-title {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .close {
+  color: #e2e8f0;
+  text-shadow: 0 1px 0 #4a5568;
+}

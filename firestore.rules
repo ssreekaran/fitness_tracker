@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public read access to foods collection (for food database)
+    match /foods/{foodId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // User-specific food entries
+    match /foodEntries/{entryId} {
+      allow read, create, update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.userId || 
+         request.auth.uid == request.resource.data.userId);
+    }
+    
+    // User-specific rules
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      match /fitnessData/{document=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+      
+      match /workouts/{workoutId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}

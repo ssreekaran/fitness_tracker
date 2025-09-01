@@ -44,6 +44,14 @@ const Navbar: React.FC = () => {
       ]
     },
     { 
+      title: 'Tracker', 
+      path: '#',
+      children: [
+        { title: 'Personal Fitness', path: '/personal-fitness' },
+        { title: 'Calorie Tracker', path: '/calorie-tracker' },
+      ]
+    },
+    { 
       title: 'About Us', 
       path: '#',
       children: [
@@ -51,7 +59,6 @@ const Navbar: React.FC = () => {
         { title: 'Contact Us', path: '/contact' },
       ]
     },
-    { title: 'Personal Fitness', path: '/personal-fitness' },
   ];
 
   // Search functionality
