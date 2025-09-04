@@ -24,6 +24,29 @@
   margin: 0;
 }
 
+/* Food Database Link */
+.food-db-link {
+  transition: color 0.2s;
+  text-decoration: none;
+  color: inherit; /* Inherit text color from parent */
+  opacity: 0.9; /* 90% opacity for better visibility */
+}
+
+/* Dark mode support */
+[data-bs-theme="dark"] .food-db-link {
+  color: var(--bs-body-color, #f8f9fa);
+}
+
+.food-db-link:hover {
+  text-decoration: underline;
+  opacity: 1;
+  color: var(--bs-link-color, #0d6efd); /* Use theme's link color */
+}
+
+[data-bs-theme="dark"] .food-db-link:hover {
+  color: var(--bs-link-hover-color, #6ea8fe);
+}
+
 /* Card Styling */
 .card {
   border: none;

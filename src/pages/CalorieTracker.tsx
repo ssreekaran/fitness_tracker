@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Button, Form, Table, Alert, Container, Row, Col, Modal } from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, Button, Form, Table, Alert, Container, Row, Col, Modal, InputGroup } from 'react-bootstrap';
 import { useAuth } from '../components/Navbar/hooks/useAuth';
 import { 
   addFoodEntry, 
@@ -7,12 +7,17 @@ import {
   deleteFoodEntry,
   FoodEntry
 } from '../services/foodService';
+import { getFoodByCode } from '../services/foodDatabase';
 import './CalorieTracker.css';
 
 
 const CalorieTracker: React.FC = () => {
   const { user } = useAuth();
   const [foodEntries, setFoodEntries] = useState<FoodEntry[]>([]);
+  const [foodCode, setFoodCode] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  
   const [formData, setFormData] = useState<Omit<FoodEntry, 'id' | 'userId'>>(() => {
     const now = new Date();
     // Format time as HH:MM for the time input
@@ -30,19 +35,30 @@ const CalorieTracker: React.FC = () => {
     };
   });
   const [loading, setLoading] = useState(false);
+  const [isDbLoading, setIsDbLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [entryToDelete, setEntryToDelete] = useState<string | null>(null);
 
-  // Load food entries
+  // Check if food database is loaded
   useEffect(() => {
-    if (user) {
-      loadFoodEntries();
-    }
-  }, [user]);
+    const checkDbStatus = async () => {
+      try {
+        // Try to get a food item to check if database is loaded
+        await getFoodByCode('1');
+        setIsDbLoading(false);
+      } catch (error) {
+        console.error('Error checking database status:', error);
+        setIsDbLoading(false);
+      }
+    };
 
-  const loadFoodEntries = async () => {
+    checkDbStatus();
+  }, []);
+
+  // Load food entries
+  const loadFoodEntries = useCallback(async () => {
     if (!user) {
       console.log('No user found');
       return;
@@ -85,25 +101,75 @@ const CalorieTracker: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  }, [user]);
+
+  // Load food entries when user changes
+  useEffect(() => {
+    if (user) {
+      loadFoodEntries();
+    }
+  }, [user, loadFoodEntries]);
+
+
+  const handleFoodCodeLookup = async () => {
+    if (!foodCode.trim()) {
+      setSearchError('Please enter a food code');
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError('');
+
+    try {
+      // Ensure database is loaded before lookup
+      if (isDbLoading) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Small delay to show loading state
+      }
+      
+      const foodItem = await getFoodByCode(foodCode);
+      if (foodItem) {
+        setFormData(prev => ({
+          ...prev,
+          name: foodItem.foodName,
+          calories: foodItem.calories,
+          protein: foodItem.protein,
+          carbs: foodItem.carbs,
+          fat: foodItem.fat
+        }));
+      } else {
+        setSearchError(`No food found with code: ${foodCode}`);
+      }
+    } catch (error) {
+      console.error('Error looking up food code:', error);
+      setSearchError('Failed to look up food. Please try again.');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
     
-    // Special handling for time input
-    if (name === 'time') {
+    // Handle number inputs
+    if (type === 'number') {
+      if (value === '') {
+        setFormData(prev => ({
+          ...prev,
+          [name]: ''
+        }));
+      } else {
+        const numValue = parseFloat(value);
+        setFormData(prev => ({
+          ...prev,
+          [name]: isNaN(numValue) ? '' : parseFloat(numValue.toFixed(2))
+        }));
+      }
+    } else {
       setFormData(prev => ({
         ...prev,
         [name]: value
       }));
-      return;
     }
-    
-    // Handle number inputs
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'number' ? (value === '' ? '' : parseFloat(value) || 0) : value
-    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -112,6 +178,9 @@ const CalorieTracker: React.FC = () => {
       setError('You must be logged in to add food entries');
       return;
     }
+
+    // Clear any previous search errors
+    setSearchError('');
 
     try {
       const newEntry = {
@@ -140,6 +209,8 @@ const CalorieTracker: React.FC = () => {
       date: now.toISOString().split('T')[0],
       time: `${hours}:${minutes}`
     });
+    // Clear food code input
+    setFoodCode('');
       loadFoodEntries();
       
       // Clear success message after 3 seconds
@@ -185,6 +256,14 @@ const CalorieTracker: React.FC = () => {
         <p className="text-muted">Track your daily nutrition and stay on top of your fitness goals</p>
       </div>
       
+      {isDbLoading && (
+        <Alert variant="info" className="d-flex align-items-center">
+          <div className="spinner-border spinner-border-sm me-2" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          Loading food database...
+        </Alert>
+      )}
       {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
       {success && <Alert variant="success" className="mb-4">{success}</Alert>}
 
@@ -195,17 +274,55 @@ const CalorieTracker: React.FC = () => {
               <Card.Header>Add Food Entry</Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Food Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="e.g., Chicken Breast"
+                <Form.Group controlId="foodCode" className="mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <Form.Label className="mb-0">Food Code (Optional)</Form.Label>
+                  <a 
+                    href="/food-database"
+                    className="small food-db-link"
+                    title="Browse the food database to find food codes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Browse Food Database
+                  </a>
+                </div>
+                <InputGroup>
+                  <Form.Control 
+                    type="text" 
+                    placeholder="Enter food code" 
+                    value={foodCode}
+                    onChange={(e) => setFoodCode(e.target.value)}
+                    disabled={isSearching || isDbLoading}
                   />
-                </Form.Group>
+                  <Button 
+                    variant="outline-secondary" 
+                    onClick={handleFoodCodeLookup}
+                    disabled={isSearching || !foodCode.trim() || isDbLoading}
+                  >
+                    {isSearching ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Looking Up...
+                      </>
+                    ) : 'Lookup'}
+                  </Button>
+                </InputGroup>
+                {searchError && <Form.Text className="text-danger">{searchError}</Form.Text>}
+                {isDbLoading && <Form.Text className="text-muted">Food database is still loading. Lookup will be available shortly.</Form.Text>}
+              </Form.Group>
+
+              <Form.Group controlId="formFoodName" className="mb-3">
+                <Form.Label>Food Name *</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter food name"
+                  required
+                />
+              </Form.Group>
 
                 <Row>
                   <Col md={6}>
@@ -258,7 +375,7 @@ const CalorieTracker: React.FC = () => {
                         value={formData.protein}
                         onChange={handleInputChange}
                         min="0"
-                        step="0.1"
+                        step="0.01"
                         required
                       />
                     </Form.Group>
@@ -275,7 +392,7 @@ const CalorieTracker: React.FC = () => {
                         value={formData.carbs}
                         onChange={handleInputChange}
                         min="0"
-                        step="0.1"
+                        step="0.01"
                         required
                       />
                     </Form.Group>
@@ -289,7 +406,7 @@ const CalorieTracker: React.FC = () => {
                         value={formData.fat}
                         onChange={handleInputChange}
                         min="0"
-                        step="0.1"
+                        step="0.01"
                         required
                       />
                     </Form.Group>

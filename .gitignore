@@ -82,6 +82,9 @@ local-overrides.gradle
 *.pfx
 android/app/debug.keystore
 
+# Android build outputs
+android/app/release/output-metadata.json
+
 # Secrets
 secrets.*
 *.pem
