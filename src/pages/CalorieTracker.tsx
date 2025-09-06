@@ -7,13 +7,20 @@ import {
   deleteFoodEntry,
   FoodEntry
 } from '../services/foodService';
-import { getFoodByCode } from '../services/foodDatabase';
+import { getFoodByCode, initFoodDatabase, checkDatabaseReady } from '../services/foodDatabase';
 import './CalorieTracker.css';
 
 
 const CalorieTracker: React.FC = () => {
   const { user } = useAuth();
   const [foodEntries, setFoodEntries] = useState<FoodEntry[]>([]);
+  
+  // Initialize food database when component mounts
+  useEffect(() => {
+    initFoodDatabase().catch(error => {
+      console.error('Failed to initialize food database:', error);
+    });
+  }, []);
   const [foodCode, setFoodCode] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
@@ -45,11 +52,14 @@ const CalorieTracker: React.FC = () => {
   useEffect(() => {
     const checkDbStatus = async () => {
       try {
-        // Try to get a food item to check if database is loaded
-        await getFoodByCode('1');
-        setIsDbLoading(false);
+        // Use the dedicated database readiness check
+        const isReady = await checkDatabaseReady();
+        if (!isReady) {
+          console.warn('Food database is not ready');
+        }
       } catch (error) {
         console.error('Error checking database status:', error);
+      } finally {
         setIsDbLoading(false);
       }
     };
@@ -112,8 +122,17 @@ const CalorieTracker: React.FC = () => {
 
 
   const handleFoodCodeLookup = async () => {
-    if (!foodCode.trim()) {
+    const trimmedCode = foodCode.trim();
+    
+    if (!trimmedCode) {
       setSearchError('Please enter a food code');
+      return;
+    }
+
+    // Validate food code format (alphanumeric, 1-10 characters)
+    const foodCodeRegex = /^[a-zA-Z0-9]{1,10}$/;
+    if (!foodCodeRegex.test(trimmedCode)) {
+      setSearchError('Food code must be 1-10 alphanumeric characters');
       return;
     }
 
@@ -121,12 +140,7 @@ const CalorieTracker: React.FC = () => {
     setSearchError('');
 
     try {
-      // Ensure database is loaded before lookup
-      if (isDbLoading) {
-        await new Promise(resolve => setTimeout(resolve, 500)); // Small delay to show loading state
-      }
-      
-      const foodItem = await getFoodByCode(foodCode);
+      const foodItem = await getFoodByCode(trimmedCode);
       if (foodItem) {
         setFormData(prev => ({
           ...prev,
@@ -147,6 +161,21 @@ const CalorieTracker: React.FC = () => {
     }
   };
 
+  // Helper function to round numbers to specified precision
+  const roundTo = (value: number, precision: number): number => {
+    const factor = Math.pow(10, precision);
+    return Math.round((value + Number.EPSILON) * factor) / factor;
+  };
+
+  // Field-specific precision mapping
+  const fieldPrecision: Record<string, number> = {
+    calories: 0,    // Whole numbers for calories
+    protein: 1,     // 1 decimal for protein
+    carbs: 1,       // 1 decimal for carbs
+    fat: 1,         // 1 decimal for fat
+    // Add other numeric fields with their precision as needed
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
     
@@ -159,10 +188,14 @@ const CalorieTracker: React.FC = () => {
         }));
       } else {
         const numValue = parseFloat(value);
-        setFormData(prev => ({
-          ...prev,
-          [name]: isNaN(numValue) ? '' : parseFloat(numValue.toFixed(2))
-        }));
+        if (!isNaN(numValue)) {
+          const precision = fieldPrecision[name] ?? 2; // Default to 2 decimals if field not in map
+          const roundedValue = roundTo(numValue, precision);
+          setFormData(prev => ({
+            ...prev,
+            [name]: roundedValue
+          }));
+        }
       }
     } else {
       setFormData(prev => ({
@@ -196,22 +229,27 @@ const CalorieTracker: React.FC = () => {
 
       await addFoodEntry(newEntry);
       setSuccess('Food entry added successfully!');
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    
-    setFormData({ 
-      name: '', 
-      calories: 0, 
-      protein: 0, 
-      carbs: 0, 
-      fat: 0,
-      date: now.toISOString().split('T')[0],
-      time: `${hours}:${minutes}`
-    });
-    // Clear food code input
-    setFoodCode('');
-      loadFoodEntries();
+      
+      // Reset form state
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      
+      setFormData({ 
+        name: '', 
+        calories: 0, 
+        protein: 0, 
+        carbs: 0, 
+        fat: 0,
+        date: now.toISOString().split('T')[0],
+        time: `${hours}:${minutes}`
+      });
+      
+      // Clear food code input
+      setFoodCode('');
+      
+      // Refresh the entries list
+      await loadFoodEntries();
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);

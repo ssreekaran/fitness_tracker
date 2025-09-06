@@ -59,7 +59,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
     }
   };
 
-  const renderLink = (link: NavLinkItem, isChild = false) => {
+  const renderLink = (link: NavLinkItem & { key?: string }, isChild = false) => {
     const isActive = location.pathname === link.path;
     const hasChildren = link.children && link.children.length > 0;
     const isDropdownOpen = activeDropdown === link.title;
@@ -67,7 +67,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
     if (isChild) {
       return (
         <Link
-          key={link.path}
+          key={`${link.title}-${link.path}`}
           to={link.path}
           className={`nav-link ${isActive ? 'active' : ''} ${isChild ? 'dropdown-item' : ''}`}
           onClick={onLinkClick}
@@ -79,20 +79,27 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
 
     return (
       <div 
-        key={link.path} 
+        key={link.key || link.title}
         className={`nav-item ${hasChildren ? 'has-dropdown' : ''} ${isDropdownOpen ? 'dropdown-open' : ''}`}
         ref={el => dropdownRefs.current[link.title] = el}
       >
-        <Link
-          to={link.path}
-          className={`nav-link ${isActive ? 'active' : ''} ${hasChildren ? 'has-arrow' : ''}`}
-          onClick={(e) => handleLinkClick(e, link)}
+        <div 
+          key={link.key || link.title}
+          className={`nav-link-container ${hasChildren ? 'has-children' : ''}`}
+          onMouseEnter={() => hasChildren && setActiveDropdown(link.title)}
+          onMouseLeave={() => hasChildren && setActiveDropdown(null)}
         >
-          {link.title}
-          {hasChildren && (
-            <span className={`dropdown-arrow ${isDropdownOpen ? 'rotate' : ''}`} />
-          )}
-        </Link>
+          <Link
+            to={link.path}
+            className={`nav-link ${isActive ? 'active' : ''} ${hasChildren ? 'has-arrow' : ''}`}
+            onClick={(e) => handleLinkClick(e, link)}
+          >
+            {link.title}
+            {hasChildren && (
+              <span className={`dropdown-arrow ${isDropdownOpen ? 'rotate' : ''}`} />
+            )}
+          </Link>
+        </div>
         
         {hasChildren && (
           <div className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
@@ -105,7 +112,9 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
 
   return (
     <div className={`nav-links ${isMobile ? 'mobile' : 'desktop'}`}>
-      {filteredLinks.map(link => renderLink(link))}
+      {filteredLinks.map((link, index) => 
+        renderLink({ ...link, key: `${link.title}-${link.path || index}` })
+      )}
     </div>
   );
 };
