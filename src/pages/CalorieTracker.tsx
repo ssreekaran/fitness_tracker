@@ -17,7 +17,7 @@ const CalorieTracker: React.FC = () => {
   
   // Initialize food database when component mounts
   useEffect(() => {
-    initFoodDatabase().catch(error => {
+    initFoodDatabase().catch((error: Error) => {
       console.error('Failed to initialize food database:', error);
     });
   }, []);

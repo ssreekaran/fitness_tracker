@@ -53,6 +53,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
 
   const handleLinkClick = (e: React.MouseEvent, link: NavLinkItem) => {
     if (link.children) {
+      e.preventDefault();
       toggleDropdown(e, link.title);
     } else if (onLinkClick) {
       onLinkClick();
@@ -83,12 +84,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
         className={`nav-item ${hasChildren ? 'has-dropdown' : ''} ${isDropdownOpen ? 'dropdown-open' : ''}`}
         ref={el => dropdownRefs.current[link.title] = el}
       >
-        <div 
-          key={link.key || link.title}
-          className={`nav-link-container ${hasChildren ? 'has-children' : ''}`}
-          onMouseEnter={() => hasChildren && setActiveDropdown(link.title)}
-          onMouseLeave={() => hasChildren && setActiveDropdown(null)}
-        >
+        <div className={`nav-link-container ${hasChildren ? 'has-children' : ''}`}>
           <Link
             to={link.path}
             className={`nav-link ${isActive ? 'active' : ''} ${hasChildren ? 'has-arrow' : ''}`}
@@ -101,9 +97,13 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, onLinkClick, isMobile = fals
           </Link>
         </div>
         
-        {hasChildren && (
-          <div className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
-            {link.children?.map(childLink => renderLink(childLink, true))}
+        {hasChildren && link.children && (
+          <div 
+            className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}
+            data-parent={link.title}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {link.children.map((child) => renderLink({ ...child, key: `${link.title}-${child.title}` }, true))}
           </div>
         )}
       </div>

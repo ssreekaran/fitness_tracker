@@ -394,23 +394,65 @@ const loadFoodItems = async (): Promise<void> => {
       
       // Helper function to get nutrient value by type (calories, protein, etc.)
       const getNutrientValue = (type: keyof typeof DEFAULT_NUTRIENT_MAPPING): number => {
-        const nutrientId = nutrientMapping[type];
-        if (!nutrientId) {
-          console.warn(`No valid nutrient ID configured for ${type}`);
+        try {
+          const config = DEFAULT_NUTRIENT_MAPPING[type];
+          if (!config) {
+            console.warn(`No configuration found for nutrient type: ${type}`);
+            return 0;
+          }
+          
+          const targetNutrientId = config.id;
+          if (!targetNutrientId) {
+            console.warn(`No nutrient ID configured for ${type}`);
+            return 0;
+          }
+          
+          // Debug log for the first few lookups
+          if (i < 3) {
+            console.log(`Looking for ${type} (ID: ${targetNutrientId}) in food ${foodId}...`);
+          }
+          
+          // Find the nutrient entry that matches our target ID
+          const nutrient = nutrients.find((n: any) => {
+            try {
+              const currentId = String(n[nutrientIdKey as keyof NutrientEntry] || '').trim();
+              return currentId === targetNutrientId;
+            } catch (error) {
+              console.error('Error processing nutrient entry:', error, n);
+              return false;
+            }
+          });
+          
+          if (!nutrient) {
+            if (i < 3) { // Only log for first few items to avoid console spam
+              console.warn(`Nutrient ${type} (${config.name}, ID: ${targetNutrientId}) not found for food ${foodId}`);
+              console.log('Available nutrient IDs:', nutrients.map((n: any) => ({
+                id: n[nutrientIdKey as keyof NutrientEntry],
+                name: n[nutrientNameKey as keyof NutrientEntry] || 'unknown'
+              })));
+            }
+            return 0;
+          }
+          
+          // Safely parse the nutrient value
+          const rawValue = nutrient[nutrientValueKey as keyof NutrientEntry];
+          const valueStr = String(rawValue ?? '0').trim();
+          const value = parseFloat(valueStr);
+          
+          if (isNaN(value)) {
+            console.warn(`Invalid numeric value for ${type}: '${valueStr}' (raw: '${rawValue}')`);
+            return 0;
+          }
+          
+          if (i < 3) { // Log first few successful lookups
+            console.log(`Found ${type}: ${value} ${config.unit} for food ${foodId}`);
+          }
+          
+          return value;
+        } catch (error) {
+          console.error(`Error getting ${type} for food ${foodId}:`, error);
           return 0;
         }
-        
-        const nutrient = nutrients.find((n: NutrientEntry) => 
-          String(n[nutrientIdKey as keyof NutrientEntry]) === nutrientId
-        );
-        
-        if (!nutrient) {
-          console.warn(`Nutrient ${type} (ID: ${nutrientId}) not found for food ${foodId}`);
-          return 0;
-        }
-        
-        const value = parseFloat(nutrient[nutrientValueKey as keyof NutrientEntry] as string);
-        return isNaN(value) ? 0 : value;
       };
       
       const foodItem: FoodItem = {
