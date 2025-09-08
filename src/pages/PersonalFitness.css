@@ -51,8 +51,6 @@
   padding: 0.75rem 1rem;
   width: 100%;
   border-radius: 4px;
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
   transition: none !important;
 }
 

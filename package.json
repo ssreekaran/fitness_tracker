@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json.schemastore.org/package",
   "name": "fitness-tracker",
   "private": true,
   "version": "1.0.0",
