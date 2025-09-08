@@ -413,7 +413,7 @@ const loadFoodItems = async (): Promise<void> => {
           }
           
           // Find the nutrient entry that matches our target ID
-          const nutrient = nutrients.find((n: any) => {
+          const nutrient = nutrients.find((n: Record<string, unknown>) => {
             try {
               const currentId = String(n[nutrientIdKey as keyof NutrientEntry] || '').trim();
               return currentId === targetNutrientId;
@@ -426,7 +426,7 @@ const loadFoodItems = async (): Promise<void> => {
           if (!nutrient) {
             if (i < 3) { // Only log for first few items to avoid console spam
               console.warn(`Nutrient ${type} (${config.name}, ID: ${targetNutrientId}) not found for food ${foodId}`);
-              console.log('Available nutrient IDs:', nutrients.map((n: any) => ({
+              console.log('Available nutrient IDs:', nutrients.map((n: Record<string, unknown>) => ({
                 id: n[nutrientIdKey as keyof NutrientEntry],
                 name: n[nutrientNameKey as keyof NutrientEntry] || 'unknown'
               })));
