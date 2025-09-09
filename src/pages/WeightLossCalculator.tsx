@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Alert, ButtonGroup } from "react-bootstrap";
-import "./BMICalculator.css";
+import "../styles/CalculatorBase.css";
+import "./WeightLossCalculator.css";
 
 const activityLevels = [
   { label: "Sedentary (little or no exercise)", value: 1.2 },
@@ -62,9 +63,9 @@ const WeightLossCalculator: React.FC = () => {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Weight Loss Calculator</h1>
-      <Container className="bmi-calculator">
+    <div className="calculator-container">
+      <h2 className="calculator-title">Weight Loss Calculator</h2>
+      <Container className="calculator-form mx-auto">
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Age</Form.Label>

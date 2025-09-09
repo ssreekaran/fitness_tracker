@@ -70,7 +70,11 @@ body {
   z-index: 1;
   min-height: calc(100vh - 80px);
   box-sizing: border-box;
-  padding-bottom: 2rem;
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container {

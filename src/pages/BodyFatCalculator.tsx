@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Alert, ButtonGroup } from 'react-bootstrap';
-import './BMICalculator.css';
+import { Container, Form, Button, ButtonGroup, Alert } from 'react-bootstrap';
+import '../styles/CalculatorBase.css';
+import './BodyFatCalculator.css';
 
 const BodyFatCalculator: React.FC = () => {
   const [age, setAge] = useState('');
@@ -52,73 +53,75 @@ const BodyFatCalculator: React.FC = () => {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Body Fat Calculator</h1>
-      <Container className="bmi-calculator">
+    <div className="calculator-container">
+      <h2 className="calculator-title">Body Fat Calculator</h2>
+      <Container className="calculator-form mx-auto">
         <Form onSubmit={calculateBodyFat}>
-          <Form.Group className="form-group">
-            <Form.Label>Age</Form.Label>
-            <Form.Control
-              type="number"
-              value={age}
-              onChange={e => setAge(e.target.value)}
-              required
-              min={10}
-              max={120}
-              placeholder="Enter your age"
-              className="measurement-input"
-            />
-          </Form.Group>
-          <Form.Group className="form-group">
-            <div className="d-flex flex-wrap align-items-center gap-3 mb-2">
-              <div className="d-flex align-items-center gap-2">
-                <Form.Label className="mb-0">Gender</Form.Label>
-                <ButtonGroup size="sm">
-                  <Button
-                    variant={gender === 'male' ? 'primary' : 'outline-primary'}
-                    onClick={e => { e.preventDefault(); setGender('male'); }}
-                  >
-                    Male
-                  </Button>
-                  <Button
-                    variant={gender === 'female' ? 'primary' : 'outline-primary'}
-                    onClick={e => { e.preventDefault(); setGender('female'); }}
-                  >
-                    Female
-                  </Button>
-                </ButtonGroup>
-              </div>
-            </div>
-            <Form.Group className="form-group">
-              <Form.Label>Height</Form.Label>
-              <div className="d-flex align-items-center gap-2">
-                <Form.Control
-                  type="number"
-                  value={height}
-                  onChange={e => setHeight(e.target.value)}
-                  required
-                  min={50}
-                  max={300}
-                  placeholder={heightUnit === 'cm' ? 'Height' : 'Height'}
-                  className="measurement-input"
-                  style={{ width: '140px' }}
-                />
-                <ButtonGroup size="sm">
-                  <Button
-                    variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
-                    onClick={e => { e.preventDefault(); setHeightUnit('cm'); }}
-                  >cm</Button>
-                  <Button
-                    variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
-                    onClick={e => { e.preventDefault(); setHeightUnit('in'); }}
-                  >in</Button>
-                </ButtonGroup>
-              </div>
+            <Form.Group className="mb-4">
+              <Form.Label className="mb-2">Age</Form.Label>
+              <Form.Control
+                type="number"
+                value={age}
+                onChange={e => setAge(e.target.value)}
+                required
+                min={10}
+                max={120}
+                placeholder="Enter your age"
+                className="measurement-input"
+              />
             </Form.Group>
+            <Form.Group className="mb-4">
+              <div className="d-flex flex-wrap align-items-center gap-3 mb-2">
+                <div className="d-flex align-items-center gap-2">
+                  <Form.Label className="mb-0">Gender</Form.Label>
+                  <ButtonGroup size="sm">
+                    <Button
+                      variant={gender === 'male' ? 'primary' : 'outline-primary'}
+                      onClick={e => { e.preventDefault(); setGender('male'); }}
+                    >
+                      Male
+                    </Button>
+                    <Button
+                      variant={gender === 'female' ? 'primary' : 'outline-primary'}
+                      onClick={e => { e.preventDefault(); setGender('female'); }}
+                    >
+                      Female
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </div>
           </Form.Group>
-          <Form.Group className="form-group">
-            <Form.Label>Neck Circumference</Form.Label>
-            <div className="d-flex align-items-center">
+          
+          <Form.Group className="mb-4">
+            <Form.Label className="mb-2">Height</Form.Label>
+            <div className="d-flex align-items-center gap-2">
+              <Form.Control
+                type="number"
+                value={height}
+                onChange={e => setHeight(e.target.value)}
+                required
+                min={50}
+                max={300}
+                placeholder={heightUnit === 'cm' ? 'Height (cm)' : 'Height (in)'}
+                className="measurement-input"
+                style={{ width: '160px' }}
+              />
+              <ButtonGroup size="sm">
+                <Button
+                  variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
+                  onClick={e => { e.preventDefault(); setHeightUnit('cm'); }}
+                >cm</Button>
+                <Button
+                  variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
+                  onClick={e => { e.preventDefault(); setHeightUnit('in'); }}
+                >in</Button>
+              </ButtonGroup>
+            </div>
+          </Form.Group>
+          
+          <Form.Group className="mb-4">
+            <Form.Label className="mb-2">Neck Circumference</Form.Label>
+            <div className="d-flex align-items-center gap-2">
               <Form.Control
                 type="number"
                 value={neck}
@@ -126,10 +129,11 @@ const BodyFatCalculator: React.FC = () => {
                 required
                 min={neckUnit === 'cm' ? 20 : 8}
                 max={neckUnit === 'cm' ? 80 : 32}
-                placeholder="Neck"
+                placeholder={neckUnit === 'cm' ? 'Neck (cm)' : 'Neck (in)'}
                 className="measurement-input"
+                style={{ width: '160px' }}
               />
-              <ButtonGroup className="ms-2">
+              <ButtonGroup size="sm">
                 <Button
                   variant={neckUnit === 'cm' ? 'primary' : 'outline-primary'}
                   onClick={e => { e.preventDefault(); setNeckUnit('cm'); }}
@@ -141,9 +145,10 @@ const BodyFatCalculator: React.FC = () => {
               </ButtonGroup>
             </div>
           </Form.Group>
-          <Form.Group className="form-group">
-            <Form.Label>Waist Circumference</Form.Label>
-            <div className="d-flex align-items-center">
+          
+          <Form.Group className="mb-4">
+            <Form.Label className="mb-2">Waist Circumference</Form.Label>
+            <div className="d-flex align-items-center gap-2">
               <Form.Control
                 type="number"
                 value={waist}
@@ -151,10 +156,11 @@ const BodyFatCalculator: React.FC = () => {
                 required
                 min={waistUnit === 'cm' ? 30 : 12}
                 max={waistUnit === 'cm' ? 200 : 80}
-                placeholder="Waist"
+                placeholder={waistUnit === 'cm' ? 'Waist (cm)' : 'Waist (in)'}
                 className="measurement-input"
+                style={{ width: '160px' }}
               />
-              <ButtonGroup className="ms-2">
+              <ButtonGroup size="sm">
                 <Button
                   variant={waistUnit === 'cm' ? 'primary' : 'outline-primary'}
                   onClick={e => { e.preventDefault(); setWaistUnit('cm'); }}
@@ -166,21 +172,23 @@ const BodyFatCalculator: React.FC = () => {
               </ButtonGroup>
             </div>
           </Form.Group>
+          
           {gender === 'female' && (
-            <Form.Group className="form-group">
-              <Form.Label>Hip Circumference</Form.Label>
-              <div className="d-flex align-items-center">
+            <Form.Group className="mb-4">
+              <Form.Label className="mb-2">Hip Circumference</Form.Label>
+              <div className="d-flex align-items-center gap-2">
                 <Form.Control
                   type="number"
                   value={hip}
                   onChange={e => setHip(e.target.value)}
                   required
-                  min={30}
-                  max={200}
-                  placeholder="Hip"
+                  min={circumferenceUnit === 'cm' ? 30 : 12}
+                  max={circumferenceUnit === 'cm' ? 200 : 80}
+                  placeholder={circumferenceUnit === 'cm' ? 'Hip (cm)' : 'Hip (in)'}
                   className="measurement-input"
+                  style={{ width: '160px' }}
                 />
-                <ButtonGroup className="ms-2">
+                <ButtonGroup size="sm">
                   <Button
                     variant={circumferenceUnit === 'cm' ? 'primary' : 'outline-primary'}
                     onClick={e => { e.preventDefault(); setCircumferenceUnit('cm'); }}
@@ -193,16 +201,20 @@ const BodyFatCalculator: React.FC = () => {
               </div>
             </Form.Group>
           )}
-          <Button variant="primary" type="submit" className="calculate-button">
-            Calculate Body Fat
-          </Button>
+          
+          <div className="text-center mt-4">
+            <Button variant="primary" type="submit" className="calculate-button">
+              Calculate Body Fat
+            </Button>
+          </div>
+          
+          {bodyFat !== null && (
+            <Alert variant="info" className="mt-4">
+              <h4 className="text-center">Your Body Fat Percentage: {bodyFat}%</h4>
+              <p className="text-center mb-0">Category: <strong>{category}</strong></p>
+            </Alert>
+          )}
         </Form>
-        {bodyFat !== null && (
-          <Alert variant="info" className="mt-3">
-            <h4>Your Body Fat: {bodyFat}%</h4>
-            <p>Category: {category}</p>
-          </Alert>
-        )}
       </Container>
     </div>
   );

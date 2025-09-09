@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Alert, ButtonGroup } from 'react-bootstrap';
+import { Container, Form, Button, ButtonGroup, Alert } from 'react-bootstrap';
+import '../styles/CalculatorBase.css';
 import './BMICalculator.css';
 
 const BMICalculator: React.FC = () => {
@@ -65,77 +66,78 @@ const BMICalculator: React.FC = () => {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">BMI Calculator</h1>
-      <Container className="bmi-calculator">
+    <div className="calculator-container">
+      <h2 className="calculator-title">BMI Calculator</h2>
+      <Container className="calculator-form mx-auto">
         <Form onSubmit={calculateBMI}>
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <Form.Label>Height</Form.Label>
-              <ButtonGroup size="sm">
-                <Button
-                  variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
-                  onClick={() => handleHeightUnitChange('cm')}
-                >
-                  cm
-                </Button>
-                <Button
-                  variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
-                  onClick={() => handleHeightUnitChange('in')}
-                >
-                  in
-                </Button>
-              </ButtonGroup>
-            </div>
-            <Form.Control
-              type="number"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder={getHeightPlaceholder()}
-              required
-              step="any"
-              className="measurement-input"
-            />
-          </Form.Group>
+            <Form.Group className="mb-4">
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <Form.Label className="mb-2">Height</Form.Label>
+                <ButtonGroup size="sm">
+                  <Button
+                    variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
+                    onClick={() => handleHeightUnitChange('cm')}
+                  >
+                    cm
+                  </Button>
+                  <Button
+                    variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
+                    onClick={() => handleHeightUnitChange('in')}
+                  >
+                    in
+                  </Button>
+                </ButtonGroup>
+              </div>
+              <Form.Control
+                type="number"
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                placeholder={getHeightPlaceholder()}
+                required
+                step="any"
+                className="measurement-input"
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <Form.Label>Weight</Form.Label>
-              <ButtonGroup size="sm">
-                <Button
-                  variant={weightUnit === 'kg' ? 'primary' : 'outline-primary'}
-                  onClick={() => handleWeightUnitChange('kg')}
-                >
-                  kg
-                </Button>
-                <Button
-                  variant={weightUnit === 'lbs' ? 'primary' : 'outline-primary'}
-                  onClick={() => handleWeightUnitChange('lbs')}
-                >
-                  lbs
-                </Button>
-              </ButtonGroup>
-            </div>
-            <Form.Control
-              type="number"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              placeholder={getWeightPlaceholder()}
-              required
-              step="any"
-              className="measurement-input"
-            />
-          </Form.Group>
+            <Form.Group className="mb-4">
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <Form.Label className="mb-2">Weight</Form.Label>
+                <ButtonGroup size="sm">
+                  <Button
+                    variant={weightUnit === 'kg' ? 'primary' : 'outline-primary'}
+                    onClick={() => handleWeightUnitChange('kg')}
+                  >
+                    kg
+                  </Button>
+                  <Button
+                    variant={weightUnit === 'lbs' ? 'primary' : 'outline-primary'}
+                    onClick={() => handleWeightUnitChange('lbs')}
+                  >
+                    lbs
+                  </Button>
+                </ButtonGroup>
+              </div>
+              <Form.Control
+                type="number"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder={getWeightPlaceholder()}
+                required
+                step="any"
+                className="measurement-input"
+              />
+            </Form.Group>
 
-          <Button variant="primary" type="submit" className="calculate-button">
-            Calculate BMI
-          </Button>
+            <div className="text-center mt-4">
+              <Button variant="primary" type="submit" className="calculate-button">
+                Calculate BMI
+              </Button>
+            </div>
         </Form>
-
         {bmi !== null && (
-          <Alert variant="info" className="mt-3">
-            <h4>Your BMI: {bmi}</h4>
-            <p>You are {category}.</p>
+          <Alert variant="info" className="mt-4">
+            <h4 className="text-center">Your BMI: {bmi.toFixed(1)}</h4>
+            <p className="text-center mb-0">Category: <strong>{category}</strong></p>
           </Alert>
         )}
       </Container>
