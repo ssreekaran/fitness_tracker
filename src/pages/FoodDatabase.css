@@ -1,5 +1,9 @@
 .page-container {
-  padding-top: 6rem;
+  padding: 1rem 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: hidden;
 }
 
 .page-title {
@@ -10,13 +14,17 @@
 }
 
 .food-db-container {
-  max-width: 1500px;
-  margin: 0 auto 2rem;
-  padding: 2rem 3rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   border-radius: 8px;
   background-color: var(--background-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  overflow: visible;
 }
 
 .food-db-search {
@@ -30,17 +38,68 @@
   color: var(--text-color);
 }
 
-.food-db-table {
+.food-db-table-wrapper {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 12px;
-  background-color: var(--background-color);
-}
-.food-db-table th, .food-db-table td {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border-color);
-  padding: 8px 10px;
+  border-radius: 8px;
+  max-width: 100%;
+  display: block;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--dropdown-bg);
+}
+
+.food-db-table {
+  width: auto;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  background-color: var(--background-color);
+  table-layout: auto;
+  position: relative;
+  display: table;
+}
+.food-db-table th, 
+.food-db-table td {
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
   text-align: left;
   color: var(--text-color);
+  white-space: nowrap;
+  min-width: 100px;
+  position: relative;
+  background-color: var(--background-color);
+}
+
+/* First column (Food Code) */
+.food-db-table th:first-child,
+.food-db-table td:first-child {
+  min-width: 80px;
+}
+
+/* Second column (Description) */
+.food-db-table th:nth-child(2),
+.food-db-table td:nth-child(2) {
+  min-width: 200px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Header row */
+.food-db-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--dropdown-bg);
+  white-space: nowrap;
 }
 .food-db-table th {
   background: var(--dropdown-bg);
@@ -59,12 +118,27 @@ body.dark .food-db-table tr:hover,
 }
 
 @media (max-width: 700px) {
-  .food-db-container {
-    padding: 10px;
+  .page-container {
+    padding: 0.5rem 0.25rem;
   }
-  .food-db-table th, .food-db-table td {
-    font-size: 0.9rem;
-    padding: 6px 4px;
+  
+  .food-db-container {
+    padding: 0;
+    margin: 0;
+  }
+  .food-db-table th, 
+  .food-db-table td {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+  }
+  .food-db-table th:first-child,
+  .food-db-table td:first-child {
+    min-width: 50px;
+  }
+  .food-db-table th:nth-child(2),
+  .food-db-table td:nth-child(2) {
+    min-width: 150px;
+    max-width: 200px;
   }
 }
 

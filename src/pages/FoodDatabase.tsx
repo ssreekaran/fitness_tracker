@@ -68,33 +68,48 @@ const FoodDatabase: React.FC = () => {
         {loading ? (
           <div>Loading food database...</div>
         ) : (
-          <div className="food-db-table-wrapper">
-            <table className="food-db-table">
-              <thead>
-                <tr>
-                  <th>Food Code</th>
-                  <th>Description</th>
-                  {nutrientList.map((nutrient) => (
-                    <th key={nutrient.NutrientID}>{nutrient.NutrientSymbol || nutrient.NutrientName}</th>
+          <div className="table-responsive">
+            <div className="food-db-table-wrapper">
+              <table className="food-db-table">
+                <colgroup>
+                  <col style={{ width: '80px' }} />
+                  <col style={{ minWidth: '200px' }} />
+                  {nutrientList.map((_, index) => (
+                    <col key={`col-${index}`} style={{ minWidth: '100px' }} />
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredFoods
-                  .slice()
-                  .sort((a, b) => Number(a.FoodID) - Number(b.FoodID))
-                  .map((food) => (
-                    <tr key={food.FoodID}>
-                      <td>{food.FoodID}</td>
-                      <td>{food.FoodDescription}</td>
-                      {nutrientList.map((nutrient) => {
-                        const found = (food.Nutrients || []).find(n => n.NutrientID === nutrient.NutrientID);
-                        return <td key={nutrient.NutrientID}>{found ? found.NutrientValue : ''}</td>;
-                      })}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>Food Code</th>
+                    <th>Description</th>
+                    {nutrientList.map((nutrient) => (
+                      <th key={nutrient.NutrientID} className="sticky-header">
+                        {nutrient.NutrientSymbol || nutrient.NutrientName}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredFoods
+                    .slice()
+                    .sort((a, b) => Number(a.FoodID) - Number(b.FoodID))
+                    .map((food) => (
+                      <tr key={food.FoodID}>
+                        <td>{food.FoodID}</td>
+                        <td>{food.FoodDescription}</td>
+                        {nutrientList.map((nutrient) => {
+                          const found = (food.Nutrients || []).find(n => n.NutrientID === nutrient.NutrientID);
+                          return (
+                            <td key={nutrient.NutrientID}>
+                              {found ? found.NutrientValue : ''}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
             <div style={{ fontSize: 13, color: '#888', marginTop: 8 }}>
               Showing all filtered foods and 10 nutrients for performance. Data: Canadian Nutrient File, Health Canada.
             </div>
