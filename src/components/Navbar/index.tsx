@@ -49,6 +49,7 @@ const Navbar: React.FC = () => {
       children: [
         { title: 'Personal Fitness', path: '/personal-fitness' },
         { title: 'Calorie Tracker', path: '/calorie-tracker' },
+        { title: 'Workout Planner', path: '/workout-planner' },
       ]
     },
     { 

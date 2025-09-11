@@ -5,27 +5,27 @@
   padding: 1.5rem;
 }
 
-.page-header {
+.calorie-tracker .page-header {
   text-align: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #e9ecef;
 }
 
-.page-header h2 {
+.calorie-tracker .page-header h2 {
   color: var(--primary-color);
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   font-size: 1.75rem;
 }
 
-.page-header p {
+.calorie-tracker .page-header p {
   color: #6c757d;
   margin: 0;
 }
 
 /* Food Database Link */
-.food-db-link {
+.calorie-tracker .food-db-link {
   transition: color 0.2s;
   text-decoration: none;
   color: inherit; /* Inherit text color from parent */
@@ -33,17 +33,17 @@
 }
 
 /* Dark mode support */
-[data-bs-theme="dark"] .food-db-link {
+[data-bs-theme="dark"] .calorie-tracker .food-db-link {
   color: var(--bs-body-color, #f8f9fa);
 }
 
-.food-db-link:hover {
+.calorie-tracker .food-db-link:hover {
   text-decoration: underline;
   opacity: 1;
   color: var(--bs-link-color, #0d6efd); /* Use theme's link color */
 }
 
-[data-bs-theme="dark"] .food-db-link:hover {
+[data-bs-theme="dark"] .calorie-tracker .food-db-link:hover {
   color: var(--bs-link-hover-color, #6ea8fe);
 }
 
@@ -61,7 +61,7 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.card-header {
+.calorie-tracker .card-header {
   background-color: var(--primary-color);
   color: white;
   font-weight: 500;
@@ -89,9 +89,15 @@
 }
 
 /* Style for placeholder text */
-.form-control::placeholder {
+.calorie-tracker .form-control::placeholder {
   color: inherit;
   opacity: 0.7; /* Slightly transparent to differentiate from actual input */
+}
+
+/* Form control focus state */
+.calorie-tracker .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
 }
 
 /* Dark mode support */
@@ -102,16 +108,11 @@
     color: var(--bs-body-color, #f8f9fa);
   }
   
-  .form-control:focus {
+  .calorie-tracker .form-control:focus {
     background-color: var(--bs-dark-bg-subtle, #2b3035);
     border-color: var(--primary-color);
     color: var(--bs-body-color, #f8f9fa);
   }
-}
-
-.form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
 }
 
 /* Table Styling - Scoped to component */
@@ -120,7 +121,7 @@
   font-size: 0.9rem;
 }
 
-.table thead th {
+.calorie-tracker .table thead th {
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
   font-weight: 600;
@@ -167,15 +168,15 @@
   font-weight: 500;
 }
 
-.summary-item strong {
+.calorie-tracker .summary-item strong {
   color: #000000; /* Force black text for values */
   font-weight: 600;
 }
 
 /* Ensure text remains black in dark mode */
-[data-bs-theme="dark"] .summary-item,
-[data-bs-theme="dark"] .summary-item span,
-[data-bs-theme="dark"] .summary-item strong {
+[data-bs-theme="dark"] .calorie-tracker .summary-item,
+[data-bs-theme="dark"] .calorie-tracker .summary-item span,
+[data-bs-theme="dark"] .calorie-tracker .summary-item strong {
   color: #000000 !important;
 }
 
@@ -204,17 +205,17 @@
   transform: translateY(-1px);
 }
 
-.summary-item:last-child {
+.calorie-tracker .summary-item:last-child {
   margin-bottom: 0;
 }
 
-.summary-item strong {
+.calorie-tracker .summary-item strong {
   color: var(--primary-color);
   font-weight: 600;
 }
 
 /* Buttons */
-.btn-primary {
+.calorie-tracker .btn-primary {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   font-weight: 500;
@@ -222,17 +223,17 @@
   transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
+.calorie-tracker .btn-primary:hover {
   background-color: #0b5ed7;
   border-color: #0a58ca;
   transform: translateY(-1px);
 }
 
-.btn-outline-danger {
+.calorie-tracker .btn-outline-danger {
   transition: all 0.3s ease;
 }
 
-.btn-outline-danger:hover {
+.calorie-tracker .btn-outline-danger:hover {
   transform: translateY(-1px);
 }
 
@@ -242,11 +243,11 @@
     padding: 1rem 0;
   }
   
-  .card {
+  .calorie-tracker .card {
     margin-bottom: 1rem;
   }
   
-  .table-responsive {
+  .calorie-tracker .table-responsive {
     border: none;
   }
 }
@@ -265,62 +266,62 @@
   color: #e2e8f0;
 }
 
-[data-theme="dark"] .table thead th {
+[data-theme="dark"] .calorie-tracker .table thead th {
   background-color: #2d3748;
   color: #e2e8f0;
   border-color: #4a5568;
 }
 
-[data-theme="dark"] .table td,
-[data-theme="dark"] .table th {
+[data-theme="dark"] .calorie-tracker .table td,
+[data-theme="dark"] .calorie-tracker .table th {
   border-color: #4a5568;
 }
 
-[data-theme="dark"] .form-control,
-[data-theme="dark"] .form-select {
+[data-theme="dark"] .calorie-tracker .form-control,
+[data-theme="dark"] .calorie-tracker .form-select {
   background-color: #2d3748;
   border-color: #4a5568;
   color: #e2e8f0;
 }
 
-[data-theme="dark"] .form-control:focus,
-[data-theme="dark"] .form-select:focus {
+[data-theme="dark"] .calorie-tracker .form-control:focus,
+[data-theme="dark"] .calorie-tracker .form-select:focus {
   background-color: #2d3748;
   border-color: #4299e1;
   box-shadow: 0 0 0 0.25rem rgba(66, 153, 225, 0.25);
   color: #e2e8f0;
 }
 
-[data-theme="dark"] .summary-item {
+[data-theme="dark"] .calorie-tracker .summary-item {
   border-bottom-color: #4a5568;
 }
 
-[data-theme="dark"] .btn-outline-secondary {
+[data-theme="dark"] .calorie-tracker .btn-outline-secondary {
   color: #e2e8f0;
   border-color: #4a5568;
 }
 
-[data-theme="dark"] .btn-outline-secondary:hover {
+[data-theme="dark"] .calorie-tracker .btn-outline-secondary:hover {
   background-color: #4a5568;
   border-color: #4a5568;
 }
 
 /* Dark mode modal text */
-[data-theme="dark"] .modal-content {
+[data-theme="dark"] .calorie-tracker .modal-content {
   background-color: #2d3748;
   color: #e2e8f0;
 }
 
-[data-theme="dark"] .modal-header,
-[data-theme="dark"] .modal-footer {
+[data-theme="dark"] .calorie-tracker .modal-header,
+[data-theme="dark"] .calorie-tracker .modal-footer {
   border-color: #4a5568;
 }
 
-[data-theme="dark"] .modal-title {
+[data-theme="dark"] .calorie-tracker .modal-title {
   color: #e2e8f0;
 }
 
-[data-theme="dark"] .close {
+[data-theme="dark"] .calorie-tracker .close {
   color: #e2e8f0;
   text-shadow: 0 1px 0 #4a5568;
 }

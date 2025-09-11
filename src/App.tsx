@@ -21,6 +21,7 @@ const WeightLossCalculator = lazy(() => import('./pages/WeightLossCalculator'));
 const HealthyFood = lazy(() => import('./pages/HealthyFood'));
 const PersonalFitness = lazy(() => import('./pages/PersonalFitness'));
 const CalorieTracker = lazy(() => import('./pages/CalorieTracker'));
+const WorkoutPlanner = lazy(() => import('./pages/WorkoutPlanner'));
 
 // Legal pages
 const PrivacyPolicy = () => (
@@ -78,6 +79,11 @@ function App() {
               <Route path="/calorie-tracker" element={
                 <ProtectedRoute>
                   <CalorieTracker />
+                </ProtectedRoute>
+              } />
+              <Route path="/workout-planner" element={
+                <ProtectedRoute>
+                  <WorkoutPlanner />
                 </ProtectedRoute>
               } />
             </Routes>
