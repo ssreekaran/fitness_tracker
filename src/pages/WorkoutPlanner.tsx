@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import { format } from 'date-fns/format';
-import { parse } from 'date-fns/parse';
+import { format, parseISO, parse, isValid } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import { startOfWeek } from 'date-fns/startOfWeek';
 import { getDay } from 'date-fns/getDay';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -11,8 +11,16 @@ import { db } from '../firebase';
 import { useAuth } from '../components/Navbar/hooks/useAuth';
 import './WorkoutPlanner.css';
 
-// Setup the localizer by providing the required date-fns functions
-import { enUS } from 'date-fns/locale';
+// Helper function to convert Date to local datetime string in format YYYY-MM-DDTHH:MM
+const toLocalDatetimeString = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 
 const locales = {
   'en-US': enUS,
@@ -20,7 +28,7 @@ const locales = {
 
 const localizer = dateFnsLocalizer({
   format,
-  parse,
+  parse: parseISO,
   startOfWeek,
   getDay,
   locales,
@@ -57,10 +65,28 @@ const WorkoutPlanner: React.FC = () => {
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'start' || name === 'end' ? new Date(value) : value
-    }));
+    setFormData(prev => {
+      if (name === 'start' || name === 'end') {
+        try {
+          // Parse the datetime-local input using date-fns parse with explicit format
+          const parsedDate = parse(value, "yyyy-MM-dd'T'HH:mm", new Date());
+          
+          // Only update if the parsed date is valid
+          if (isValid(parsedDate)) {
+            return { ...prev, [name]: parsedDate };
+          } else {
+            console.warn(`Invalid date input: ${value}`);
+            // Keep the previous value if parsing fails
+            return prev;
+          }
+        } catch (error) {
+          console.error('Error parsing date:', error);
+          // Keep the previous value if an error occurs during parsing
+          return prev;
+        }
+      }
+      return { ...prev, [name]: value };
+    });
   };
 
   // Handle form submission
@@ -100,12 +126,30 @@ const WorkoutPlanner: React.FC = () => {
     setSelectedEvent(event);
   };
 
-  // Handle slot selection (create new event)
+  const getNextWholeHour = (date: Date): Date => {
+    const nextHour = new Date(date);
+    nextHour.setHours(date.getHours() + 1, 0, 0, 0); // Set to next whole hour, 0 minutes, 0 seconds, 0 ms
+    return nextHour;
+  };
+
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
+    const now = new Date();
+    let startTime = new Date(start);
+    let endTime = new Date(end);
+
+    // If the selected time is in the past or within the current hour
+    if (startTime <= now || 
+        (startTime.getHours() === now.getHours() && 
+         startTime.getDate() === now.getDate())) {
+      startTime = getNextWholeHour(now);
+      endTime = new Date(startTime);
+      endTime.setHours(startTime.getHours() + 1);
+    }
+
     setFormData({
       title: '',
-      start,
-      end,
+      start: startTime,
+      end: endTime,
       type: 'strength',
       notes: '',
       userId: user?.uid || '',
@@ -133,22 +177,47 @@ const WorkoutPlanner: React.FC = () => {
       
       setIsLoading(true);
       try {
+        console.log('Fetching workout plans for user:', user.uid);
         const q = query(collection(db, 'users', user.uid, 'workoutPlans'));
         const querySnapshot = await getDocs(q);
-        const userWorkouts = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            title: data.title,
-            type: data.type,
-            notes: data.notes,
-            userId: data.userId,
-            start: data.start?.toDate(),
-            end: data.end?.toDate(),
-          } as WorkoutEvent;
-        });
+        console.log('Workout plans query result:', querySnapshot.docs.length, 'documents');
+        
+        let skippedCount = 0;
+        const userWorkouts = querySnapshot.docs
+          .map(doc => {
+            const data = doc.data();
+            
+            // Validate timestamps
+            const start = data.start?.toDate ? data.start.toDate() : null;
+            const end = data.end?.toDate ? data.end.toDate() : null;
+            
+            // Skip documents with invalid timestamps
+            if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) {
+              console.warn('Skipping workout plan with invalid timestamps:', doc.id, { start, end });
+              skippedCount++;
+              return null;
+            }
+            
+            const event = {
+              id: doc.id,
+              title: data.title || 'No Title',
+              type: data.type || 'strength',
+              notes: data.notes || '',
+              userId: data.userId,
+              start,
+              end,
+            } as WorkoutEvent;
+            
+            return event;
+          })
+          .filter((event): event is WorkoutEvent => event !== null);
+          
+        if (skippedCount > 0) {
+          console.warn(`Skipped ${skippedCount} workout plans due to invalid timestamps`);
+        }
         
         setEvents(userWorkouts);
+        console.log('Set events:', userWorkouts.length);
       } catch (error) {
         console.error('Error fetching workout plans:', error);
       } finally {
@@ -202,6 +271,8 @@ const WorkoutPlanner: React.FC = () => {
     );
   }
 
+  console.log('Rendering WorkoutPlanner with events:', events.length);
+
   return (
     <div className="workout-planner">
       <Container>
@@ -209,7 +280,21 @@ const WorkoutPlanner: React.FC = () => {
           <h1>Workout Planner</h1>
           <Button 
             variant="primary" 
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              const startTime = getNextWholeHour(new Date());
+              const endTime = new Date(startTime);
+              endTime.setHours(startTime.getHours() + 1);
+              
+              setFormData({
+                title: '',
+                start: startTime,
+                end: endTime,
+                type: 'strength',
+                notes: '',
+                userId: user?.uid || '',
+              });
+              setShowModal(true);
+            }}
             size="lg"
             className="mb-4"
           >
@@ -218,12 +303,14 @@ const WorkoutPlanner: React.FC = () => {
         </div>
 
         <div className="calendar-container">
+          <h2>Workout Calendar</h2>
+          <div style={{ height: '1px', backgroundColor: '#ddd', margin: '10px 0' }}></div>
           <Calendar
             localizer={localizer}
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: 700 }}
+            style={{ height: 700, minHeight: 700 }}
             selectable
             onSelectEvent={handleSelectEvent}
             onSelectSlot={handleSelectSlot}
@@ -296,7 +383,7 @@ const WorkoutPlanner: React.FC = () => {
                   <Form.Control
                     type="datetime-local"
                     name="start"
-                    value={formData.start.toISOString().slice(0, 16)}
+                    value={toLocalDatetimeString(formData.start)}
                     onChange={handleInputChange}
                     required
                   />
@@ -306,7 +393,7 @@ const WorkoutPlanner: React.FC = () => {
                   <Form.Control
                     type="datetime-local"
                     name="end"
-                    value={formData.end.toISOString().slice(0, 16)}
+                    value={toLocalDatetimeString(formData.end)}
                     onChange={handleInputChange}
                     required
                   />

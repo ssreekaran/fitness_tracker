@@ -27,7 +27,46 @@ service cloud.firestore {
       }
       
       match /workoutPlans/{planId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        // Allow read if authenticated and owner
+        allow read: if request.auth != null && request.auth.uid == userId;
+        
+        // Allow create with validation
+        allow create: if request.auth != null 
+          && request.auth.uid == request.resource.data.userId
+          && request.resource.data.title is string
+          && request.resource.data.title.matches('^.{1,100}$')
+          && request.resource.data.type is string
+          && request.resource.data.notes is string
+          && request.resource.data.start is timestamp
+          && request.resource.data.end is timestamp
+          && request.resource.data.createdAt is timestamp
+          && request.resource.data.updatedAt is timestamp
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'userId', 'title', 'type', 'notes', 
+            'start', 'end', 'createdAt', 'updatedAt'
+          ]);
+          
+        // Allow update with validation
+        allow update: if request.auth != null 
+          && request.auth.uid == resource.data.userId
+          && request.auth.uid == request.resource.data.userId
+          && request.resource.data.title is string
+          && request.resource.data.title.matches('^.{1,100}$')
+          && request.resource.data.type is string
+          && request.resource.data.notes is string
+          && request.resource.data.start is timestamp
+          && request.resource.data.end is timestamp
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.updatedAt is timestamp
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'userId', 'title', 'type', 'notes', 
+            'start', 'end', 'createdAt', 'updatedAt'
+          ]);
+          
+        // Allow delete if owner
+        allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
       }
     }
   }

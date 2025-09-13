@@ -38,6 +38,9 @@
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Improve month view */
@@ -81,13 +84,23 @@
 
 /* Calendar overrides */
 .rbc-calendar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   min-height: 500px;
+  height: 100%;
   color: #000000 !important; /* Force black text for all calendar elements */
 }
 
-/* Force black text for all calendar text elements */
 .rbc-calendar * {
   color: #000000 !important;
+}
+
+.rbc-time-view,
+.rbc-month-view,
+.rbc-time-content {
+  flex: 1;
+  min-height: 0; /* Allows the calendar to shrink below its content size */
 }
 
 /* Specific overrides for calendar elements */
