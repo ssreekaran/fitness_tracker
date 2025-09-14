@@ -4,27 +4,31 @@
   padding: 2rem 1rem;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #f8f9fa;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .workout-planner .container {
-  background: white;
+  background: var(--background-color);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-top: 2rem;
+  color: var(--text-color);
+  border: 1px solid var(--button-bg);
 }
 
 .workout-planner h1 {
   text-align: center;
-  color: #2c3e50;
+  color: var(--blog-title);
   font-size: 2.5rem;
   font-weight: 600;
   margin-bottom: 2rem;
   padding-top: 1rem;
 }
 
-.calendar-header {
+.workout-planner .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,9 +36,9 @@
   padding: 0 10px;
 }
 
-.calendar-container {
+.workout-planner .calendar-container {
   margin-top: 2rem;
-  background: white;
+  background: var(--background-color);
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -43,143 +47,194 @@
   flex-direction: column;
 }
 
-/* Improve month view */
-.rbc-month-view {
+/* Calendar styles */
+.workout-planner .rbc-month-view {
   min-height: 600px;
+  background: var(--background-color);
+  border: 1px solid var(--button-bg);
 }
 
-.rbc-month-header {
-  background-color: #f8f9fa;
+.workout-planner .rbc-month-header {
+  background-color: var(--button-bg);
   padding: 10px 0;
 }
 
-.rbc-header {
+.workout-planner .rbc-header {
   padding: 10px 3px;
   text-align: center;
   font-weight: 500;
-  color: #2c3e50;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--button-bg);
 }
 
-.rbc-date-cell {
+.workout-planner .rbc-date-cell {
   text-align: center;
   padding: 5px;
+  color: var(--text-color);
 }
 
-.rbc-off-range-bg {
-  background-color: #f8f9fa;
+.workout-planner .rbc-off-range-bg {
+  background-color: var(--blog-card);
 }
 
-.rbc-today {
-  background-color: #e8f4f8;
+.workout-planner .rbc-today {
+  background-color: color-mix(in srgb, var(--link-color) 10%, transparent);
 }
 
-.rbc-event {
+.workout-planner .rbc-day-bg + .rbc-day-bg,
+.workout-planner .rbc-header + .rbc-header {
+  border-left: 1px solid var(--button-bg);
+}
+
+.workout-planner .rbc-month-row + .rbc-month-row {
+  border-top: 1px solid var(--button-bg);
+}
+
+.workout-planner .rbc-event {
   border-radius: 4px;
   padding: 2px 5px;
   font-size: 0.85em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Calendar overrides */
-.rbc-calendar {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 500px;
-  height: 100%;
-  color: #000000 !important; /* Force black text for all calendar elements */
-}
-
-.rbc-calendar * {
-  color: #000000 !important;
-}
-
-.rbc-time-view,
-.rbc-month-view,
-.rbc-time-content {
-  flex: 1;
-  min-height: 0; /* Allows the calendar to shrink below its content size */
-}
-
-/* Specific overrides for calendar elements */
-.rbc-header,
-.rbc-date-cell,
-.rbc-time-header-content,
-.rbc-time-content,
-.rbc-time-gutter,
-.rbc-time-slot,
-.rbc-day-slot,
-.rbc-time-view,
-.rbc-month-view,
-.rbc-agenda-view,
-.rbc-agenda-date,
-.rbc-agenda-time,
-.rbc-agenda-event-cell {
-  color: #000000 !important;
-}
-
-.rbc-event {
-  padding: 2px 5px;
-  font-size: 0.8rem;
-  border-radius: 4px;
-  background-color: #3174ad;
+  background-color: var(--link-color);
   color: white;
   border: none;
   cursor: pointer;
 }
 
-.rbc-event.rbc-selected {
-  background-color: #1a4b75;
+.workout-planner .rbc-event.rbc-selected {
+  background-color: color-mix(in srgb, var(--link-color) 20%, #000);
+  box-shadow: 0 0 0 2px var(--link-color);
 }
 
-.rbc-today {
-  background-color: #f8f9fa;
+/* Calendar container */
+.workout-planner .rbc-calendar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  height: 100%;
+  color: var(--text-color);
+  background: var(--background-color);
 }
 
-.rbc-off-range-bg {
-  background: #f8f9fa;
+.workout-planner .rbc-time-view,
+.workout-planner .rbc-month-view,
+.workout-planner .rbc-time-content {
+  flex: 1;
+  min-height: 0;
+  background: var(--background-color);
 }
 
-.rbc-header {
-  padding: 10px 0;
-  font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #e9ecef;
+/* Calendar cells */
+.workout-planner .rbc-day-slot,
+.workout-planner .rbc-time-content,
+.workout-planner .rbc-time-gutter,
+.workout-planner .rbc-time-slot,
+.workout-planner .rbc-agenda-view,
+.workout-planner .rbc-agenda-date,
+.workout-planner .rbc-agenda-time,
+.workout-planner .rbc-agenda-event-cell {
+  color: var(--text-color);
+  border-color: var(--workout-border);
 }
 
-.rbc-toolbar {
+.workout-planner .rbc-time-gutter .rbc-timeslot-group {
+  border-bottom: 1px solid var(--button-bg);
+}
+
+/* Toolbar */
+.workout-planner .rbc-toolbar {
   margin-bottom: 20px;
+  color: var(--text-color);
 }
 
-.rbc-toolbar button {
-  color: #495057;
-  border: 1px solid #dee2e6;
-  background: white;
+.workout-planner .rbc-toolbar button {
+  color: var(--text-color);
+  border: 1px solid var(--button-bg);
+  background: var(--background-color);
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
   margin: 0 2px;
+  transition: all 0.2s ease;
 }
 
-.rbc-toolbar button:hover {
-  background-color: #e9ecef;
+.workout-planner .rbc-toolbar button:hover {
+  background-color: var(--button-hover);
+  color: var(--text-color);
 }
 
-.rbc-toolbar button.rbc-active {
-  background-color: #007bff;
+.workout-planner .rbc-toolbar button:active,
+.workout-planner .rbc-toolbar button.rbc-active {
+  background-color: var(--link-color);
   color: white;
-  border-color: #007bff;
+  border-color: var(--link-color);
+}
+
+/* Time grid */
+.workout-planner .rbc-time-header {
+  background: var(--background-color);
+  border-bottom: 1px solid var(--button-bg);
+}
+
+.workout-planner .rbc-time-gutter,
+.workout-planner .rbc-time-content > * + * > * {
+  border-left: 1px solid var(--button-bg);
+}
+
+.workout-planner .rbc-time-slot {
+  color: var(--text-color);
+}
+
+/* Agenda view */
+.workout-planner .rbc-agenda-view table {
+  border: 1px solid var(--button-bg);
+}
+
+.workout-planner .rbc-agenda-time-cell,
+.workout-planner .rbc-agenda-date-cell,
+.workout-planner .rbc-agenda-event-cell {
+  border-bottom: 1px solid var(--button-bg);
+  padding: 8px;
 }
 
 /* Modal styles */
-.modal-header {
-  border-bottom: 1px solid #dee2e6;
+.workout-planner .modal-content {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--button-bg);
 }
 
-.modal-footer {
-  border-top: 1px solid #dee2e6;
+.workout-planner .modal-header {
+  border-bottom: 1px solid var(--button-bg);
+  /*background-color: var(--background-color);*/
+  /*color: var(--text-color);*/
+}
+
+.workout-planner .modal-body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.workout-planner .modal-footer {
+  border-top: 1px solid var(--button-bg);
+  background-color: var(--background-color);
+}
+
+/* Form controls */
+.workout-planner .form-control,
+.workout-planner .form-select,
+.workout-planner .form-control:focus,
+.workout-planner .form-select:focus {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-color: var(--workout-border);
+}
+
+.workout-planner .form-label {
+  color: var(--text-color);
 }
 
 /* Loading state */

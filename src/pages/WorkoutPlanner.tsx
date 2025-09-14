@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import { format, parseISO, parse, isValid } from 'date-fns';
+import { format, parseISO, parse, isValid, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import { startOfWeek } from 'date-fns/startOfWeek';
-import { getDay } from 'date-fns/getDay';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Button, Modal, Form, Container } from 'react-bootstrap';
 import { addDoc, collection, doc, deleteDoc, getDocs, query } from 'firebase/firestore';
@@ -95,9 +93,12 @@ const WorkoutPlanner: React.FC = () => {
     if (!user) return;
 
     try {
+      const now = new Date();
       const workoutData = {
         ...formData,
         userId: user.uid,
+        createdAt: now,
+        updatedAt: now
       };
 
       // Add to Firestore
@@ -370,10 +371,10 @@ const WorkoutPlanner: React.FC = () => {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="strength">Strength Training</option>
-                  <option value="cardio">Cardio</option>
-                  <option value="flexibility">Flexibility</option>
-                  <option value="rest">Rest Day</option>
+                  <option value="Strength">Strength Training</option>
+                  <option value="Cardio">Cardio</option>
+                  <option value="Flexibility">Flexibility</option>
+                  <option value="Rest">Rest Day</option>
                 </Form.Select>
               </Form.Group>
 

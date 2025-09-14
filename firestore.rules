@@ -1,10 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+             (request.auth.token.admin == true || 
+              request.auth.token.role == 'admin');
+    }
+
     // Public read access to foods collection (for food database)
     match /foods/{foodId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
     
     // User-specific food entries
@@ -32,41 +39,38 @@ service cloud.firestore {
         
         // Allow create with validation
         allow create: if request.auth != null 
-          && request.auth.uid == request.resource.data.userId
+          && request.auth.uid == userId  // Path userId must match auth
+          && request.auth.uid == request.resource.data.userId  // Document userId must match auth
           && request.resource.data.title is string
           && request.resource.data.title.matches('^.{1,100}$')
           && request.resource.data.type is string
           && request.resource.data.notes is string
           && request.resource.data.start is timestamp
           && request.resource.data.end is timestamp
-          && request.resource.data.createdAt is timestamp
-          && request.resource.data.updatedAt is timestamp
-          && request.resource.data.updatedAt == request.time
-          && request.resource.data.keys().hasOnly([
-            'userId', 'title', 'type', 'notes', 
-            'start', 'end', 'createdAt', 'updatedAt'
-          ]);
+          && request.resource.data.start < request.resource.data.end  // Validate start < end
+          && (request.resource.data.createdAt == request.time || request.resource.data.createdAt is timestamp)
+          && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
           
         // Allow update with validation
         allow update: if request.auth != null 
-          && request.auth.uid == resource.data.userId
-          && request.auth.uid == request.resource.data.userId
+          && request.auth.uid == userId  // Path userId must match auth
+          && request.auth.uid == resource.data.userId  // Existing doc owner check
+          && request.auth.uid == request.resource.data.userId  // New data owner check
+          && resource.data.userId == request.resource.data.userId  // userId cannot change
           && request.resource.data.title is string
           && request.resource.data.title.matches('^.{1,100}$')
           && request.resource.data.type is string
           && request.resource.data.notes is string
           && request.resource.data.start is timestamp
           && request.resource.data.end is timestamp
-          && request.resource.data.createdAt == resource.data.createdAt
-          && request.resource.data.updatedAt is timestamp
-          && request.resource.data.updatedAt == request.time
-          && request.resource.data.keys().hasOnly([
-            'userId', 'title', 'type', 'notes', 
-            'start', 'end', 'createdAt', 'updatedAt'
-          ]);
+          && request.resource.data.start < request.resource.data.end  // Validate start < end
+          && request.resource.data.createdAt == resource.data.createdAt  // createdAt cannot change
+          && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
           
-        // Allow delete if owner
-        allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
+        // Allow delete if owner (both path and document owner must match)
+        allow delete: if request.auth != null 
+          && request.auth.uid == userId  // Path userId must match auth
+          && request.auth.uid == resource.data.userId;  // Document must be owned by auth user
       }
     }
   }
