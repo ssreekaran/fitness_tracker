@@ -11,6 +11,8 @@
 
 /* Light mode (default) */
 :root {
+  --bs-body-bg: var(--background-color);
+  --bs-body-color: var(--text-color);
   --background-color: #ffffff;
   --text-color: #213547;
   --button-bg: #f9f9f9;
@@ -30,6 +32,8 @@
 
 /* Dark mode */
 :root.dark {
+  --bs-body-bg: var(--background-color);
+  --bs-body-color: var(--text-color);
   --background-color: #242424;
   --text-color: #ffffff;
   --button-bg: #2d2d2d;
