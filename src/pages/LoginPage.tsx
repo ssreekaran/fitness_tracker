@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle, FaGoogle } from 'react-icons/fa';
-import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { FaArrowLeft, FaEnvelope, FaLock, FaExclamationCircle, FaGoogle, FaSpinner } from 'react-icons/fa';
+import { signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from 'firebase/auth';
 import { auth, signInWithGoogle } from '../firebase';
+import { Capacitor } from '@capacitor/core';
 import './LoginPage.css';
 
 interface LocationState {
@@ -36,17 +37,40 @@ const LoginPage: React.FC = () => {
     try {
       setIsLoading(true);
       setError('');
-      await signInWithGoogle();
-      const from = locationState?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      
+      if (Capacitor.isNativePlatform()) {
+        // For mobile, we'll use the browser-based sign-in
+        // The App component will handle the redirect result
+        await signInWithGoogle();
+        // Don't navigate here, the App component will handle the redirect
+      } else {
+        // For web, use the popup flow
+        await signInWithGoogle();
+        const from = locationState?.from?.pathname || '/';
+        navigate(from, { replace: true });
+      }
     } catch (error: unknown) {
       console.error("Google sign in error:", error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to sign in with Google. Please try again.';
       setError(errorMessage);
-    } finally {
       setIsLoading(false);
     }
   };
+
+  // Listen for auth state changes on mobile
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const from = locationState?.from?.pathname || '/';
+          navigate(from, { replace: true });
+        }
+        setIsLoading(false);
+      });
+
+      return () => unsubscribe();
+    }
+  }, [navigate, locationState]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,13 +163,23 @@ const LoginPage: React.FC = () => {
         )}
 
         <div className="social-login">
-          <button 
+          <button
+            type="button"
             onClick={handleGoogleSignIn}
-            disabled={isLoading}
             className="google-signin-button"
+            disabled={isLoading}
           >
-            <FaGoogle className="google-icon" />
-            {isLoading ? 'Signing in...' : 'Continue with Google'}
+            {isLoading ? (
+              <>
+                <FaSpinner className="spinner-icon" />
+                Signing in...
+              </>
+            ) : (
+              <>
+                <FaGoogle className="google-icon" />
+                Continue with Google
+              </>
+            )}
           </button>
           <div className="divider">
             <span>or</span>

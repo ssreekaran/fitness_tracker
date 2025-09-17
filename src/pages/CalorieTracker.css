@@ -119,13 +119,14 @@
 .calorie-tracker .table {
   margin-bottom: 0;
   font-size: 0.9rem;
+  color: #ffffff; /* White text for all table content */
 }
 
 .calorie-tracker .table thead th {
-  background-color: #f8f9fa;
+  background-color: var(--primary-color, #0d6efd);
   border-bottom: 1px solid #dee2e6;
   font-weight: 600;
-  color: #495057;
+  color: #ffffff; /* White text for headers */
   padding: 0.6rem 0.75rem;
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -135,6 +136,19 @@
 .calorie-tracker .table td {
   padding: 0.6rem 0.75rem;
   vertical-align: middle;
+  color: #ffffff; /* White text for table cells */
+  border-color: rgba(255, 255, 255, 0.1); /* Lighter border for better visibility */
+}
+
+/* Ensure text is visible in both light and dark modes */
+[data-bs-theme="dark"] .calorie-tracker .table,
+[data-bs-theme="light"] .calorie-tracker .table {
+  color: #ffffff;
+}
+
+[data-bs-theme="dark"] .calorie-tracker .table td,
+[data-bs-theme="light"] .calorie-tracker .table td {
+  color: #ffffff;
 }
 
 /* Button Styling - Scoped to component */
@@ -186,7 +200,8 @@
 }
 
 .calorie-tracker .table-hover tbody tr:hover {
-  background-color: rgba(13, 110, 253, 0.05);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 /* Summary Section - Scoped to component */

@@ -232,8 +232,8 @@ const PersonalFitness: React.FC = () => {
     const { min, max } = getMinMaxBirthDate();
     
     return (
-      <div className="row justify-content-center">
-        <div className="col-md-8">
+      <div className="row">
+        <div className="col-12">
           <Card>
             <Card.Body>
               <Card.Title>Update Your Information</Card.Title>
@@ -340,12 +340,12 @@ const PersonalFitness: React.FC = () => {
   };
 
   return (
-    <div className="personal-fitness-wrapper" style={{ padding: '100px 2rem 2rem', minHeight: 'calc(100vh - 150px)' }}>
-      <Container className="personal-fitness-container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div className="personal-fitness-content" style={{ width: '100%' }}>
+    <div className="personal-fitness-wrapper" style={{ padding: '100px 0 2rem', minHeight: 'calc(100vh - 150px)' }}>
+      <Container fluid className="px-4 px-md-5">
+        <div className="personal-fitness-content">
           <h1 className="mb-4 text-center" style={{ margin: '0 0 2rem', fontSize: '2.5rem', fontWeight: 'bold' }}>Personal Fitness Tracker</h1>
-          {error && <Alert variant="danger" style={{ maxWidth: '800px' }}>{error}</Alert>}
-          {success && <Alert variant="success" style={{ maxWidth: '800px' }}>{success}</Alert>}
+          {error && <Alert variant="danger" className="mx-auto" style={{ maxWidth: '100%' }}>{error}</Alert>}
+          {success && <Alert variant="success" className="mx-auto" style={{ maxWidth: '100%' }}>{success}</Alert>}
           
           <Tabs
             activeKey={activeTab}

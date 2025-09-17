@@ -7,9 +7,10 @@
 }
 
 .personal-fitness-content {
-  max-width: 900px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
 }
 
 .personal-fitness-title {
@@ -23,16 +24,29 @@
 
 .personal-fitness-form {
   background-color: var(--card-bg, #ffffff);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--border-color, #e0e0e0);
   color: var(--text-color);
   transition: none !important;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.measurement-input,
+.form-select,
+.form-control {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1.05rem !important;
 }
 
 .form-group label,
@@ -48,6 +62,8 @@
   background-color: var(--input-bg, #ffffff) !important;
   color: var(--input-text, #333333) !important;
   border: 1px solid var(--input-border, #dddddd);
+  height: 48px;
+  border-radius: 8px;
   padding: 0.75rem 1rem;
   width: 100%;
   border-radius: 4px;

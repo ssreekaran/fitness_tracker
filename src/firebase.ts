@@ -1,7 +1,15 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signInWithRedirect, 
+  getRedirectResult,
+  OAuthProvider
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { Capacitor } from '@capacitor/core';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,17 +35,52 @@ export const db = getFirestore(app);
 // Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
 
+// Add custom parameters to the Google provider
+// This ensures we get a refresh token
+const provider = new OAuthProvider('google.com');
+provider.addScope('profile');
+provider.addScope('email');
+provider.setCustomParameters({
+  prompt: 'select_account', // Forces account selection even for one account
+});
+
 export const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, googleProvider);
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    return { user, token };
+    // Use redirect for mobile, popup for web
+    if (Capacitor.isNativePlatform()) {
+      // For mobile, use signInWithRedirect
+      // The redirect result will be handled in the root component
+      await signInWithRedirect(auth, provider);
+      return { user: null, token: null };
+    } else {
+      // For web, continue using popup
+      const result = await signInWithPopup(auth, googleProvider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      const user = result.user;
+      return { user, token };
+    }
   } catch (error) {
     console.error("Error signing in with Google:", error);
+    throw error;
+  }
+};
+
+// Handle the redirect result when the app loads
+export const handleRedirectResult = async () => {
+  try {
+    if (Capacitor.isNativePlatform()) {
+      const result = await getRedirectResult(auth);
+      if (result) {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const user = result.user;
+        return { user, token };
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Error handling redirect result:", error);
     throw error;
   }
 };

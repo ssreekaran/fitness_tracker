@@ -1,9 +1,13 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Navbar } from './components';
 import Footer from './components/Footer';
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from './components/LoadingSpinner';
+import { auth, handleRedirectResult } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 import './App.css';
 
 // Lazy load all page components
@@ -44,9 +48,66 @@ const TermsOfService = () => (
   </div>
 );
 
-function App() {
+// Handle deep links for OAuth redirects
+const handleDeepLink = (url: string) => {
+  if (url.includes('__/auth/handler')) {
+    // This is a Firebase auth redirect, let it handle it
+    return;
+  }
+};
+
+// Add URL handler in mobile app
+if (Capacitor.isNativePlatform()) {
+  // Handle app opened from a URL (like OAuth redirect)
+  CapApp.addListener('appUrlOpen', (data: { url: string }) => {
+    handleDeepLink(data.url);
+  });
+
+  // Handle universal links on iOS
+  CapApp.addListener('appUrlOpen', (data: { url: string }) => {
+    if (data.url) {
+      handleDeepLink(data.url);
+    }
+  });
+}
+
+// Create a separate component for the app content that needs access to routing
+const AppContent = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Handle the redirect result when the app loads
+    const handleAuthRedirect = async () => {
+      try {
+        const result = await handleRedirectResult();
+        if (result?.user) {
+          // Redirect to home or dashboard after successful login
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Error handling auth redirect:', error);
+      }
+    };
+
+    // Set up auth state observer
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        console.log('User is signed in:', user.uid);
+      } else {
+        // User is signed out
+        console.log('User is signed out');
+      }
+    });
+
+    // Check for redirect result on initial load
+    handleAuthRedirect();
+
+    // Clean up subscription
+    return () => unsubscribe();
+  }, [navigate]);
+
   return (
-    <Router>
       <div className="app">
         <Navbar />
         <main className="main-content">
@@ -91,6 +152,13 @@ function App() {
         </main>
         <Footer />
       </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
