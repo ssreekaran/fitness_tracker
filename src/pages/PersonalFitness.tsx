@@ -4,6 +4,7 @@ import { getFitnessData, saveFitnessData, clearFitnessData, FitnessData } from '
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import WorkoutTracker from '../components/WorkoutTracker';
+import './PersonalFitness.css';
 
 const PersonalFitness: React.FC = () => {
   const [fitnessData, setFitnessData] = useState<FitnessData | null>(null);
@@ -183,7 +184,7 @@ const PersonalFitness: React.FC = () => {
     return (
       <div className="row g-4">
         <div className="col-md-4">
-          <Card className="h-100">
+          <Card className="h-100 pf-card pf-card--indigo">
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <Card.Title className="mb-0">Your Fitness Stats</Card.Title>
@@ -197,15 +198,15 @@ const PersonalFitness: React.FC = () => {
               </div>
               {fitnessData ? (
                 <div className="fitness-stats">
-                  <p><strong>BMI:</strong> {fitnessData.bmi?.toFixed(1)} <small>({getBMICategory(fitnessData.bmi || 0)})</small></p>
-                  <p><strong>Height:</strong> {fitnessData.height} cm ({(fitnessData.height / 2.54).toFixed(1)} in)</p>
-                  <p><strong>Weight:</strong> {fitnessData.weight} kg ({(fitnessData.weight * 2.20462).toFixed(1)} lbs)</p>
-                  <p><strong>Age:</strong> {currentAge} years old</p>
+                  <div className="stat-row"><span className="label">BMI</span><span className="value">{fitnessData.bmi?.toFixed(1)} <small className="muted">({getBMICategory(fitnessData.bmi || 0)})</small></span></div>
+                  <div className="stat-row"><span className="label">Height</span><span className="value">{fitnessData.height} cm <span className="muted">({(fitnessData.height / 2.54).toFixed(1)} in)</span></span></div>
+                  <div className="stat-row"><span className="label">Weight</span><span className="value">{fitnessData.weight} kg <span className="muted">({(fitnessData.weight * 2.20462).toFixed(1)} lbs)</span></span></div>
+                  <div className="stat-row"><span className="label">Age</span><span className="value">{currentAge} years</span></div>
                   {fitnessData.dateOfBirth && (
-                    <p><strong>Date of Birth:</strong> {formatDate(fitnessData.dateOfBirth)}</p>
+                    <div className="stat-row"><span className="label">Date of Birth</span><span className="value">{formatDate(fitnessData.dateOfBirth)}</span></div>
                   )}
-                  <p><strong>Gender:</strong> {fitnessData.gender.charAt(0).toUpperCase() + fitnessData.gender.slice(1)}</p>
-                  <p className="text-muted small mt-3 mb-0">
+                  <div className="stat-row"><span className="label">Gender</span><span className="value">{fitnessData.gender.charAt(0).toUpperCase() + fitnessData.gender.slice(1)}</span></div>
+                  <p className="muted small mt-3 mb-0">
                     Last updated: {fitnessData.lastUpdated ? 
                       (fitnessData.lastUpdated instanceof Date ? 
                         formatDate(fitnessData.lastUpdated.toISOString()) : 
@@ -222,7 +223,9 @@ const PersonalFitness: React.FC = () => {
           </Card>
         </div>
         <div className="col-md-8">
-          <WorkoutTracker userWeight={fitnessData?.weight || 70} />
+          <div className="pf-card pf-card--teal h-100">
+            <WorkoutTracker userWeight={fitnessData?.weight || 70} />
+          </div>
         </div>
       </div>
     );
@@ -234,7 +237,7 @@ const PersonalFitness: React.FC = () => {
     return (
       <div className="row">
         <div className="col-12">
-          <Card>
+          <Card className="pf-card pf-card--violet">
             <Card.Body>
               <Card.Title>Update Your Information</Card.Title>
               <Form onSubmit={handleSubmit} className="mt-3">
@@ -340,17 +343,36 @@ const PersonalFitness: React.FC = () => {
   };
 
   return (
-    <div className="personal-fitness-wrapper" style={{ padding: '100px 0 2rem', minHeight: 'calc(100vh - 150px)' }}>
+    <div className="personal-fitness-container">
       <Container fluid className="px-4 px-md-5">
         <div className="personal-fitness-content">
-          <h1 className="mb-4 text-center" style={{ margin: '0 0 2rem', fontSize: '2.5rem', fontWeight: 'bold' }}>Personal Fitness Tracker</h1>
+          <div className="pf-hero">
+            <h1 className="pf-title">Personal Fitness Tracker</h1>
+            <p className="pf-subtitle">Manage your stats, log workouts, and stay on track.</p>
+            {fitnessData && (
+              <div className="pf-stats-grid">
+                <div className="pf-stat">
+                  <div className="pf-stat-value">{fitnessData.bmi?.toFixed(1) || '--'}</div>
+                  <div className="pf-stat-label">BMI</div>
+                </div>
+                <div className="pf-stat">
+                  <div className="pf-stat-value">{fitnessData.weight?.toFixed(1)}<span className="unit"> kg</span></div>
+                  <div className="pf-stat-label">Weight</div>
+                </div>
+                <div className="pf-stat">
+                  <div className="pf-stat-value">{fitnessData.height?.toFixed(0)}<span className="unit"> cm</span></div>
+                  <div className="pf-stat-label">Height</div>
+                </div>
+              </div>
+            )}
+          </div>
           {error && <Alert variant="danger" className="mx-auto" style={{ maxWidth: '100%' }}>{error}</Alert>}
           {success && <Alert variant="success" className="mx-auto" style={{ maxWidth: '100%' }}>{success}</Alert>}
           
           <Tabs
             activeKey={activeTab}
             onSelect={(k) => setActiveTab(k || 'dashboard')}
-            className="mb-4"
+            className="mb-4 pf-tabs"
             id="fitness-tabs"
           >
             <Tab eventKey="dashboard" title="Dashboard">
@@ -362,11 +384,11 @@ const PersonalFitness: React.FC = () => {
           </Tabs>
 
           {/* Clear Data Confirmation Modal */}
-          <Modal show={showClearModal} onHide={() => setShowClearModal(false)}>
-            <Modal.Header closeButton className="text-dark">
+          <Modal show={showClearModal} onHide={() => setShowClearModal(false)} className="pf-modal">
+            <Modal.Header closeButton>
               <Modal.Title>Clear Personal Data</Modal.Title>
             </Modal.Header>
-            <Modal.Body className="text-dark">
+            <Modal.Body>
               <p className="mb-2">Are you sure you want to clear all your personal fitness data? This action cannot be undone.</p>
               <p className="mb-0">This will remove your height, weight, date of birth, and gender information.</p>
             </Modal.Body>

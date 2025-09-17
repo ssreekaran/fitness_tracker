@@ -245,10 +245,7 @@
   color: white;
 }
 
-/* Global body spacing */
-body {
-  padding-top: 76px;
-}
+/* Removed global body spacing to avoid pushing navbar down. */
 
 /* Dark mode specific styles */
 /* Dark mode overrides */
@@ -309,4 +306,166 @@ body {
   .unit-toggle {
     flex-direction: column;
   }
+}
+
+/* Redesigned Page Additions */
+.pf-hero {
+  margin: 2rem auto 1.5rem;
+  padding: 1.75rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(74,144,226,0.10), rgba(129,140,248,0.08));
+  border: 1px solid rgba(100,108,255,0.15);
+}
+
+.pf-title {
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+}
+
+.pf-subtitle {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.pf-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pf-stat {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  text-align: center;
+}
+
+.pf-stat-value {
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.pf-stat-value .unit {
+  font-weight: 600;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.pf-stat-label {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+/* Card wrapper for consistent theming */
+.pf-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  padding: 0.25rem;
+}
+
+.pf-card .card-body {
+  color: var(--text-color);
+}
+
+/* Fitness stats list */
+.fitness-stats {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.fitness-stats .stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.fitness-stats .stat-row:last-child {
+  border-bottom: none;
+}
+
+.fitness-stats .label {
+  opacity: 0.8;
+}
+
+.fitness-stats .value {
+  font-weight: 600;
+}
+
+.muted {
+  opacity: 0.7;
+}
+
+/* Tabs override for better dark mode */
+.pf-tabs .nav-link {
+  color: var(--text-color);
+  border: 1px solid transparent;
+  margin-right: 0.25rem;
+}
+
+.pf-tabs .nav-link.active {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--border-color) var(--border-color) var(--card-bg);
+}
+
+.pf-tabs .tab-content {
+  background: transparent;
+}
+
+/* Modal */
+.pf-modal .modal-content {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.pf-modal .modal-header, .pf-modal .modal-footer {
+  border-color: var(--border-color);
+}
+
+/* Colorful card variants - light mode subtle tints */
+.pf-card--indigo { background: linear-gradient(180deg, rgba(99,102,241,0.06), rgba(99,102,241,0.03)) !important; }
+.pf-card--teal { background: linear-gradient(180deg, rgba(20,184,166,0.06), rgba(20,184,166,0.03)) !important; }
+.pf-card--violet { background: linear-gradient(180deg, rgba(139,92,246,0.06), rgba(139,92,246,0.03)) !important; }
+
+.pf-card--indigo { border-color: rgba(99,102,241,0.25) !important; }
+.pf-card--teal { border-color: rgba(20,184,166,0.25) !important; }
+.pf-card--violet { border-color: rgba(139,92,246,0.25) !important; }
+
+/* Colorful card variants - dark mode richer tints */
+:root.dark .pf-card--indigo {
+  background: radial-gradient(1200px 300px at 10% -10%, rgba(99,102,241,0.28), transparent),
+              linear-gradient(180deg, rgba(99,102,241,0.20), rgba(99,102,241,0.10)) !important;
+  border-color: rgba(99,102,241,0.35) !important;
+}
+
+:root.dark .pf-card--teal {
+  background: radial-gradient(1200px 300px at 90% -10%, rgba(20,184,166,0.26), transparent),
+              linear-gradient(180deg, rgba(20,184,166,0.18), rgba(20,184,166,0.10)) !important;
+  border-color: rgba(20,184,166,0.35) !important;
+}
+
+:root.dark .pf-card--violet {
+  background: radial-gradient(1200px 300px at 50% -10%, rgba(139,92,246,0.28), transparent),
+              linear-gradient(180deg, rgba(139,92,246,0.20), rgba(139,92,246,0.10)) !important;
+  border-color: rgba(139,92,246,0.35) !important;
+}
+
+/* Ensure text remains readable on tinted cards */
+.pf-card--indigo .card-title,
+.pf-card--teal .card-title,
+.pf-card--violet .card-title {
+  color: var(--text-color);
+}
+
+.pf-card--indigo .muted,
+.pf-card--teal .muted,
+.pf-card--violet .muted {
+  opacity: 0.8;
 }

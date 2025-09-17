@@ -232,7 +232,8 @@ const WorkoutPlanner: React.FC = () => {
   // Event style getter
   const eventStyleGetter = (event: WorkoutEvent) => {
     let backgroundColor = '';
-    switch (event.type) {
+    const t = (event.type || '').toLowerCase();
+    switch (t) {
       case 'strength':
         backgroundColor = '#3174ad';
         break;
@@ -272,80 +273,92 @@ const WorkoutPlanner: React.FC = () => {
     );
   }
 
-  console.log('Rendering WorkoutPlanner with events:', events.length);
-
   return (
     <div className="workout-planner">
       <Container>
-        <div className="text-center">
-          <h1>Workout Planner</h1>
-          <Button 
-            variant="primary" 
-            onClick={() => {
-              const startTime = getNextWholeHour(new Date());
-              const endTime = new Date(startTime);
-              endTime.setHours(startTime.getHours() + 1);
-              
-              setFormData({
-                title: '',
-                start: startTime,
-                end: endTime,
-                type: 'strength',
-                notes: '',
-                userId: user?.uid || '',
-              });
-              setShowModal(true);
-            }}
-            size="lg"
-            className="mb-4"
-          >
-            Add Workout
-          </Button>
-        </div>
+        <div className="wp-layout">
+          <div className="wp-hero">
+            <div className="wp-hero-text">
+              <h1 className="wp-title">Workout Planner</h1>
+              <p className="wp-subtitle">Plan your training week and stay consistent.</p>
+            </div>
+            <div className="wp-actions">
+              <Button 
+                variant="primary" 
+                onClick={() => {
+                  const startTime = getNextWholeHour(new Date());
+                  const endTime = new Date(startTime);
+                  endTime.setHours(startTime.getHours() + 1);
+                  
+                  setFormData({
+                    title: '',
+                    start: startTime,
+                    end: endTime,
+                    type: 'strength',
+                    notes: '',
+                    userId: user?.uid || '',
+                  });
+                  setShowModal(true);
+                }}
+                size="lg"
+                className="wp-add-btn"
+              >
+                Add Workout
+              </Button>
+            </div>
+            <div className="type-legend inside-hero">
+              <span className="legend-item"><span className="dot strength"></span>Strength</span>
+              <span className="legend-item"><span className="dot cardio"></span>Cardio</span>
+              <span className="legend-item"><span className="dot flexibility"></span>Flexibility</span>
+              <span className="legend-item"><span className="dot rest"></span>Rest</span>
+            </div>
+          </div>
 
-        <div className="calendar-container">
-          <h2>Workout Calendar</h2>
-          <div style={{ height: '1px', backgroundColor: '#ddd', margin: '10px 0' }}></div>
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 700, minHeight: 700 }}
-            selectable
-            onSelectEvent={handleSelectEvent}
-            onSelectSlot={handleSelectSlot}
-            eventPropGetter={eventStyleGetter}
-            defaultView="month"
-            views={['month', 'week', 'day']}
-            step={30}
-            timeslots={2}
-            dayLayoutAlgorithm="no-overlap"
-            components={{
-              month: {
-                dateHeader: ({ label }: { label: string }) => (
-                  <div className="rbc-date-cell">
-                    <div className="rbc-button-link">{label}</div>
-                  </div>
-                ),
-              },
-            }}
-            formats={{
-              monthHeaderFormat: 'MMMM yyyy',
-              weekdayFormat: 'EEEE',
-              dayFormat: 'd',
-              timeGutterFormat: 'h a',
-              eventTimeRangeFormat: (range: { start: Date; end: Date }) => {
-                const startTime = format(range.start, 'h:mm a');
-                const endTime = format(range.end, 'h:mm a');
-                return `${startTime} - ${endTime}`;
-              },
-            }}
-          />
+          <div className="calendar-container wp-card">
+            <div className="wp-card-header">
+              <h2>Workout Calendar</h2>
+            </div>
+            <Calendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: 820, minHeight: 820 }}
+              selectable
+              onSelectEvent={handleSelectEvent}
+              onSelectSlot={handleSelectSlot}
+              eventPropGetter={eventStyleGetter}
+              defaultView="month"
+              views={['month', 'week', 'day']}
+              step={30}
+              timeslots={2}
+              dayLayoutAlgorithm="no-overlap"
+              components={{
+                month: {
+                  dateHeader: ({ label }: { label: string }) => (
+                    <div className="rbc-date-cell">
+                      <div className="rbc-button-link">{label}</div>
+                    </div>
+                  ),
+                },
+              }}
+              formats={{
+                monthHeaderFormat: 'MMMM yyyy',
+                weekdayFormat: 'EEEE',
+                dayFormat: 'd',
+                timeGutterFormat: 'h a',
+                eventTimeRangeFormat: (range: { start: Date; end: Date }) => {
+                  const startTime = format(range.start, 'h:mm a');
+                  const endTime = format(range.end, 'h:mm a');
+                  return `${startTime} - ${endTime}`;
+                },
+              }}
+            />
+          </div>
         </div>
 
         {/* Add/Edit Workout Modal */}
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal show={showModal} onHide={() => setShowModal(false)} className="wp-modal">
           <Modal.Header closeButton>
             <Modal.Title>Add Workout</Modal.Title>
           </Modal.Header>
@@ -371,10 +384,10 @@ const WorkoutPlanner: React.FC = () => {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="Strength">Strength Training</option>
-                  <option value="Cardio">Cardio</option>
-                  <option value="Flexibility">Flexibility</option>
-                  <option value="Rest">Rest Day</option>
+                  <option value="strength">Strength Training</option>
+                  <option value="cardio">Cardio</option>
+                  <option value="flexibility">Flexibility</option>
+                  <option value="rest">Rest Day</option>
                 </Form.Select>
               </Form.Group>
 
@@ -425,7 +438,7 @@ const WorkoutPlanner: React.FC = () => {
         </Modal>
 
         {/* View/Delete Event Modal */}
-        <Modal show={!!selectedEvent} onHide={() => setSelectedEvent(null)}>
+        <Modal show={!!selectedEvent} onHide={() => setSelectedEvent(null)} className="wp-modal">
           <Modal.Header closeButton>
             <Modal.Title>{selectedEvent?.title}</Modal.Title>
           </Modal.Header>
