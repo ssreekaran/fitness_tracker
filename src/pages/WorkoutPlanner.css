@@ -325,6 +325,14 @@
   padding: 0.7rem 1.1rem;
 }
 
+/* Ensure hero action buttons match size and alignment */
+.wp-actions .btn.wp-add-btn,
+.wp-actions .btn.wp-delete-btn {
+  padding: 0.7rem 1.1rem; /* identical padding */
+  line-height: 1.25;      /* normalize vertical alignment */
+  border-radius: 10px;
+}
+
 /* Card wrapper for calendar */
 .wp-card {
   background: var(--card-bg, var(--background-color));
