@@ -26,6 +26,8 @@ const HealthyFood = lazy(() => import('./pages/HealthyFood'));
 const PersonalFitness = lazy(() => import('./pages/PersonalFitness'));
 const CalorieTracker = lazy(() => import('./pages/CalorieTracker'));
 const WorkoutPlanner = lazy(() => import('./pages/WorkoutPlanner'));
+const DietRecommendations = lazy(() => import('./pages/DietRecommendations'));
+const WorkoutRecommendations = lazy(() => import('./pages/WorkoutRecommendations'));
 
 // Legal pages
 const PrivacyPolicy = () => (
@@ -60,11 +62,7 @@ const handleDeepLink = (url: string) => {
 if (Capacitor.isNativePlatform()) {
   // Handle app opened from a URL (like OAuth redirect)
   CapApp.addListener('appUrlOpen', (data: { url: string }) => {
-    handleDeepLink(data.url);
-  });
-
-  // Handle universal links on iOS
-  CapApp.addListener('appUrlOpen', (data: { url: string }) => {
+    // Consolidated handler for all platforms (including iOS universal links)
     if (data.url) {
       handleDeepLink(data.url);
     }
@@ -132,6 +130,8 @@ const AppContent = () => {
               <Route path="/healthy-food" element={<HealthyFood />} />
               <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/legal/terms-of-service" element={<TermsOfService />} />
+              <Route path="/diet-recommendations" element={<DietRecommendations />} />
+              <Route path="/workout-recommendations" element={<WorkoutRecommendations />} />
               <Route path="/personal-fitness" element={
                 <ProtectedRoute>
                   <PersonalFitness />

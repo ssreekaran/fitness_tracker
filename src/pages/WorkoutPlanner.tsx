@@ -4,7 +4,7 @@ import { format, parseISO, parse, isValid, startOfWeek, getDay } from 'date-fns'
 import { enUS } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Button, Modal, Form, Container } from 'react-bootstrap';
-import { collection, doc, deleteDoc, getDocs, query, writeBatch, where } from 'firebase/firestore';
+import { collection, doc, deleteDoc, getDocs, query, writeBatch, where, DocumentReference, DocumentData, WithFieldValue, Timestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../components/Navbar/hooks/useAuth';
 import './WorkoutPlanner.css';
@@ -31,6 +31,29 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
+
+// Reusable helper to delete document references in chunks with awaited commits
+const commitInChunks = async (
+  dbInstance: typeof db,
+  refs: DocumentReference[],
+  chunkSize = 500
+): Promise<void> => {
+  if (!refs.length) return;
+  let batch = writeBatch(dbInstance);
+  let count = 0;
+  for (const ref of refs) {
+    batch.delete(ref);
+    count++;
+    if (count % chunkSize === 0) {
+      await batch.commit();
+      batch = writeBatch(dbInstance);
+    }
+  }
+  // Commit any remaining operations
+  if (count % chunkSize !== 0) {
+    await batch.commit();
+  }
+};
 
 // Define types for our workout events
 interface WorkoutEvent {
@@ -113,21 +136,20 @@ const WorkoutPlanner: React.FC = () => {
       const colRef = collection(db, 'users', user.uid, 'workoutPlans');
       const q = query(colRef, where('seriesId', '==', selectedEvent.seriesId));
       const snap = await getDocs(q);
-      let batch = writeBatch(db);
-      let count = 0;
-      snap.forEach((d) => {
-        const data: any = d.data();
-        const start: Date = data.start?.toDate ? data.start.toDate() : data.start;
+      const refsToDelete: DocumentReference[] = [];
+      for (const d of snap.docs) {
+        const data = d.data() as {
+          start?: Timestamp | Date;
+          end?: Timestamp | Date;
+          [key: string]: unknown;
+        };
+        const start: Date | undefined =
+          data.start instanceof Timestamp ? data.start.toDate() : data.start;
         if (start && start > cutoff) {
-          batch.delete(d.ref);
-          count++;
-          if (count % 500 === 0) {
-            batch.commit();
-            batch = writeBatch(db);
-          }
+          refsToDelete.push(d.ref);
         }
-      });
-      await batch.commit();
+      }
+      await commitInChunks(db, refsToDelete, 500);
       // Update local state
       setEvents(prev => prev.filter(ev => ev.seriesId !== selectedEvent.seriesId || ev.start <= cutoff));
       setSelectedEvent(null);
@@ -179,8 +201,8 @@ const WorkoutPlanner: React.FC = () => {
 
       // Prepare occurrences
       const occurrences: { start: Date; end: Date }[] = [];
-      let curStart = new Date(formData.start);
-      let curEnd = new Date(formData.end);
+      const curStart = new Date(formData.start);
+      const curEnd = new Date(formData.end);
       occurrences.push({ start: curStart, end: curEnd });
 
       if (repeatEnabled) {
@@ -216,7 +238,7 @@ const WorkoutPlanner: React.FC = () => {
           createdAt: now,
           updatedAt: now,
         };
-        batch.set(docRef, record as any);
+        batch.set(docRef, record as WithFieldValue<DocumentData>);
         newEvents.push({
           id: docRef.id,
           title: record.title,
@@ -270,17 +292,8 @@ const WorkoutPlanner: React.FC = () => {
       const colRef = collection(db, 'users', user.uid, 'workoutPlans');
       const q = query(colRef, where('seriesId', '==', selectedEvent.seriesId));
       const snap = await getDocs(q);
-      let batch = writeBatch(db);
-      let count = 0;
-      snap.forEach((d) => {
-        batch.delete(d.ref);
-        count++;
-        if (count % 500 === 0) {
-          batch.commit();
-          batch = writeBatch(db);
-        }
-      });
-      await batch.commit();
+      const refsToDelete: DocumentReference[] = snap.docs.map(d => d.ref);
+      await commitInChunks(db, refsToDelete, 500);
       // Update local state: remove all events in this series
       setEvents(prev => prev.filter(ev => ev.seriesId !== selectedEvent.seriesId));
       setSelectedEvent(null);
@@ -563,7 +576,7 @@ const WorkoutPlanner: React.FC = () => {
                       <Form.Label>Frequency</Form.Label>
                       <Form.Select
                         value={repeatMode}
-                        onChange={(e) => setRepeatMode(e.target.value as any)}
+                        onChange={(e) => setRepeatMode(e.target.value as typeof repeatMode)}
                       >
                         <option value="daily">Every day</option>
                         <option value="weekly">Every week</option>
@@ -580,7 +593,7 @@ const WorkoutPlanner: React.FC = () => {
                         </Form.Group>
                         <Form.Group className="col-md-3">
                           <Form.Label>Unit</Form.Label>
-                          <Form.Select value={customUnit} onChange={(e) => setCustomUnit(e.target.value as any)}>
+                          <Form.Select value={customUnit} onChange={(e) => setCustomUnit(e.target.value as typeof customUnit)}>
                             <option value="days">Days</option>
                             <option value="weeks">Weeks</option>
                             <option value="months">Months</option>
@@ -693,17 +706,8 @@ const WorkoutPlanner: React.FC = () => {
                 setIsDeletingAll(true);
                 const colRef = collection(db, 'users', user.uid, 'workoutPlans');
                 const snap = await getDocs(colRef);
-                let batch = writeBatch(db);
-                let count = 0;
-                snap.forEach((d) => {
-                  batch.delete(d.ref);
-                  count++;
-                  if (count % 500 === 0) {
-                    batch.commit();
-                    batch = writeBatch(db);
-                  }
-                });
-                await batch.commit();
+                const refsToDelete: DocumentReference[] = snap.docs.map(d => d.ref);
+                await commitInChunks(db, refsToDelete, 500);
                 setEvents([]);
               } catch (err) {
                 console.error('Error deleting all workouts:', err);
