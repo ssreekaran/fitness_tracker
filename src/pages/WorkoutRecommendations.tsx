@@ -54,7 +54,7 @@ type QuestionReadonly = Readonly<{
 
 // Type that enforces all ChatState keys are present exactly once
 type ValidateQuestions<T extends readonly QuestionReadonly[]> = {
-  [K in QuestionKey]: T extends readonly [...infer U, { key: K }, ...infer _]
+  [K in QuestionKey]: T extends readonly [...infer U, { key: K }, ...unknown[]]
     ? U extends QuestionReadonly[]
       ? unknown
       : `Missing question for key: ${K}`
@@ -89,7 +89,7 @@ function validateQuestions<T extends readonly QuestionReadonly[]>(
       return acc;
     }, {} as Record<QuestionKey, number>);
     const duplicateKeys = Object.entries(keyCounts)
-      .filter(([_, count]) => count > 1)
+      .filter(([, count]) => count > 1)
       .map(([key]) => key);
     
     if (duplicateKeys.length > 0) {
