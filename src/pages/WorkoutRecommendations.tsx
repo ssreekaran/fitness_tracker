@@ -46,6 +46,71 @@ const QUICK_REPLIES: Record<string, { label: string; value: string }[]> = {
   ],
 };
 
+type QuestionKey = keyof ChatState;
+type QuestionReadonly = Readonly<{
+  key: QuestionKey;
+  text: string;
+}>;
+
+// Type that enforces all ChatState keys are present exactly once
+type ValidateQuestions<T extends readonly QuestionReadonly[]> = {
+  [K in QuestionKey]: T extends readonly [...infer U, { key: K }, ...infer _]
+    ? U extends QuestionReadonly[]
+      ? unknown
+      : `Missing question for key: ${K}`
+    : `Missing question for key: ${K}`;
+}[QuestionKey] extends unknown
+  ? T
+  : never;
+
+// Helper function for development-time validation
+function validateQuestions<T extends readonly QuestionReadonly[]>(
+  questions: T & ValidateQuestions<T>
+): T {
+  if (process.env.NODE_ENV !== 'production') {
+    const requiredKeys = new Set<QuestionKey>(['goal', 'experience', 'equipment', 'daysPerWeek', 'constraints']);
+    const questionKeys = new Set(questions.map(q => q.key));
+    
+    // Check for missing keys
+    const missingKeys = [...requiredKeys].filter(key => !questionKeys.has(key));
+    if (missingKeys.length > 0) {
+      console.error(`Missing questions for keys: ${missingKeys.join(', ')}`);
+    }
+    
+    // Check for extra keys
+    const extraKeys = [...questionKeys].filter(key => !requiredKeys.has(key));
+    if (extraKeys.length > 0) {
+      console.error(`Extra questions found for keys: ${extraKeys.join(', ')}`);
+    }
+    
+    // Check for duplicates
+    const keyCounts = questions.reduce((acc, { key }) => {
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {} as Record<QuestionKey, number>);
+    const duplicateKeys = Object.entries(keyCounts)
+      .filter(([_, count]) => count > 1)
+      .map(([key]) => key);
+    
+    if (duplicateKeys.length > 0) {
+      console.error(`Duplicate questions found for keys: ${duplicateKeys.join(', ')}`);
+    }
+  }
+  return questions;
+}
+
+const QUESTIONS = validateQuestions([
+  { key: 'goal' as const, text: 'Choose your primary goal.' },
+  { key: 'experience' as const, text: 'What is your experience level?' },
+  { key: 'equipment' as const, text: 'What equipment do you have access to?' },
+  { key: 'daysPerWeek' as const, text: 'How many days per week can you train?' },
+  { key: 'constraints' as const, text: 'Any injuries or constraints I should know about? (optional)' },
+] as const);
+
+const getQuestionForStep = (s: number): QuestionReadonly | null => {
+  return s < QUESTIONS.length ? QUESTIONS[s] : null;
+};
+
 const WorkoutRecommendations: React.FC = () => {
   const navigate = useNavigate();
 
@@ -94,16 +159,7 @@ const WorkoutRecommendations: React.FC = () => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages]);
 
-  const currentQuestion = useMemo(() => {
-    switch (step) {
-      case 0: return { key: 'goal', text: 'Choose your primary goal.' } as const;
-      case 1: return { key: 'experience', text: 'What is your experience level?' } as const;
-      case 2: return { key: 'equipment', text: 'What equipment do you have access to?' } as const;
-      case 3: return { key: 'daysPerWeek', text: 'How many days per week can you train?' } as const;
-      case 4: return { key: 'constraints', text: 'Any injuries or constraints I should know about? (optional)' } as const;
-      default: return null;
-    }
-  }, [step]);
+  const currentQuestion = useMemo(() => getQuestionForStep(step), [step]);
 
   const append = (msg: Omit<ChatMsg, 'id'>) => {
     setMessages(prev => ([...prev, { id: `${Date.now()}-${Math.random()}`, ...msg }]));
@@ -144,23 +200,12 @@ const WorkoutRecommendations: React.FC = () => {
       const nextStep = step + 1;
       setStep(nextStep);
       setTimeout(() => {
-        const q = getQuestionText(nextStep);
-        append({ role: 'bot', text: q });
+        const q = getQuestionForStep(nextStep);
+        append({ role: 'bot', text: q?.text || '' });
       }, 250);
     } else {
       // Generate plan
       setTimeout(() => finalizePlan(), 350);
-    }
-  };
-
-  const getQuestionText = (s: number) => {
-    switch (s) {
-      case 0: return 'Choose your primary goal.';
-      case 1: return 'What is your experience level?';
-      case 2: return 'What equipment do you have access to?';
-      case 3: return 'How many days per week can you train?';
-      case 4: return 'Any injuries or constraints I should know about? (optional)';
-      default: return '';
     }
   };
 
