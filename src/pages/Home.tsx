@@ -68,21 +68,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Metrics */}
-      <section className="section metrics">
-        <div className="metric">
-          <div className="metric-value">24k+</div>
-          <div className="metric-label">Workouts logged</div>
-        </div>
-        <div className="metric">
-          <div className="metric-value">1M+</div>
-          <div className="metric-label">Foods in database</div>
-        </div>
-        <div className="metric">
-          <div className="metric-value">4.9★</div>
-          <div className="metric-label">User satisfaction</div>
-        </div>
-      </section>
 
       {/* Quick links */}
       <section className="section quick-links">

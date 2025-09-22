@@ -1,342 +1,341 @@
-/* Calorie Tracker Styles - Scoped to component */
-.calorie-tracker {
-  max-width: 1200px;
+/* Calorie Tracker Container - matching PersonalFitness style */
+.calorie-tracker-container {
+  padding-top: 6rem;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: none !important;
+}
+
+.calorie-tracker-content {
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 0;
 }
 
-.calorie-tracker .page-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e9ecef;
+/* Hero Section - matching Home and PersonalFitness style */
+.ct-hero {
+  margin: 2rem auto 1.5rem;
+  padding: 1.75rem;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.1),
+    rgba(129, 140, 248, 0.08)
+  );
+  border: 1px solid rgba(139, 92, 246, 0.15);
 }
 
-.calorie-tracker .page-header h2 {
-  color: var(--primary-color);
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  font-size: 1.75rem;
+.ct-title {
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  color: var(--text-color);
 }
 
-.calorie-tracker .page-header p {
-  color: #6c757d;
+.ct-subtitle {
   margin: 0;
+  opacity: 0.85;
+  color: var(--text-color);
+}
+
+.ct-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .ct-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ct-stat {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  text-align: center;
+}
+
+.ct-stat-value {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--text-color);
+}
+
+.ct-stat-value .unit {
+  font-weight: 600;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.ct-stat-label {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+/* Card wrapper for consistent theming - matching PersonalFitness */
+.calorie-tracker-container .pf-card {
+  background: var(--card-bg, #ffffff) !important;
+  border: 1px solid var(--border-color, #e0e0e0) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  padding: 0.25rem;
+}
+
+.calorie-tracker-container .pf-card .card-body {
+  color: var(--text-color);
+}
+
+/* Colorful card variants - light mode subtle tints */
+.calorie-tracker-container .pf-card--violet {
+  background: linear-gradient(
+    180deg,
+    rgba(139, 92, 246, 0.06),
+    rgba(139, 92, 246, 0.03)
+  ) !important;
+  border-color: rgba(139, 92, 246, 0.25) !important;
+}
+
+.calorie-tracker-container .pf-card--teal {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 184, 166, 0.06),
+    rgba(20, 184, 166, 0.03)
+  ) !important;
+  border-color: rgba(20, 184, 166, 0.25) !important;
+}
+
+/* Colorful card variants - dark mode richer tints */
+:root.dark .calorie-tracker-container .pf-card--violet {
+  background: radial-gradient(
+      1200px 300px at 50% -10%,
+      rgba(139, 92, 246, 0.28),
+      transparent
+    ),
+    linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1)) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
+}
+
+:root.dark .calorie-tracker-container .pf-card--teal {
+  background: radial-gradient(
+      1200px 300px at 90% -10%,
+      rgba(20, 184, 166, 0.26),
+      transparent
+    ),
+    linear-gradient(180deg, rgba(20, 184, 166, 0.18), rgba(20, 184, 166, 0.1)) !important;
+  border-color: rgba(20, 184, 166, 0.35) !important;
+}
+
+/* Form styling */
+.calorie-tracker-container .form-label {
+  color: var(--text-color);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.calorie-tracker-container .form-control,
+.calorie-tracker-container .form-select {
+  background-color: var(--input-bg, #ffffff);
+  color: var(--text-color);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.calorie-tracker-container .form-control:focus,
+.calorie-tracker-container .form-select:focus {
+  background-color: var(--input-bg, #ffffff);
+  border-color: var(--link-color);
+  box-shadow: 0 0 0 0.25rem rgba(129, 140, 248, 0.25);
+}
+
+.calorie-tracker-container .form-control::placeholder {
+  color: var(--text-color);
+  opacity: 0.6;
 }
 
 /* Food Database Link */
-.calorie-tracker .food-db-link {
+.calorie-tracker-container .food-db-link {
   transition: color 0.2s;
   text-decoration: none;
-  color: inherit; /* Inherit text color from parent */
-  opacity: 0.9; /* 90% opacity for better visibility */
+  color: var(--link-color);
+  opacity: 0.9;
 }
 
-/* Dark mode support */
-[data-bs-theme="dark"] .calorie-tracker .food-db-link {
-  color: var(--bs-body-color, #f8f9fa);
-}
-
-.calorie-tracker .food-db-link:hover {
+.calorie-tracker-container .food-db-link:hover {
   text-decoration: underline;
   opacity: 1;
-  color: var(--bs-link-color, #0d6efd); /* Use theme's link color */
+  color: var(--link-hover);
 }
 
-[data-bs-theme="dark"] .calorie-tracker .food-db-link:hover {
-  color: var(--bs-link-hover-color, #6ea8fe);
-}
-
-/* Card Styling - Scoped to component */
-.calorie-tracker .card {
-  border: none;
+/* Button styling */
+.calorie-tracker-container .btn-primary {
+  background-color: var(--link-color);
+  border-color: var(--link-color);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.25rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
 }
 
-.calorie-tracker .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.calorie-tracker-container .btn-primary:hover {
+  background-color: var(--link-hover);
+  border-color: var(--link-hover);
+  transform: translateY(-1px);
 }
 
-.calorie-tracker .card-header {
-  background-color: var(--primary-color);
-  color: white;
-  font-weight: 500;
-  border-radius: 10px 10px 0 0 !important;
+.calorie-tracker-container .btn-outline-secondary {
+  color: var(--text-color);
+  border-color: var(--border-color, #e0e0e0);
+  border-radius: 8px;
+}
+
+.calorie-tracker-container .btn-outline-secondary:hover {
+  background-color: var(--button-bg);
+  border-color: var(--border-color, #e0e0e0);
+  color: var(--text-color);
+}
+
+.calorie-tracker-container .btn-outline-danger {
+  border-radius: 6px;
+}
+
+/* Table styling */
+.calorie-tracker-container .table {
+  color: var(--text-color);
+  --bs-table-bg: transparent;
+}
+
+.calorie-tracker-container .table th,
+.calorie-tracker-container .table td {
+  border-color: var(--border-color, #e0e0e0);
+  color: var(--text-color);
+  padding: 0.75rem;
+}
+
+.calorie-tracker-container .table thead th {
+  background-color: var(--button-bg);
+  color: var(--text-color);
+  border-color: var(--border-color, #e0e0e0);
+  font-weight: 600;
+}
+
+.calorie-tracker-container .table-hover > tbody > tr:hover > td {
+  background-color: var(--button-bg);
+}
+
+/* Alert styling */
+.calorie-tracker-container .alert {
+  border-radius: 12px;
+  border: 1px solid transparent;
   padding: 1rem 1.25rem;
 }
 
-/* Form Styling - Scoped to component */
-.calorie-tracker .form-group {
-  margin-bottom: 1rem;
+.calorie-tracker-container .alert-info {
+  background-color: rgba(129, 140, 248, 0.1);
+  border-color: rgba(129, 140, 248, 0.2);
+  color: var(--text-color);
 }
 
-.calorie-tracker .form-label {
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-  color: var(--text-color, #213547); /* Use theme text color */
-  font-size: 0.9rem;
+.calorie-tracker-container .alert-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: var(--text-color);
 }
 
-.calorie-tracker .form-control {
-  padding: 0.4rem 0.75rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  color: inherit; /* Inherit text color from parent */
+.calorie-tracker-container .alert-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--text-color);
 }
 
-/* Style for placeholder text */
-.calorie-tracker .form-control::placeholder {
-  color: inherit;
-  opacity: 0.7; /* Slightly transparent to differentiate from actual input */
+/* Modal styling */
+.ct-modal .modal-content {
+  background: var(--card-bg, #ffffff);
+  color: var(--text-color);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
 }
 
-/* Form control focus state */
-.calorie-tracker .form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+.ct-modal .modal-header,
+.ct-modal .modal-footer {
+  border-color: var(--border-color, #e0e0e0);
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .calorie-tracker .form-control {
-    background-color: var(--bs-dark-bg-subtle, #2b3035);
-    border-color: var(--bs-dark-border-color, #495057);
-    color: var(--bs-body-color, #f8f9fa);
+.ct-modal .modal-title {
+  color: var(--text-color);
+}
+
+/* Dark mode variables */
+:root.dark {
+  --card-bg: #2d2d2d;
+  --border-color: #404040;
+  --input-bg: #3d3d3d;
+}
+
+/* Light mode variables */
+:root {
+  --card-bg: #ffffff;
+  --border-color: #e0e0e0;
+  --input-bg: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .calorie-tracker-container {
+    padding-top: 5rem;
   }
-  
-  .calorie-tracker .form-control:focus {
-    background-color: var(--bs-dark-bg-subtle, #2b3035);
-    border-color: var(--primary-color);
-    color: var(--bs-body-color, #f8f9fa);
+
+  .ct-hero {
+    margin: 1rem auto 1.5rem;
+    padding: 1.5rem;
   }
-}
 
-/* Table Styling - Scoped to component */
-.calorie-tracker .table {
-  margin-bottom: 0;
-  font-size: 0.9rem;
-  color: #ffffff; /* White text for all table content */
-}
-
-.calorie-tracker .table thead th {
-  background-color: var(--primary-color, #0d6efd);
-  border-bottom: 1px solid #dee2e6;
-  font-weight: 600;
-  color: #ffffff; /* White text for headers */
-  padding: 0.6rem 0.75rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.calorie-tracker .table td {
-  padding: 0.6rem 0.75rem;
-  vertical-align: middle;
-  color: #ffffff; /* White text for table cells */
-  border-color: rgba(255, 255, 255, 0.1); /* Lighter border for better visibility */
-}
-
-/* Ensure text is visible in both light and dark modes */
-[data-bs-theme="dark"] .calorie-tracker .table,
-[data-bs-theme="light"] .calorie-tracker .table {
-  color: #ffffff;
-}
-
-[data-bs-theme="dark"] .calorie-tracker .table td,
-[data-bs-theme="light"] .calorie-tracker .table td {
-  color: #ffffff;
-}
-
-/* Button Styling - Scoped to component */
-.calorie-tracker .btn {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
-}
-
-/* Card Content Padding - Scoped to component */
-.calorie-tracker .card-body {
-  padding: 1.25rem;
-}
-
-/* Summary Items - Scoped to component */
-.calorie-tracker .summary-item {
-  padding: 0.6rem 0.75rem;
-  margin-bottom: 0.5rem;
-  border-radius: 4px;
-  background-color: #f8f9fa;
-  font-size: 0.9rem;
-  color: #000000; /* Force black text */
-}
-
-.summary-item:last-child {
-  margin-bottom: 0;
-}
-
-.calorie-tracker .summary-item span {
-  color: #000000; /* Force black text for labels */
-  font-weight: 500;
-}
-
-.calorie-tracker .summary-item strong {
-  color: #000000; /* Force black text for values */
-  font-weight: 600;
-}
-
-/* Ensure text remains black in dark mode */
-[data-bs-theme="dark"] .calorie-tracker .summary-item,
-[data-bs-theme="dark"] .calorie-tracker .summary-item span,
-[data-bs-theme="dark"] .calorie-tracker .summary-item strong {
-  color: #000000 !important;
-}
-
-.calorie-tracker .table td, .calorie-tracker .table th {
-  vertical-align: middle;
-  border-color: #dee2e6;
-}
-
-.calorie-tracker .table-hover tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-/* Summary Section - Scoped to component */
-.calorie-tracker .summary-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 12px 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.calorie-tracker .summary-item:hover {
-  background-color: #e9ecef;
-  transform: translateY(-1px);
-}
-
-.calorie-tracker .summary-item:last-child {
-  margin-bottom: 0;
-}
-
-.calorie-tracker .summary-item strong {
-  color: var(--primary-color);
-  font-weight: 600;
-}
-
-/* Buttons */
-.calorie-tracker .btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  font-weight: 500;
-  padding: 0.5rem 1.25rem;
-  transition: all 0.3s ease;
-}
-
-.calorie-tracker .btn-primary:hover {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
-  transform: translateY(-1px);
-}
-
-.calorie-tracker .btn-outline-danger {
-  transition: all 0.3s ease;
-}
-
-.calorie-tracker .btn-outline-danger:hover {
-  transform: translateY(-1px);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 767.98px) {
-  .calorie-tracker {
-    padding: 1rem 0;
-  }
-  
-  .calorie-tracker .card {
-    margin-bottom: 1rem;
-  }
-  
-  .calorie-tracker .table-responsive {
-    border: none;
+  .ct-title {
+    font-size: 1.75rem;
   }
 }
 
-/* Dark Mode Support */
-[data-theme="dark"] .calorie-tracker .card {
-  background-color: #2d3748;
-  color: #e2e8f0;
+/* Ensure text remains readable on tinted cards */
+.calorie-tracker-container .pf-card--violet .card-title,
+.calorie-tracker-container .pf-card--teal .card-title {
+  color: var(--text-color);
 }
 
-[data-theme="dark"] .calorie-tracker .card-header {
-  background-color: #2c5282;
+/* Input group styling */
+.calorie-tracker-container .input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-[data-theme="dark"] .calorie-tracker .table {
-  color: #e2e8f0;
+.calorie-tracker-container .input-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
-[data-theme="dark"] .calorie-tracker .table thead th {
-  background-color: #2d3748;
-  color: #e2e8f0;
-  border-color: #4a5568;
+/* Spinner styling */
+.calorie-tracker-container .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
 }
 
-[data-theme="dark"] .calorie-tracker .table td,
-[data-theme="dark"] .calorie-tracker .table th {
-  border-color: #4a5568;
+/* Text muted styling */
+.calorie-tracker-container .text-muted {
+  color: var(--text-color) !important;
+  opacity: 0.7;
 }
 
-[data-theme="dark"] .calorie-tracker .form-control,
-[data-theme="dark"] .calorie-tracker .form-select {
-  background-color: #2d3748;
-  border-color: #4a5568;
-  color: #e2e8f0;
+/* Form text styling */
+.calorie-tracker-container .form-text {
+  color: var(--text-color);
+  opacity: 0.7;
 }
 
-[data-theme="dark"] .calorie-tracker .form-control:focus,
-[data-theme="dark"] .calorie-tracker .form-select:focus {
-  background-color: #2d3748;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 0.25rem rgba(66, 153, 225, 0.25);
-  color: #e2e8f0;
-}
-
-[data-theme="dark"] .calorie-tracker .summary-item {
-  border-bottom-color: #4a5568;
-}
-
-[data-theme="dark"] .calorie-tracker .btn-outline-secondary {
-  color: #e2e8f0;
-  border-color: #4a5568;
-}
-
-[data-theme="dark"] .calorie-tracker .btn-outline-secondary:hover {
-  background-color: #4a5568;
-  border-color: #4a5568;
-}
-
-/* Dark mode modal text */
-[data-theme="dark"] .calorie-tracker .modal-content {
-  background-color: #2d3748;
-  color: #e2e8f0;
-}
-
-[data-theme="dark"] .calorie-tracker .modal-header,
-[data-theme="dark"] .calorie-tracker .modal-footer {
-  border-color: #4a5568;
-}
-
-[data-theme="dark"] .calorie-tracker .modal-title {
-  color: #e2e8f0;
-}
-
-[data-theme="dark"] .calorie-tracker .close {
-  color: #e2e8f0;
-  text-shadow: 0 1px 0 #4a5568;
+.calorie-tracker-container .text-danger {
+  color: #dc3545 !important;
 }

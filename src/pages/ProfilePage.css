@@ -1,0 +1,312 @@
+/* Profile Page Styling */
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* Header Section */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-name h1.ant-typography,
+.profile-name h2.ant-typography,
+.profile-name h3.ant-typography {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.profile-name .ant-typography-secondary {
+  font-size: 16px;
+  color: var(--ant-text-color-secondary);
+}
+
+.profile-name h3.ant-typography {
+  color: var(--ant-text-color);
+  margin-bottom: 4px !important;
+}
+
+/* Profile Cards */
+.profile-card {
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.profile-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.profile-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 24px;
+}
+
+.profile-card .ant-card-body {
+  padding: 24px;
+}
+
+/* Info Section */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 13px;
+  color: var(--ant-text-color-secondary);
+}
+
+.info-value {
+  font-size: 15px;
+  color: var(--ant-text-color);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-card .ant-statistic-title {
+  font-size: 13px;
+  color: var(--ant-text-color-secondary);
+  margin-bottom: 8px;
+}
+
+.stat-card .ant-statistic-content {
+  font-size: 24px;
+  color: var(--ant-text-color);
+}
+
+/* Activity Cards */
+.activity-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  height: 100%;
+}
+
+.activity-card .ant-card-body {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 16px;
+}
+
+.activity-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-icon .anticon {
+  font-size: 24px;
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-content .ant-typography {
+  margin: 0;
+  line-height: 1.4;
+  color: var(--ant-text-color);
+}
+
+.activity-content .ant-typography-secondary {
+  color: var(--ant-text-color-secondary) !important;
+}
+
+.activity-content .ant-progress {
+  margin-top: 8px;
+}
+
+/* Danger Zone */
+.danger-zone {
+  margin-top: 24px;
+  border: 1px solid #fff1f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.danger-zone .ant-card-head {
+  background-color: #fff1f0;
+  border-bottom: 1px solid #ffccc7;
+}
+
+.danger-zone .ant-card-head-title {
+  color: #cf1322;
+  font-weight: 500;
+}
+
+.danger-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-card .ant-card-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .danger-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Utility Classes */
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mt-3 {
+  margin-top: 12px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-card {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Loading State */
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  gap: 16px;
+  color: #8c8c8c;
+}
+
+/* Button Styles */
+.back-button {
+  border-radius: 8px;
+  font-weight: 500;
+  height: 40px;
+  padding: 0 20px;
+}
+
+/* Hover Effects */
+.ant-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Card Hover Effects - consolidated above */
+
+/* Form Elements */
+.ant-input,
+.ant-input-password,
+.ant-select-selector {
+  border-radius: 8px !important;
+}
+
+/* Alert Styling */
+.ant-alert {
+  border-radius: 8px;
+}
+
+.ant-alert-error {
+  background-color: #fff1f0;
+  border: 1px solid #ffa39e;
+}
+
+.ant-alert-success {
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
+}
+/* Loading skeleton animation */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark mode support for loading skeleton */
+:root.dark .loading-skeleton {
+  background: linear-gradient(90deg, #3d3d3d 25%, #4d4d4d 50%, #3d3d3d 75%);
+  background-size: 200% 100%;
+}
+
+/* Activity card improvements */
+.activity-card .activity-content {
+  position: relative;
+}
+
+.activity-card .loading-skeleton {
+  display: inline-block;
+}
