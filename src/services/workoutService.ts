@@ -11,6 +11,51 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
+import { logger } from "../utils/logger";
+
+// Safe date conversion utility
+const convertToValidDate = (
+  dateInput: Date | Timestamp | string | number
+): Date => {
+  let date: Date;
+
+  if (dateInput instanceof Date) {
+    date = dateInput;
+  } else if (dateInput instanceof Timestamp) {
+    date = dateInput.toDate();
+  } else if (typeof dateInput === "number") {
+    // Treat as epoch timestamp (milliseconds)
+    date = new Date(dateInput);
+  } else if (typeof dateInput === "string") {
+    // Parse string date
+    date = new Date(dateInput);
+  } else {
+    throw new Error(`Invalid date type: ${typeof dateInput}`);
+  }
+
+  // Validate the resulting Date
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid date value: ${dateInput}`);
+  }
+
+  return date;
+};
+
+// Date normalization helper for consistent date conversion
+const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
+  if (dateInput instanceof Date) {
+    return dateInput;
+  } else if (dateInput instanceof Timestamp) {
+    return dateInput.toDate();
+  } else {
+    return new Date(dateInput);
+  }
+};
+
+// Activity summary constants
+const WEEKLY_WORKOUT_TARGET = 5; // Target workouts per week
+const WEEKLY_GOAL_THRESHOLD = 3; // Minimum workouts per week to consider goal met
+const GOAL_TRACKING_WEEKS = 4; // Number of weeks to track for goal achievement
 
 export interface WorkoutLog {
   id?: string;
@@ -19,42 +64,45 @@ export interface WorkoutLog {
   duration: number;
   intensity?: "low" | "moderate" | "high"; // Made optional
   caloriesBurned: number;
-  date: Date | Timestamp;
+  date: Date | Timestamp | string | number;
   createdAt?: Date | Timestamp;
 }
 
 export const saveWorkout = async (
   workout: Omit<WorkoutLog, "id" | "userId" | "createdAt">
 ): Promise<WorkoutLog> => {
-  console.log("Starting saveWorkout with data:", workout);
+  logger.debug("Starting saveWorkout");
   try {
     const auth = getAuth();
     const user = auth.currentUser;
 
     if (!user) {
       const error = new Error("User not authenticated");
-      console.error(error);
+      logger.error("User not authenticated in saveWorkout");
       throw error;
     }
 
-    console.log("Current user ID:", user.uid);
+    logger.debug("Saving workout for user", { userId: user.uid });
 
     // Ensure date is properly formatted
-    let dateToSave;
+    let dateToSave: Timestamp;
     try {
-      if (workout.date instanceof Date) {
-        dateToSave = Timestamp.fromDate(workout.date);
-      } else if (workout.date instanceof Timestamp) {
+      if (workout.date instanceof Timestamp) {
+        // Already a Timestamp, use directly
         dateToSave = workout.date;
       } else {
-        // Try to parse string date
-        dateToSave = Timestamp.fromDate(
-          new Date(workout.date as unknown as string)
-        );
+        // Convert to valid Date first, then to Timestamp
+        const validDate = convertToValidDate(workout.date);
+        dateToSave = Timestamp.fromDate(validDate);
       }
-      console.log("Processed date:", dateToSave?.toDate?.());
+      logger.debug("Date processed successfully");
     } catch (dateError) {
-      console.error("Error processing date:", dateError);
+      logger.error("Error processing date", {
+        error:
+          dateError instanceof Error ? dateError.message : String(dateError),
+        inputDate: workout.date,
+        inputType: typeof workout.date,
+      });
       throw new Error(`Invalid date format: ${workout.date}`);
     }
 
@@ -65,21 +113,19 @@ export const saveWorkout = async (
       date: dateToSave,
     };
 
-    console.log("Processed workout data:", {
-      ...workoutData,
-      date: workoutData.date?.toDate?.(),
-    });
+    logger.debug("Workout data prepared for saving");
 
     try {
       const userWorkoutsRef = collection(db, "users", user.uid, "workouts");
-      console.log("Collection reference created");
-
       const newWorkoutRef = doc(userWorkoutsRef);
-      console.log("New document reference created with ID:", newWorkoutRef.id);
 
-      console.log("Attempting to write document...");
+      logger.debug("Saving workout to Firestore", {
+        workoutId: newWorkoutRef.id,
+      });
       await setDoc(newWorkoutRef, workoutData);
-      console.log("Document successfully written!");
+      logger.info("Workout saved successfully", {
+        workoutId: newWorkoutRef.id,
+      });
 
       const savedWorkout = {
         id: newWorkoutRef.id,
@@ -94,21 +140,19 @@ export const saveWorkout = async (
             : workoutData.createdAt,
       };
 
-      console.log("Returning saved workout:", savedWorkout);
       return savedWorkout;
     } catch (error) {
       const dbError = error as Error & { code?: string };
-      console.error("Database error:", dbError);
-      console.error("Error details:", {
-        name: dbError.name,
+      logger.error("Database error in saveWorkout", {
         message: dbError.message,
         code: dbError.code,
-        stack: dbError.stack,
       });
       throw new Error(`Database error: ${dbError.message}`);
     }
   } catch (error) {
-    console.error("Error in saveWorkout:", error);
+    logger.error("Error in saveWorkout", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
     throw new Error(`Failed to save workout: ${errorMessage}`);
@@ -142,7 +186,9 @@ export const getUserWorkouts = async (
       createdAt: doc.data().createdAt?.toDate(),
     })) as WorkoutLog[];
   } catch (error) {
-    console.error("Error fetching workouts:", error);
+    logger.error("Error fetching workouts", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw new Error("Failed to load workouts");
   }
 };
@@ -158,8 +204,12 @@ export const deleteWorkout = async (workoutId: string): Promise<void> => {
 
     const workoutRef = doc(db, "users", user.uid, "workouts", workoutId);
     await deleteDoc(workoutRef);
+    logger.info("Workout deleted successfully", { workoutId });
   } catch (error) {
-    console.error("Error deleting workout:", error);
+    logger.error("Error deleting workout", {
+      workoutId,
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw new Error("Failed to delete workout");
   }
 };
@@ -200,12 +250,7 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
     startOfWeek.setHours(0, 0, 0, 0);
 
     const workoutsThisWeek = allWorkouts.filter((workout) => {
-      const workoutDate =
-        workout.date instanceof Date
-          ? workout.date
-          : workout.date instanceof Timestamp
-          ? workout.date.toDate()
-          : new Date(workout.date);
+      const workoutDate = normalizeDate(workout.date);
       return workoutDate >= startOfWeek;
     });
 
@@ -213,12 +258,7 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
     const sortedWorkouts = allWorkouts
       .map((w) => ({
         ...w,
-        date:
-          w.date instanceof Date
-            ? w.date
-            : w.date instanceof Timestamp
-            ? w.date.toDate()
-            : new Date(w.date),
+        date: normalizeDate(w.date),
       }))
       .sort((a, b) => b.date.getTime() - a.date.getTime());
 
@@ -236,8 +276,9 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
         .sort((a, b) => b.getTime() - a.getTime());
 
       // Calculate current streak
-      let checkDate = new Date();
-      checkDate.setHours(0, 0, 0, 0);
+      const startCheckDate = new Date();
+      startCheckDate.setHours(0, 0, 0, 0);
+      let checkDate = new Date(startCheckDate);
 
       for (const workoutDate of uniqueDates) {
         const daysDiff = Math.floor(
@@ -249,6 +290,7 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
           (currentStreak === 0 && daysDiff <= 1)
         ) {
           currentStreak++;
+          checkDate = new Date(checkDate);
           checkDate.setDate(checkDate.getDate() - 1);
         } else {
           break;
@@ -274,29 +316,19 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
     }
 
     // Calculate goals achieved (based on workout frequency)
-    // Goal: 3 workouts per week, calculated over the last 4 weeks
-    const fourWeeksAgo = new Date();
-    fourWeeksAgo.setDate(now.getDate() - 28);
+    // Goal: 3+ workouts per week, calculated over the last 4 weeks
+    const trackingPeriodStart = new Date();
+    trackingPeriodStart.setDate(now.getDate() - GOAL_TRACKING_WEEKS * 7);
 
     const recentWorkouts = allWorkouts.filter((workout) => {
-      const workoutDate =
-        workout.date instanceof Date
-          ? workout.date
-          : workout.date instanceof Timestamp
-          ? workout.date.toDate()
-          : new Date(workout.date);
-      return workoutDate >= fourWeeksAgo;
+      const workoutDate = normalizeDate(workout.date);
+      return workoutDate >= trackingPeriodStart;
     });
 
     // Group by week and count weeks with 3+ workouts
     const weeklyWorkouts: { [key: string]: number } = {};
     recentWorkouts.forEach((workout) => {
-      const workoutDate =
-        workout.date instanceof Date
-          ? workout.date
-          : workout.date instanceof Timestamp
-          ? workout.date.toDate()
-          : new Date(workout.date);
+      const workoutDate = normalizeDate(workout.date);
       const weekStart = new Date(workoutDate);
       weekStart.setDate(workoutDate.getDate() - workoutDate.getDay());
       const weekKey = weekStart.toISOString().split("T")[0];
@@ -304,17 +336,17 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
     });
 
     const weeksWithGoalMet = Object.values(weeklyWorkouts).filter(
-      (count) => count >= 3
+      (count) => count >= WEEKLY_GOAL_THRESHOLD
     ).length;
-    const totalWeeks = 4;
+    const totalWeeks = GOAL_TRACKING_WEEKS;
 
     return {
       workoutsThisWeek: {
         completed: workoutsThisWeek.length,
-        target: 5, // Target 5 workouts per week
+        target: WEEKLY_WORKOUT_TARGET,
         percentage: Math.min(
           100,
-          Math.round((workoutsThisWeek.length / 5) * 100)
+          Math.round((workoutsThisWeek.length / WEEKLY_WORKOUT_TARGET) * 100)
         ),
       },
       currentStreak: {
@@ -328,7 +360,9 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
       },
     };
   } catch (error) {
-    console.error("Error calculating activity summary:", error);
+    logger.error("Error calculating activity summary", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw new Error("Failed to calculate activity summary");
   }
 };

@@ -17,6 +17,18 @@ import {
   deleteWorkout,
 } from "../services/workoutService";
 import "./WorkoutTracker.css";
+import { Timestamp } from "firebase/firestore";
+
+// Date normalization helper for consistent date conversion
+const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
+  if (dateInput instanceof Date) {
+    return dateInput;
+  } else if (dateInput instanceof Timestamp) {
+    return dateInput.toDate();
+  } else {
+    return new Date(dateInput);
+  }
+};
 
 interface WorkoutFormData {
   exercise: string;
@@ -301,8 +313,7 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     const csvRows = [
       headers.join(","),
       ...workoutsToExport.map((workout) => {
-        const date =
-          workout.date instanceof Date ? workout.date : workout.date.toDate();
+        const date = normalizeDate(workout.date);
         return [
           `"${date.toLocaleString()}"`,
           `"${workout.exercise}"`,
@@ -350,8 +361,8 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     } else if (timeRange === 0) {
       // If 'All Time' is selected, return all workouts
       return [...workouts].sort((a, b) => {
-        const dateA = a.date instanceof Date ? a.date : a.date.toDate();
-        const dateB = b.date instanceof Date ? b.date : b.date.toDate();
+        const dateA = normalizeDate(a.date);
+        const dateB = normalizeDate(b.date);
         return dateB.getTime() - dateA.getTime();
       });
     }
@@ -359,13 +370,12 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
     // Filter and sort workouts
     return workouts
       .filter((workout) => {
-        const workoutDate =
-          workout.date instanceof Date ? workout.date : workout.date.toDate();
+        const workoutDate = normalizeDate(workout.date);
         return workoutDate >= cutoffDate;
       })
       .sort((a, b) => {
-        const dateA = a.date instanceof Date ? a.date : a.date.toDate();
-        const dateB = b.date instanceof Date ? b.date : b.date.toDate();
+        const dateA = normalizeDate(a.date);
+        const dateB = normalizeDate(b.date);
         return dateB.getTime() - dateA.getTime();
       });
   };
@@ -518,24 +528,24 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
                     <td style={{ whiteSpace: "nowrap" }}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <div>
-                          {(workout.date instanceof Date
-                            ? workout.date
-                            : workout.date.toDate()
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          {normalizeDate(workout.date).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
                         </div>
                         <div style={{ fontSize: "0.8em", opacity: 0.8 }}>
-                          {(workout.date instanceof Date
-                            ? workout.date
-                            : workout.date.toDate()
-                          ).toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                          })}
+                          {normalizeDate(workout.date).toLocaleTimeString(
+                            "en-US",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            }
+                          )}
                         </div>
                       </div>
                     </td>
