@@ -8,6 +8,7 @@ import {
   getActivitySummary,
   ActivitySummary,
 } from "../services/workoutService";
+import GoalsManager from "../components/GoalsManager";
 import {
   Card,
   Typography,
@@ -28,6 +29,7 @@ import {
   HeartOutlined,
   CalendarOutlined,
   DeleteOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { User } from "firebase/auth";
 import "./ProfilePage.css";
@@ -46,7 +48,26 @@ const ProfilePage: React.FC = () => {
   const [activityError, setActivityError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [deleting, setDeleting] = useState(false);
+  const [showGoalsManager, setShowGoalsManager] = useState(false);
   const navigate = useNavigate();
+
+  const loadActivityData = async () => {
+    try {
+      setActivityLoading(true);
+      setActivityError("");
+      const activity = await getActivitySummary();
+      setActivityData(activity);
+    } catch (err) {
+      console.error("Error loading activity data:", err);
+      setActivityError("Failed to load activity data");
+    } finally {
+      setActivityLoading(false);
+    }
+  };
+
+  const handleGoalsUpdate = () => {
+    loadActivityData(); // Refresh activity data when goals are updated
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -70,7 +91,7 @@ const ProfilePage: React.FC = () => {
       }
     };
 
-    const loadActivityData = async () => {
+    const loadActivityDataWithMount = async () => {
       try {
         setActivityLoading(true);
         setActivityError("");
@@ -96,7 +117,7 @@ const ProfilePage: React.FC = () => {
       } else {
         setUser(firebaseUser);
         loadData();
-        loadActivityData();
+        loadActivityDataWithMount();
       }
     });
 
@@ -322,6 +343,15 @@ const ProfilePage: React.FC = () => {
                   <span>Activity Summary</span>
                 </Space>
               }
+              extra={
+                <Button
+                  type="link"
+                  icon={<SettingOutlined />}
+                  onClick={() => setShowGoalsManager(!showGoalsManager)}
+                >
+                  {showGoalsManager ? "Hide" : "Customize"} Goals
+                </Button>
+              }
             >
               {activityError ? (
                 <Alert
@@ -497,6 +527,13 @@ const ProfilePage: React.FC = () => {
               )}
             </Card>
           </Col>
+
+          {/* Goals Management */}
+          {showGoalsManager && (
+            <Col span={24}>
+              <GoalsManager onGoalsUpdate={handleGoalsUpdate} />
+            </Col>
+          )}
         </Row>
       </div>
 

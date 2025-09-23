@@ -1,0 +1,157 @@
+/* Settings Page Styling */
+.settings-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  min-height: calc(100vh - 120px);
+}
+
+/* Header Section */
+.settings-header {
+  margin-bottom: 32px;
+}
+
+.settings-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.settings-title .back-button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.settings-title .back-button:hover {
+  background-color: #f5f5f5;
+  transform: translateX(-2px);
+}
+
+.settings-title h2.ant-typography {
+  margin: 0;
+  color: var(--ant-text-color);
+}
+
+/* Content Section */
+.settings-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.settings-content .ant-tabs {
+  margin: 0;
+}
+
+.settings-content .ant-tabs-nav {
+  background: #fafafa;
+  margin: 0;
+  padding: 0 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-content .ant-tabs-tab {
+  padding: 16px 20px;
+  font-weight: 500;
+  border-radius: 8px 8px 0 0;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+}
+
+.settings-content .ant-tabs-tab:hover {
+  background-color: #f0f0f0;
+}
+
+.settings-content .ant-tabs-tab-active {
+  background-color: #fff;
+  border-bottom: 2px solid #1890ff;
+}
+
+.settings-content .ant-tabs-content-holder {
+  padding: 0;
+}
+
+.settings-content .ant-tabs-tabpane {
+  padding: 24px;
+}
+
+/* Tab Icons */
+.settings-content .ant-tabs-tab .anticon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 16px 12px;
+  }
+
+  .settings-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .settings-content .ant-tabs-nav {
+    padding: 0 16px;
+  }
+
+  .settings-content .ant-tabs-tabpane {
+    padding: 16px;
+  }
+
+  .settings-content .ant-tabs-tab {
+    padding: 12px 16px;
+    margin-right: 4px;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Utility Classes */
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .settings-content {
+    background-color: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .settings-content .ant-tabs-nav {
+    background-color: #262626;
+    border-color: #303030;
+  }
+
+  .settings-content .ant-tabs-tab:hover {
+    background-color: #303030;
+  }
+
+  .settings-content .ant-tabs-tab-active {
+    background-color: #1f1f1f;
+  }
+
+  .settings-title .back-button:hover {
+    background-color: #303030;
+  }
+}

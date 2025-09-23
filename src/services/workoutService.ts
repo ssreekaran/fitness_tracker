@@ -12,6 +12,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 import { logger } from "../utils/logger";
+import { getUserGoals } from "./goalsService";
 
 // Safe date conversion utility
 const convertToValidDate = (
@@ -52,10 +53,10 @@ const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
   }
 };
 
-// Activity summary constants
-const WEEKLY_WORKOUT_TARGET = 5; // Target workouts per week
-const WEEKLY_GOAL_THRESHOLD = 3; // Minimum workouts per week to consider goal met
-const GOAL_TRACKING_WEEKS = 4; // Number of weeks to track for goal achievement
+// Default activity summary constants (fallback values)
+const DEFAULT_WEEKLY_WORKOUT_TARGET = 5;
+const DEFAULT_WEEKLY_GOAL_THRESHOLD = 3;
+const DEFAULT_GOAL_TRACKING_WEEKS = 4;
 
 export interface WorkoutLog {
   id?: string;
@@ -229,6 +230,14 @@ export interface ActivitySummary {
     total: number;
     percentage: number;
   };
+  customGoalsProgress?: {
+    goalId: string;
+    name: string;
+    currentValue: number;
+    target: number;
+    percentage: number;
+    isAchieved: boolean;
+  }[];
 }
 
 export const getActivitySummary = async (): Promise<ActivitySummary> => {
@@ -238,6 +247,20 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
 
     if (!user) {
       throw new Error("User not authenticated");
+    }
+
+    // Get user goals for customizable targets
+    let userGoals;
+    try {
+      userGoals = await getUserGoals();
+    } catch (error) {
+      logger.warn("Could not load user goals, using defaults", { error });
+      userGoals = {
+        weeklyWorkoutTarget: DEFAULT_WEEKLY_WORKOUT_TARGET,
+        weeklyGoalThreshold: DEFAULT_WEEKLY_GOAL_THRESHOLD,
+        goalTrackingWeeks: DEFAULT_GOAL_TRACKING_WEEKS,
+        customGoals: [],
+      };
     }
 
     // Get all workouts for calculations
@@ -315,17 +338,18 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
       bestStreak = Math.max(bestStreak, currentTempStreak);
     }
 
-    // Calculate goals achieved (based on workout frequency)
-    // Goal: 3+ workouts per week, calculated over the last 4 weeks
+    // Calculate goals achieved using user's custom settings
     const trackingPeriodStart = new Date();
-    trackingPeriodStart.setDate(now.getDate() - GOAL_TRACKING_WEEKS * 7);
+    trackingPeriodStart.setDate(
+      now.getDate() - userGoals.goalTrackingWeeks * 7
+    );
 
     const recentWorkouts = allWorkouts.filter((workout) => {
       const workoutDate = normalizeDate(workout.date);
       return workoutDate >= trackingPeriodStart;
     });
 
-    // Group by week and count weeks with 3+ workouts
+    // Group by week and count weeks with threshold+ workouts
     const weeklyWorkouts: { [key: string]: number } = {};
     recentWorkouts.forEach((workout) => {
       const workoutDate = normalizeDate(workout.date);
@@ -336,17 +360,89 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
     });
 
     const weeksWithGoalMet = Object.values(weeklyWorkouts).filter(
-      (count) => count >= WEEKLY_GOAL_THRESHOLD
+      (count) => count >= userGoals.weeklyGoalThreshold
     ).length;
-    const totalWeeks = GOAL_TRACKING_WEEKS;
+    const totalWeeks = userGoals.goalTrackingWeeks;
+
+    // Calculate custom goals progress
+    const customGoalsProgress =
+      userGoals.customGoals
+        ?.filter((goal) => goal.isActive)
+        .map((goal) => {
+          let currentValue = 0;
+
+          switch (goal.type) {
+            case "weekly": {
+              if (goal.category === "workout") {
+                currentValue = workoutsThisWeek.length;
+              } else if (goal.category === "calories") {
+                currentValue = workoutsThisWeek.reduce(
+                  (sum, workout) => sum + workout.caloriesBurned,
+                  0
+                );
+              } else if (goal.category === "duration") {
+                currentValue = workoutsThisWeek.reduce(
+                  (sum, workout) => sum + workout.duration,
+                  0
+                );
+              }
+              break;
+            }
+            case "streak": {
+              if (goal.category === "workout") {
+                currentValue = currentStreak;
+              }
+              break;
+            }
+            case "monthly": {
+              // Calculate monthly progress
+              const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+              const monthlyWorkouts = allWorkouts.filter((workout) => {
+                const workoutDate = normalizeDate(workout.date);
+                return workoutDate >= monthStart;
+              });
+
+              if (goal.category === "workout") {
+                currentValue = monthlyWorkouts.length;
+              } else if (goal.category === "calories") {
+                currentValue = monthlyWorkouts.reduce(
+                  (sum, workout) => sum + workout.caloriesBurned,
+                  0
+                );
+              } else if (goal.category === "duration") {
+                currentValue = monthlyWorkouts.reduce(
+                  (sum, workout) => sum + workout.duration,
+                  0
+                );
+              }
+              break;
+            }
+          }
+
+          const percentage = Math.min(
+            100,
+            Math.round((currentValue / goal.target) * 100)
+          );
+
+          return {
+            goalId: goal.id,
+            name: goal.name,
+            currentValue,
+            target: goal.target,
+            percentage,
+            isAchieved: currentValue >= goal.target,
+          };
+        }) || [];
 
     return {
       workoutsThisWeek: {
         completed: workoutsThisWeek.length,
-        target: WEEKLY_WORKOUT_TARGET,
+        target: userGoals.weeklyWorkoutTarget,
         percentage: Math.min(
           100,
-          Math.round((workoutsThisWeek.length / WEEKLY_WORKOUT_TARGET) * 100)
+          Math.round(
+            (workoutsThisWeek.length / userGoals.weeklyWorkoutTarget) * 100
+          )
         ),
       },
       currentStreak: {
@@ -358,6 +454,7 @@ export const getActivitySummary = async (): Promise<ActivitySummary> => {
         total: totalWeeks,
         percentage: Math.round((weeksWithGoalMet / totalWeeks) * 100),
       },
+      customGoalsProgress,
     };
   } catch (error) {
     logger.error("Error calculating activity summary", {

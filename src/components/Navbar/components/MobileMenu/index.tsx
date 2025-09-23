@@ -1,19 +1,23 @@
-import React, { useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import { MobileMenuProps } from '../../types';
-import './styles.css';
+import React, { useEffect } from "react";
+import { FaTimes } from "react-icons/fa";
+import { MobileMenuProps } from "../../types";
+import "./styles.css";
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, toggleMenu, children }) => {
+const MobileMenu: React.FC<MobileMenuProps> = ({
+  isMenuOpen,
+  toggleMenu,
+  children,
+}) => {
   // Prevent body scroll when menu is open
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isMenuOpen]);
 
@@ -22,8 +26,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, toggleMenu, childre
   return (
     <div className="mobile-menu-overlay">
       <div className="mobile-menu-content">
-        <button 
-          className="mobile-menu-close" 
+        <button
+          className="mobile-menu-close"
           onClick={toggleMenu}
           aria-label="Close menu"
         >
@@ -31,8 +35,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, toggleMenu, childre
         </button>
         <div className="mobile-menu-items">
           {React.Children.map(children, (child, index) => (
-            <div 
-              className="mobile-menu-item" 
+            <div
+              className="mobile-menu-item"
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
             >
               {child}

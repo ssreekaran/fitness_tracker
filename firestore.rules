@@ -73,5 +73,48 @@ service cloud.firestore {
           && request.auth.uid == resource.data.userId;  // Document must be owned by auth user
       }
     }
+    
+    // User goals collection - allow users to manage their own goals
+    match /userGoals/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      allow create: if request.auth != null 
+        && request.auth.uid == userId  // Path userId must match auth
+        && request.auth.uid == request.resource.data.userId  // Document userId must match auth
+        && request.resource.data.weeklyWorkoutTarget is number
+        && request.resource.data.weeklyWorkoutTarget >= 1
+        && request.resource.data.weeklyWorkoutTarget <= 14
+        && request.resource.data.weeklyGoalThreshold is number
+        && request.resource.data.weeklyGoalThreshold >= 1
+        && request.resource.data.weeklyGoalThreshold <= 14
+        && request.resource.data.goalTrackingWeeks is number
+        && request.resource.data.goalTrackingWeeks >= 1
+        && request.resource.data.goalTrackingWeeks <= 12
+        && request.resource.data.customGoals is list
+        && (request.resource.data.createdAt == request.time || request.resource.data.createdAt is timestamp)
+        && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
+        
+      allow update: if request.auth != null 
+        && request.auth.uid == userId  // Path userId must match auth
+        && request.auth.uid == resource.data.userId  // Existing doc owner check
+        && request.auth.uid == request.resource.data.userId  // New data owner check
+        && resource.data.userId == request.resource.data.userId  // userId cannot change
+        && request.resource.data.weeklyWorkoutTarget is number
+        && request.resource.data.weeklyWorkoutTarget >= 1
+        && request.resource.data.weeklyWorkoutTarget <= 14
+        && request.resource.data.weeklyGoalThreshold is number
+        && request.resource.data.weeklyGoalThreshold >= 1
+        && request.resource.data.weeklyGoalThreshold <= 14
+        && request.resource.data.goalTrackingWeeks is number
+        && request.resource.data.goalTrackingWeeks >= 1
+        && request.resource.data.goalTrackingWeeks <= 12
+        && request.resource.data.customGoals is list
+        && request.resource.data.createdAt == resource.data.createdAt  // createdAt cannot change
+        && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
+        
+      allow delete: if request.auth != null 
+        && request.auth.uid == userId  // Path userId must match auth
+        && request.auth.uid == resource.data.userId;  // Document must be owned by auth user
+    }
   }
 }
