@@ -324,7 +324,7 @@ const GoalsManager: React.FC<GoalsManagerProps> = ({ onGoalsUpdate }) => {
       >
         <List
           dataSource={goals?.customGoals || []}
-          renderItem={(goal) => (
+          renderItem={(goal: CustomGoal) => (
             <List.Item
               actions={[
                 <Switch

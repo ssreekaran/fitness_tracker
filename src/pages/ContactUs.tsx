@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import './ContactUs.css';
-import { FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquareBluesky } from '@fortawesome/free-brands-svg-icons';
 
 const ContactUs: React.FC = () => {
   const [formData, setFormData] = React.useState({
@@ -124,13 +127,16 @@ const ContactUs: React.FC = () => {
                   <FaFacebook />
                 </a>
                 <a href="https://x.com" className="social-link" aria-label="X (formerly Twitter)" target="_blank" rel="noopener noreferrer">
-                  <FaTwitter />
+                  <FaXTwitter style={{ fontSize: '1.2rem' }} />
                 </a>
                 <a href="https://instagram.com" className="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                   <FaInstagram />
                 </a>
                 <a href="https://linkedin.com" className="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
                   <FaLinkedin />
+                </a>
+                <a href="https://bsky.app" className="social-link" aria-label="Bluesky" target="_blank" rel="noopener noreferrer">
+                  <FontAwesomeIcon icon={faSquareBluesky} style={{ fontSize: '1.3rem' }} />
                 </a>
               </div>
             </div>
