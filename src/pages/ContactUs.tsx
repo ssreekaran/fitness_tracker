@@ -1,47 +1,223 @@
-import React from 'react';
-import './About.css';
+import React, { useEffect } from 'react';
+import './ContactUs.css';
+import { FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 const ContactUs: React.FC = () => {
-  const [message, setMessage] = React.useState("");
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitStatus, setSubmitStatus] = React.useState<{success: boolean; message: string} | null>(null);
 
-  const handleSend = (e: React.FormEvent) => {
+  // Clear status message after 5 seconds when submitStatus changes
+  React.useEffect(() => {
+    if (!submitStatus) return;
+    
+    const timer = setTimeout(() => {
+      setSubmitStatus(null);
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, [submitStatus]);
+
+  useEffect(() => {
+    // Add theme class to the wrapper when component mounts
+    const htmlElement = document.documentElement;
+    const theme = htmlElement.getAttribute('data-theme') || 'light';
+    const wrapper = document.querySelector('.contact-page-wrapper');
+    if (wrapper) {
+      wrapper.setAttribute('data-theme', theme);
+    }
+
+    // Set up a mutation observer to watch for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'data-theme' && wrapper) {
+          const newTheme = htmlElement.getAttribute('data-theme') || 'light';
+          wrapper.setAttribute('data-theme', newTheme);
+        }
+      });
+    });
+
+    observer.observe(htmlElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    
     // Open mail client with prefilled body
-    const mailto = `mailto:fitness.tracker.00001@gmail.com?subject=User%20Feedback&body=${encodeURIComponent(message)}`;
+    const { name, email, subject, message } = formData;
+    const mailto = `mailto:fitness.tracker.00001@gmail.com?subject=${encodeURIComponent(subject || 'Contact Form Submission')}&body=${encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    )}`;
+    
+    // Set success message
+    setSubmitStatus({
+      success: true,
+      message: 'Your message has been sent! We\'ll get back to you soon.'
+    });
+    
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    });
+    
+    // Open email client
     window.location.href = mailto;
+    setIsSubmitting(false);
   };
 
   return (
-    <div className="about-container">
-      <div className="about-content">
-        <h1>Contact Us</h1>
-        <form onSubmit={handleSend} style={{ margin: '24px 0' }}>
-          <label htmlFor="user-message" style={{ fontWeight: 600 }}>Your Comment</label>
-          <textarea
-            id="user-message"
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            rows={4}
-            placeholder="Write your comment here..."
-            style={{ width: '100%', padding: 12, borderRadius: 8, border: '1px solid #ccc', marginTop: 8, resize: 'vertical', fontSize: 16 }}
-            required
-          />
-          <button
-            type="submit"
-            style={{ marginTop: 12, padding: '8px 24px', borderRadius: 8, background: '#333', color: '#fff', border: 'none', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}
-          >
-            Send
-          </button>
-        </form>
-        <h4>Email</h4>
-        <p>
-          For any questions, feedback, or support, please contact us at:
-        </p>
-        <a href="mailto:fitness.tracker.00001@gmail.com">fitness.tracker.00001@gmail.com</a>
-        <p style={{ marginTop: 32 }}>
-          We value your input and will do our best to respond as soon as possible! <br />
-          <strong>Please note, if you have requested a password reset and it has not arrived, please check your spam folder.</strong>
-        </p>
+    <div className="contact-page-wrapper">
+      <div className="contact-container">
+        <div className="contact-content">
+          <h1>Get In Touch</h1>
+          
+          <div className="contact-grid">
+            <div className="contact-info">
+              <h2>Contact Information</h2>
+              
+              <div className="contact-method">
+                <div className="contact-icon">
+                  <FaEnvelope />
+                </div>
+                <div className="contact-details">
+                  <h3>Email Us</h3>
+                  <a href="mailto:fitness.tracker.00001@gmail.com">fitness.tracker.00001@gmail.com</a>
+                </div>
+              </div>
+              
+              <div className="contact-method">
+                <div className="contact-icon">
+                  <FaMapMarkerAlt />
+                </div>
+                <div className="contact-details">
+                  <h3>Location</h3>
+                  <p>Mississauga, Ontario, Canada</p>
+                </div>
+              </div>
+              
+              <div className="social-links">
+                <a href="https://facebook.com" className="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                  <FaFacebook />
+                </a>
+                <a href="https://x.com" className="social-link" aria-label="X (formerly Twitter)" target="_blank" rel="noopener noreferrer">
+                  <FaTwitter />
+                </a>
+                <a href="https://instagram.com" className="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                  <FaInstagram />
+                </a>
+                <a href="https://linkedin.com" className="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                  <FaLinkedin />
+                </a>
+              </div>
+            </div>
+            
+            <div className="contact-form">
+              {submitStatus && (
+                <div className={`form-status ${submitStatus.success ? 'success' : 'error'}`}>
+                  {submitStatus.message}
+                </div>
+              )}
+              
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="name">Your Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    className="form-control"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="email">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your.email@example.com"
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="subject">Subject</label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    className="form-control"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    placeholder="How can we help?"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="message">Your Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    className="form-control"
+                    rows={6}
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Write your message here..."
+                    required
+                  ></textarea>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  className="btn-submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : (
+                    <>
+                      <FaPaperPlane style={{ marginRight: '8px' }} />
+                      Send Message
+                    </>
+                  )}
+                </button>
+              </form>
+              
+              <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary, #6c757d)' }}>
+                <strong>Note:</strong> We value your privacy and will never share your information with third parties.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

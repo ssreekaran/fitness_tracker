@@ -22,10 +22,9 @@ Try it yourself: [Fitness Tracker](https://fitness-tracker-00001.web.app/)
 - **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
 - **UI Components**: 
-  - Ant Design (antd)
-  - React Bootstrap
-  - Bootstrap Icons
-  - React Icons
+  - React Bootstrap v2.9.0 (Primary UI Library)
+  - Bootstrap v5.3.2
+  - React Icons (for all icon needs)
 - **State Management**: React Hooks
 - **Routing**: React Router v6
 - **Testing**: 
@@ -33,12 +32,40 @@ Try it yourself: [Fitness Tracker](https://fitness-tracker-00001.web.app/)
   - React Testing Library
   - Coverage reporting with @vitest/coverage-v8
 
+## UI Strategy
+
+### Current Implementation
+- **Primary UI Library**: React Bootstrap
+  - Used consistently across most components
+  - Provides responsive design and accessibility out of the box
+  - Follows Bootstrap's utility-first approach
+
+- **Icons**: React Icons
+  - Single source for all icon needs
+  - Includes multiple icon sets (Font Awesome, Material, etc.)
+  - Tree-shaking support for optimal bundle size
+
+### Migration Plan
+1. **Phase 1: Remove Unused Dependencies** (Completed)
+   - Removed `@ant-design/icons` (unused)
+   - Removed `@fortawesome` packages (consolidated to react-icons)
+   - Moved `@emotion` to devDependencies (only used for testing)
+
+2. **Phase 2: Standardize Components** (In Progress)
+   - Migrate remaining Ant Design components to React Bootstrap
+   - Update all icon imports to use react-icons
+   - Ensure consistent theming using Bootstrap's CSS variables
+
+3. **Phase 3: Optimization**
+   - Implement code splitting for better performance
+   - Optimize bundle size by importing only necessary components
+   - Add performance monitoring
+
 ### Backend & Infrastructure
 - **Hosting**: Firebase Hosting
 - **Authentication**: Firebase Authentication
 - **Database**: Firebase Firestore
 - **CI/CD**: GitHub Actions
-
 ## Getting Started
 
 ### Prerequisites
