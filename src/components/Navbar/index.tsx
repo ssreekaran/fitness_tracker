@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
       title: 'About Us', 
       path: '#',
       children: [
-        { title: 'About', path: '/about' },
+        { title: 'About Us', path: '/about' },
         { title: 'Contact Us', path: '/contact' },
       ]
     },

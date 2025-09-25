@@ -1,10 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "./components";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -200,9 +195,21 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <AppWithLocation />
     </Router>
   );
+}
+
+function AppWithLocation() {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Ensure theme is applied on route change
+    const isDark = document.documentElement.classList.contains('dark');
+    document.body.style.backgroundColor = isDark ? '#1a1a1a' : '#ffffff';
+  }, [location.pathname]);
+
+  return <AppContent />;
 }
 
 export default App;

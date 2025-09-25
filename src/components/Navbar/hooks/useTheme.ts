@@ -13,12 +13,15 @@ export const useTheme = () => {
 
   useEffect(() => {
     // Apply theme class to document element
+    const root = document.documentElement;
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      document.documentElement.setAttribute('data-theme', 'dark');
+      root.classList.add('dark');
+      root.setAttribute('data-theme', 'dark');
+      document.body.style.backgroundColor = '#1a1a1a';
     } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.setAttribute('data-theme', 'light');
+      root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
+      document.body.style.backgroundColor = '#ffffff';
     }
     
     // Save preference to localStorage
