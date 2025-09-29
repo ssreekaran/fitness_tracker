@@ -315,14 +315,17 @@
   background-color: rgba(46, 204, 113, 0.2);
   color: #27ae60;
 }
+
 .moderate {
   background-color: rgba(52, 152, 219, 0.2);
   color: #2980b9;
 }
+
 .aggressive {
   background-color: rgba(241, 196, 15, 0.2);
   color: #f39c12;
 }
+
 .very-aggressive {
   background-color: rgba(231, 76, 60, 0.2);
   color: #e74c3c;

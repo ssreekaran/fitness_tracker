@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHeartbeat, FaInfoCircle, FaRunning } from "react-icons/fa";
+import { FaHeartbeat, FaInfoCircle } from "react-icons/fa";
 import "./HeartRateZoneCalculator.css";
 
 const methods = [
@@ -105,10 +105,6 @@ const HeartRateZoneCalculator: React.FC = () => {
     });
 
     setHeartRateZones(calculatedZones);
-  };
-
-  const getMethodDescription = () => {
-    return methods.find((m) => m.value === method)?.description || "";
   };
 
   return (
@@ -228,7 +224,7 @@ const HeartRateZoneCalculator: React.FC = () => {
             </div>
 
             <div className="zones-container">
-              {zones.map((zone, index) => {
+              {zones.map((zone) => {
                 const [lower, upper] = heartRateZones[zone.name] || [0, 0];
                 return (
                   <div
