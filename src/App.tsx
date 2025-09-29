@@ -1,5 +1,11 @@
 import { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { Navbar } from "./components";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -22,6 +28,12 @@ const BodyFatCalculator = lazy(() => import("./pages/BodyFatCalculator"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 const FoodDatabase = lazy(() => import("./pages/FoodDatabase"));
 const WeightLossCalculator = lazy(() => import("./pages/WeightLossCalculator"));
+const TDEECalculator = lazy(() => import("./pages/TDEECalculator"));
+const MacroCalculator = lazy(() => import("./pages/MacroCalculator"));
+const OneRepMaxCalculator = lazy(() => import("./pages/OneRepMaxCalculator"));
+const HeartRateZoneCalculator = lazy(
+  () => import("./pages/HeartRateZoneCalculator")
+);
 const HealthyFood = lazy(() => import("./pages/HealthyFood"));
 const PersonalFitness = lazy(() => import("./pages/PersonalFitness"));
 const CalorieTracker = lazy(() => import("./pages/CalorieTracker"));
@@ -128,16 +140,26 @@ const AppContent = () => {
               path="/body-fat-calculator"
               element={<BodyFatCalculator />}
             />
+            <Route
+              path="/weight-loss-calculator"
+              element={<WeightLossCalculator />}
+            />
+            <Route path="/tdee-calculator" element={<TDEECalculator />} />
+            <Route path="/macro-calculator" element={<MacroCalculator />} />
+            <Route
+              path="/one-rep-max-calculator"
+              element={<OneRepMaxCalculator />}
+            />
+            <Route
+              path="/heart-rate-zone-calculator"
+              element={<HeartRateZoneCalculator />}
+            />
             <Route path="/food-database" element={<FoodDatabase />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/contact" element={<ContactUs />} />
-            <Route
-              path="/weight-loss-calculator"
-              element={<WeightLossCalculator />}
-            />
             <Route path="/healthy-food" element={<HealthyFood />} />
             <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
             <Route
@@ -205,8 +227,8 @@ function AppWithLocation() {
 
   useEffect(() => {
     // Ensure theme is applied on route change
-    const isDark = document.documentElement.classList.contains('dark');
-    document.body.style.backgroundColor = isDark ? '#1a1a1a' : '#ffffff';
+    const isDark = document.documentElement.classList.contains("dark");
+    document.body.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff";
   }, [location.pathname]);
 
   return <AppContent />;

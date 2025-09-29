@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../firebase';
 import './FoodDatabase.css';
+import { FaSearch, FaInfoCircle } from 'react-icons/fa';
 
 interface Nutrient {
   NutrientID: string;
@@ -56,17 +57,29 @@ const FoodDatabase: React.FC = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">Canadian Nutrient Database from Government of Canada</h1>
+      {/* Hero Section */}
+      <section className="food-db-hero">
+        <div className="food-db-hero-content">
+          <h1>Food Database</h1>
+          <p>Search and explore nutritional information for thousands of foods from the Canadian Nutrient File.</p>
+          <div className="food-search-container">
+            <div className="search-icon">
+              <FaSearch />
+            </div>
+            <input
+              type="text"
+              placeholder="Search food name or code..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="food-search-input"
+            />
+          </div>
+        </div>
+      </section>
+
       <div className="food-db-container">
-        <input
-          type="text"
-          placeholder="Search food name or code..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="food-db-search"
-        />
         {loading ? (
-          <div>Loading food database...</div>
+          <div className="loading-state">Loading food database...</div>
         ) : (
           <div className="table-responsive">
             <div className="food-db-table-wrapper">
@@ -110,8 +123,9 @@ const FoodDatabase: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            <div style={{ fontSize: 13, color: '#888', marginTop: 8 }}>
-              Showing all filtered foods and 10 nutrients for performance. Data: Canadian Nutrient File, Health Canada.
+            <div className="data-source">
+              <FaInfoCircle className="info-icon" />
+              <span>Showing all filtered foods and 10 nutrients for performance. Data: Canadian Nutrient File, Health Canada.</span>
             </div>
           </div>
         )}

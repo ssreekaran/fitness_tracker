@@ -1,25 +1,39 @@
 import React, { useState } from "react";
 import {
-  FaWeight,
+  FaFire,
   FaInfoCircle,
   FaRuler,
+  FaWeight,
   FaRunning,
-  FaBullseye,
 } from "react-icons/fa";
-import "./WeightLossCalculator.css";
+import "./TDEECalculator.css";
 
 const activityLevels = [
-  { label: "Sedentary (little or no exercise)", value: 1.2 },
   {
-    label: "Lightly active (light exercise/sports 1-3 days/week)",
+    label: "Sedentary (little or no exercise)",
+    value: 1.2,
+    description: "Desk job, no exercise",
+  },
+  {
+    label: "Lightly active (light exercise 1-3 days/week)",
     value: 1.375,
+    description: "Light exercise or sports 1-3 days/week",
   },
   {
-    label: "Moderately active (moderate exercise/sports 3-5 days/week)",
+    label: "Moderately active (moderate exercise 3-5 days/week)",
     value: 1.55,
+    description: "Moderate exercise or sports 3-5 days/week",
   },
-  { label: "Very active (hard exercise/sports 6-7 days a week)", value: 1.725 },
-  { label: "Super active (very hard exercise & a physical job)", value: 1.9 },
+  {
+    label: "Very active (hard exercise 6-7 days/week)",
+    value: 1.725,
+    description: "Hard exercise or sports 6-7 days/week",
+  },
+  {
+    label: "Super active (very hard exercise & physical job)",
+    value: 1.9,
+    description: "Very hard exercise, physical job, or training twice a day",
+  },
 ];
 
 function calculateBMR(
@@ -35,21 +49,18 @@ function calculateBMR(
   }
 }
 
-const WeightLossCalculator: React.FC = () => {
+const TDEECalculator: React.FC = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<"male" | "female">("male");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [activity, setActivity] = useState(1.2);
-  const [goal, setGoal] = useState("");
-  const [calories, setCalories] = useState<number | null>(null);
   const [bmr, setBmr] = useState<number | null>(null);
   const [tdee, setTdee] = useState<number | null>(null);
   const [heightUnit, setHeightUnit] = useState<"cm" | "in">("cm");
   const [weightUnit, setWeightUnit] = useState<"kg" | "lbs">("kg");
-  const [goalUnit, setGoalUnit] = useState<"kg" | "lbs">("kg");
 
-  const calculateWeightLoss = (e: React.FormEvent) => {
+  const calculateTDEE = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Convert all to metric for calculation
@@ -57,46 +68,38 @@ const WeightLossCalculator: React.FC = () => {
       heightUnit === "cm" ? parseFloat(height) : parseFloat(height) * 2.54;
     const weightKg =
       weightUnit === "kg" ? parseFloat(weight) : parseFloat(weight) * 0.453592;
-    const goalKg =
-      goalUnit === "kg" ? parseFloat(goal) : parseFloat(goal) * 0.453592;
 
     const bmrValue = calculateBMR(gender, weightKg, heightCm, parseFloat(age));
     const tdeeValue = bmrValue * activity;
 
-    // 1 kg fat ≈ 7700 kcal, so goalKg/week = (goalKg*7700)/7 kcal deficit/day
-    const deficit = (goalKg * 7700) / 7;
-    const targetCalories = Math.round(tdeeValue - deficit);
-
     setBmr(Math.round(bmrValue));
     setTdee(Math.round(tdeeValue));
-    setCalories(targetCalories);
   };
 
-  const getWeightLossCategory = (weeklyGoal: number) => {
-    if (weeklyGoal <= 0.25) return "Conservative";
-    if (weeklyGoal <= 0.5) return "Moderate";
-    if (weeklyGoal <= 0.75) return "Aggressive";
-    return "Very Aggressive";
+  const getActivityLevel = () => {
+    return (
+      activityLevels.find((level) => level.value === activity)?.label || ""
+    );
   };
 
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <section className="wl-hero">
-        <div className="wl-hero-content">
-          <h1>Weight Loss Calculator</h1>
+      <section className="tdee-hero">
+        <div className="tdee-hero-content">
+          <h1>TDEE Calculator</h1>
           <p>
-            Calculate your daily calorie needs to reach your weight loss goals
-            safely and effectively.
+            Calculate your Total Daily Energy Expenditure to understand how many
+            calories you burn per day.
           </p>
         </div>
         <div className="calculator-icon">
-          <FaWeight />
+          <FaFire />
         </div>
       </section>
 
-      <div className="wl-calculator">
-        <form onSubmit={calculateWeightLoss} className="wl-form">
+      <div className="tdee-calculator">
+        <form onSubmit={calculateTDEE} className="tdee-form">
           {/* Gender Selection */}
           <div className="form-group">
             <div className="form-header">
@@ -190,7 +193,7 @@ const WeightLossCalculator: React.FC = () => {
           {/* Weight */}
           <div className="form-group">
             <div className="form-header">
-              <label>Current Weight</label>
+              <label>Weight</label>
               <div className="unit-toggle">
                 <button
                   type="button"
@@ -250,68 +253,24 @@ const WeightLossCalculator: React.FC = () => {
                 ))}
               </select>
             </div>
-          </div>
-
-          {/* Weight Loss Goal */}
-          <div className="form-group">
-            <div className="form-header">
-              <label>Weight Loss Goal</label>
-              <div className="unit-toggle">
-                <button
-                  type="button"
-                  className={`unit-btn ${goalUnit === "kg" ? "active" : ""}`}
-                  onClick={() => setGoalUnit("kg")}
-                >
-                  kg/week
-                </button>
-                <button
-                  type="button"
-                  className={`unit-btn ${goalUnit === "lbs" ? "active" : ""}`}
-                  onClick={() => setGoalUnit("lbs")}
-                >
-                  lbs/week
-                </button>
-              </div>
-            </div>
-            <div className="input-with-icon">
-              <FaBullseye className="input-icon" />
-              <input
-                type="number"
-                value={goal}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setGoal(e.target.value)
-                }
-                placeholder={
-                  goalUnit === "kg"
-                    ? "Goal (kg per week)"
-                    : "Goal (lbs per week)"
-                }
-                required
-                min={goalUnit === "kg" ? 0.1 : 0.2}
-                max={goalUnit === "kg" ? 1.5 : 3.3}
-                step="0.1"
-                className="measurement-input"
-              />
-            </div>
             <div className="input-hint">
-              Recommended: 0.5-1 kg (1-2 lbs) per week for sustainable weight
-              loss
+              Choose the activity level that best describes your lifestyle
             </div>
           </div>
 
           <button type="submit" className="calculate-btn">
-            Calculate Weight Loss Plan
+            Calculate TDEE
           </button>
         </form>
 
-        {calories !== null && (
+        {tdee !== null && (
           <div className="result-container">
-            <h3>Your Weight Loss Plan</h3>
+            <h3>Your Energy Expenditure</h3>
 
-            <div className="wl-results">
+            <div className="tdee-results">
               <div className="result-card primary">
-                <div className="result-label">Daily Calories</div>
-                <div className="result-value">{calories}</div>
+                <div className="result-label">TDEE</div>
+                <div className="result-value">{tdee}</div>
                 <div className="result-unit">kcal/day</div>
               </div>
 
@@ -322,50 +281,58 @@ const WeightLossCalculator: React.FC = () => {
               </div>
 
               <div className="result-card secondary">
-                <div className="result-label">TDEE</div>
-                <div className="result-value">{tdee}</div>
-                <div className="result-unit">kcal/day</div>
+                <div className="result-label">Activity Factor</div>
+                <div className="result-value">{activity}</div>
+                <div className="result-unit">multiplier</div>
               </div>
             </div>
 
-            <div className="goal-analysis">
-              <div
-                className={`goal-category ${getWeightLossCategory(
-                  goalUnit === "kg"
-                    ? parseFloat(goal)
-                    : parseFloat(goal) * 0.453592
-                )
-                  .toLowerCase()
-                  .replace(" ", "-")}`}
-              >
-                {getWeightLossCategory(
-                  goalUnit === "kg"
-                    ? parseFloat(goal)
-                    : parseFloat(goal) * 0.453592
-                )}{" "}
-                Goal
-              </div>
-              <div className="deficit-info">
-                Daily calorie deficit: {tdee && calories ? tdee - calories : 0}{" "}
-                kcal
+            <div className="activity-info">
+              <div className="activity-level">
+                Current Activity Level: {getActivityLevel()}
               </div>
             </div>
 
-            <div className="wl-info">
+            <div className="calorie-breakdown">
+              <h4>Calorie Goals by Objective</h4>
+              <div className="goal-cards">
+                <div className="goal-card weight-loss">
+                  <div className="goal-title">Weight Loss</div>
+                  <div className="goal-calories">
+                    {Math.round(tdee * 0.8)} kcal/day
+                  </div>
+                  <div className="goal-description">20% deficit</div>
+                </div>
+                <div className="goal-card maintenance">
+                  <div className="goal-title">Maintenance</div>
+                  <div className="goal-calories">{tdee} kcal/day</div>
+                  <div className="goal-description">Current TDEE</div>
+                </div>
+                <div className="goal-card weight-gain">
+                  <div className="goal-title">Weight Gain</div>
+                  <div className="goal-calories">
+                    {Math.round(tdee * 1.15)} kcal/day
+                  </div>
+                  <div className="goal-description">15% surplus</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="tdee-info">
               <FaInfoCircle className="info-icon" />
               <div>
                 <p>
-                  <strong>BMR (Basal Metabolic Rate):</strong> Calories your
-                  body needs at rest.
+                  <strong>TDEE (Total Daily Energy Expenditure):</strong> The
+                  total number of calories you burn in a day, including your BMR
+                  and physical activity.
                 </p>
                 <p>
-                  <strong>TDEE (Total Daily Energy Expenditure):</strong> Total
-                  calories you burn including activity.
+                  <strong>BMR (Basal Metabolic Rate):</strong> The calories your
+                  body needs to maintain basic physiological functions at rest.
                 </p>
                 <p>
-                  <strong>Important:</strong> Don't go below 1200 kcal/day
-                  (women) or 1500 kcal/day (men) without medical supervision.
-                  Sustainable weight loss is 0.5-1 kg (1-2 lbs) per week.
+                  Use these numbers as a starting point and adjust based on your
+                  results over 2-3 weeks.
                 </p>
               </div>
             </div>
@@ -376,4 +343,4 @@ const WeightLossCalculator: React.FC = () => {
   );
 };
 
-export default WeightLossCalculator;
+export default TDEECalculator;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, ButtonGroup, Alert } from 'react-bootstrap';
-import '../styles/CalculatorBase.css';
+import { FaCalculator, FaInfoCircle } from 'react-icons/fa';
 import './BMICalculator.css';
 
 const BMICalculator: React.FC = () => {
@@ -66,81 +65,106 @@ const BMICalculator: React.FC = () => {
   };
 
   return (
-    <div className="calculator-container">
-      <h2 className="calculator-title">BMI Calculator</h2>
-      <Container className="calculator-form mx-auto">
-        <Form onSubmit={calculateBMI}>
-            <Form.Group className="mb-4">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <Form.Label className="mb-2">Height</Form.Label>
-                <ButtonGroup size="sm">
-                  <Button
-                    variant={heightUnit === 'cm' ? 'primary' : 'outline-primary'}
-                    onClick={() => handleHeightUnitChange('cm')}
-                  >
-                    cm
-                  </Button>
-                  <Button
-                    variant={heightUnit === 'in' ? 'primary' : 'outline-primary'}
-                    onClick={() => handleHeightUnitChange('in')}
-                  >
-                    in
-                  </Button>
-                </ButtonGroup>
-              </div>
-              <Form.Control
-                type="number"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                placeholder={getHeightPlaceholder()}
-                required
-                step="any"
-                className="measurement-input"
-              />
-            </Form.Group>
+    <div className="page-container">
+      {/* Hero Section */}
+      <section className="bmi-hero">
+        <div className="bmi-hero-content">
+          <h1>BMI Calculator</h1>
+          <p>Calculate your Body Mass Index to understand your weight status and potential health risks.</p>
+        </div>
+        <div className="calculator-icon">
+          <FaCalculator />
+        </div>
+      </section>
 
-            <Form.Group className="mb-4">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <Form.Label className="mb-2">Weight</Form.Label>
-                <ButtonGroup size="sm">
-                  <Button
-                    variant={weightUnit === 'kg' ? 'primary' : 'outline-primary'}
-                    onClick={() => handleWeightUnitChange('kg')}
-                  >
-                    kg
-                  </Button>
-                  <Button
-                    variant={weightUnit === 'lbs' ? 'primary' : 'outline-primary'}
-                    onClick={() => handleWeightUnitChange('lbs')}
-                  >
-                    lbs
-                  </Button>
-                </ButtonGroup>
+      <div className="bmi-calculator">
+        <form onSubmit={calculateBMI} className="bmi-form">
+          <div className="form-group">
+            <div className="form-header">
+              <label>Height</label>
+              <div className="unit-toggle">
+                <button 
+                  type="button"
+                  className={`unit-btn ${heightUnit === 'cm' ? 'active' : ''}`}
+                  onClick={() => handleHeightUnitChange('cm')}
+                >
+                  cm
+                </button>
+                <button 
+                  type="button"
+                  className={`unit-btn ${heightUnit === 'in' ? 'active' : ''}`}
+                  onClick={() => handleHeightUnitChange('in')}
+                >
+                  in
+                </button>
               </div>
-              <Form.Control
-                type="number"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                placeholder={getWeightPlaceholder()}
-                required
-                step="any"
-                className="measurement-input"
-              />
-            </Form.Group>
-
-            <div className="text-center mt-4">
-              <Button variant="primary" type="submit" className="calculate-button">
-                Calculate BMI
-              </Button>
             </div>
-        </Form>
+            <input
+              type="number"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+              placeholder={getHeightPlaceholder()}
+              required
+              step="0.1"
+              className="measurement-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <div className="form-header">
+              <label>Weight</label>
+              <div className="unit-toggle">
+                <button 
+                  type="button"
+                  className={`unit-btn ${weightUnit === 'kg' ? 'active' : ''}`}
+                  onClick={() => handleWeightUnitChange('kg')}
+                >
+                  kg
+                </button>
+                <button 
+                  type="button"
+                  className={`unit-btn ${weightUnit === 'lbs' ? 'active' : ''}`}
+                  onClick={() => handleWeightUnitChange('lbs')}
+                >
+                  lbs
+                </button>
+              </div>
+            </div>
+            <input
+              type="number"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              placeholder={getWeightPlaceholder()}
+              required
+              step="0.1"
+              className="measurement-input"
+            />
+          </div>
+
+          <button type="submit" className="calculate-btn">
+            Calculate BMI
+          </button>
+        </form>
+
         {bmi !== null && (
-          <Alert variant="info" className="mt-4">
-            <h4 className="text-center">Your BMI: {bmi.toFixed(1)}</h4>
-            <p className="text-center mb-0">Category: <strong>{category}</strong></p>
-          </Alert>
+          <div className="result-container">
+            <h3>Your Results</h3>
+            <div className="bmi-result">
+              <div className="bmi-value">{bmi.toFixed(1)}</div>
+              <div className={`bmi-category ${category.toLowerCase().replace(' ', '-')}`}>
+                {category}
+              </div>
+            </div>
+            <div className="bmi-info">
+              <FaInfoCircle className="info-icon" />
+              <p>
+                BMI is a screening tool that provides a quick estimate of body fat based on height and weight.
+                It's not a diagnostic tool and doesn't account for muscle mass, bone density, or overall health.
+              </p>
+            </div>
+          </div>
         )}
-      </Container>
+      </div>
     </div>
   );
 };

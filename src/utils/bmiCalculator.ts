@@ -6,7 +6,7 @@
  */
 export const calculateBMI = (weight: number, height: number): number => {
   if (weight <= 0 || height <= 0) {
-    throw new Error('Weight and height must be positive numbers');
+    throw new Error("Weight and height must be positive numbers");
   }
   return weight / (height * height);
 };
@@ -17,8 +17,8 @@ export const calculateBMI = (weight: number, height: number): number => {
  * @returns BMI category string
  */
 export const getBMICategory = (bmi: number): string => {
-  if (bmi < 18.5) return 'Underweight';
-  if (bmi < 25) return 'Normal weight';
-  if (bmi < 30) return 'Overweight';
-  return 'Obese';
+  if (bmi < 18.5) return "Underweight";
+  if (bmi < 25) return "Normal weight";
+  if (bmi < 30) return "Overweight";
+  return "Obese";
 };

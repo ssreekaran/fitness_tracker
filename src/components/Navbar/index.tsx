@@ -1,72 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { useAuth } from './hooks/useAuth';
-import { useTheme } from './hooks/useTheme';
-import useSearch from './hooks/useSearch';
-import { auth } from '../../firebase';
-import { NavLinkItem } from './types';
-import NavLinks from './components/NavLinks';
-import SearchBar from './components/SearchBar';
-import ThemeToggle from './components/ThemeToggle';
-import UserMenu from './components/UserMenu';
-import MobileMenu from './components/MobileMenu';
-import './styles.css';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useAuth } from "./hooks/useAuth";
+import { useTheme } from "./hooks/useTheme";
+import useSearch from "./hooks/useSearch";
+import { auth } from "../../firebase";
+import { NavLinkItem } from "./types";
+import NavLinks from "./components/NavLinks";
+import SearchBar from "./components/SearchBar";
+import ThemeToggle from "./components/ThemeToggle";
+import UserMenu from "./components/UserMenu";
+import MobileMenu from "./components/MobileMenu";
+import "./styles.css";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { isDarkMode, toggleTheme } = useTheme();
   const { user } = useAuth();
-  
+
   const handleSignOut = async () => {
     await auth.signOut();
   };
-  
+
   // Navigation links with dropdowns
   const navLinks: NavLinkItem[] = [
-    { title: 'Home', path: '/' },
-    { 
-      title: 'Food Options', 
-      path: '#',
+    { title: "Home", path: "/" },
+    {
+      title: "Food Options",
+      path: "#",
       children: [
-        { title: 'Healthy Food', path: '/healthy-food' },
-        { title: 'Food Database', path: '/food-database' },
-      ]
+        { title: "Healthy Food", path: "/healthy-food" },
+        { title: "Food Database", path: "/food-database" },
+      ],
     },
-    { 
-      title: 'Calculators', 
-      path: '#',
+    {
+      title: "Calculators",
+      path: "#",
       children: [
-        { title: 'BMI Calculator', path: '/bmi-calculator' },
-        { title: 'Body Fat Calculator', path: '/body-fat-calculator' },
-        { title: 'Weight Loss Calculator', path: '/weight-loss-calculator' },
-      ]
+        { title: "BMI Calculator", path: "/bmi-calculator" },
+        { title: "Body Fat Calculator", path: "/body-fat-calculator" },
+        { title: "Weight Loss Calculator", path: "/weight-loss-calculator" },
+        { title: "TDEE Calculator", path: "/tdee-calculator" },
+        { title: "Macro Calculator", path: "/macro-calculator" },
+        { title: "One Rep Max Calculator", path: "/one-rep-max-calculator" },
+        {
+          title: "Heart Rate Zone Calculator",
+          path: "/heart-rate-zone-calculator",
+        },
+      ],
     },
-    { 
-      title: 'Tracker', 
-      path: '#',
+    {
+      title: "Tracker",
+      path: "#",
       children: [
-        { title: 'Personal Fitness', path: '/personal-fitness' },
-        { title: 'Calorie Tracker', path: '/calorie-tracker' },
-        { title: 'Workout Planner', path: '/workout-planner' },
-      ]
+        { title: "Personal Fitness", path: "/personal-fitness" },
+        { title: "Calorie Tracker", path: "/calorie-tracker" },
+        { title: "Workout Planner", path: "/workout-planner" },
+      ],
     },
-    { 
-      title: 'AI Tools', 
-      path: '#',
+    {
+      title: "AI Tools",
+      path: "#",
       children: [
-        { title: 'Diet Recommendations', path: '/diet-recommendations' },
-        { title: 'Workout Recommendations', path: '/workout-recommendations' },
-      ]
+        { title: "Diet Recommendations", path: "/diet-recommendations" },
+        { title: "Workout Recommendations", path: "/workout-recommendations" },
+      ],
     },
-    { 
-      title: 'About Us', 
-      path: '#',
+    {
+      title: "About Us",
+      path: "#",
       children: [
-        { title: 'About Us', path: '/about' },
-        { title: 'Contact Us', path: '/contact' },
-      ]
+        { title: "About Us", path: "/about" },
+        { title: "Contact Us", path: "/contact" },
+      ],
     },
   ];
 
@@ -94,15 +101,15 @@ const Navbar: React.FC = () => {
       <div className="navbar-container">
         <div className="navbar-header">
           <Link to="/" className="logo">
-            <img 
-              src="/fitness_tracker_logo6.png" 
-              alt="Fitness Tracker" 
+            <img
+              src="/fitness_tracker_logo6.png"
+              alt="Fitness Tracker"
               className="logo-img"
             />
           </Link>
 
-          <button 
-            className="menu-toggle" 
+          <button
+            className="menu-toggle"
             onClick={toggleMenu}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
@@ -139,11 +146,11 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       <MobileMenu isMenuOpen={isMenuOpen} toggleMenu={toggleMenu}>
-        <NavLinks 
-          links={navLinks} 
-          user={user} 
-          isMobile={true} 
-          onLinkClick={toggleMenu} 
+        <NavLinks
+          links={navLinks}
+          user={user}
+          isMobile={true}
+          onLinkClick={toggleMenu}
         />
         <div className="mobile-actions">
           <UserMenu user={user} onSignOut={handleSignOut} />
