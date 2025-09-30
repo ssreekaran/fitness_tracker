@@ -1,3 +1,19 @@
+/**
+ * SettingsPage Component
+ *
+ * A comprehensive settings page that provides users with access to:
+ * - Fitness goals management and configuration
+ * - User preferences and account settings
+ * - Application configuration options
+ *
+ * Features:
+ * - Tabbed interface for organized settings sections
+ * - Integration with GoalsManager component
+ * - Navigation breadcrumbs with back button
+ * - Responsive design with consistent styling
+ * - Future extensibility for additional settings categories
+ */
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Typography, Space, Button, Tabs } from "antd";
@@ -16,8 +32,12 @@ const { TabPane } = Tabs;
 const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
 
+  /**
+   * Handle goals update callback
+   * Called when goals are successfully updated in the GoalsManager component
+   */
   const handleGoalsUpdate = () => {
-    // Goals updated, could show a success message or refresh data
+    // Goals updated successfully - could show notification or refresh data
     console.log("Goals updated successfully");
   };
 

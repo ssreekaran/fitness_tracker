@@ -1,3 +1,16 @@
+/**
+ * Workout Service - Workout Logging and Activity Tracking
+ *
+ * This service manages all workout-related operations:
+ * - Saving and retrieving workout logs
+ * - Calculating activity summaries and progress metrics
+ * - Computing workout streaks and goal achievements
+ * - Integrating with the goals system for progress tracking
+ *
+ * The service handles date normalization across different input formats
+ * and provides comprehensive activity analytics for user progress monitoring.
+ */
+
 import {
   collection,
   doc,
@@ -14,7 +27,14 @@ import { db } from "../firebase";
 import { logger } from "../utils/logger";
 import { getUserGoals } from "./goalsService";
 
-// Safe date conversion utility
+/**
+ * Safe date conversion utility
+ * Converts various date input formats to a valid Date object with validation
+ *
+ * @param dateInput - Date in various formats (Date, Timestamp, string, number)
+ * @returns Valid Date object
+ * @throws Error if the input cannot be converted to a valid date
+ */
 const convertToValidDate = (
   dateInput: Date | Timestamp | string | number
 ): Date => {
@@ -28,13 +48,13 @@ const convertToValidDate = (
     // Treat as epoch timestamp (milliseconds)
     date = new Date(dateInput);
   } else if (typeof dateInput === "string") {
-    // Parse string date
+    // Parse string date (ISO format, etc.)
     date = new Date(dateInput);
   } else {
     throw new Error(`Invalid date type: ${typeof dateInput}`);
   }
 
-  // Validate the resulting Date
+  // Validate the resulting Date object
   if (isNaN(date.getTime())) {
     throw new Error(`Invalid date value: ${dateInput}`);
   }
@@ -42,7 +62,13 @@ const convertToValidDate = (
   return date;
 };
 
-// Date normalization helper for consistent date conversion
+/**
+ * Date normalization helper for consistent date conversion
+ * Simpler conversion that assumes input is already valid (used for data from Firestore)
+ *
+ * @param dateInput - Date in various formats
+ * @returns Normalized Date object
+ */
 const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
   if (dateInput instanceof Date) {
     return dateInput;
@@ -53,22 +79,38 @@ const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
   }
 };
 
-// Default activity summary constants (fallback values)
-const DEFAULT_WEEKLY_WORKOUT_TARGET = 5;
-const DEFAULT_WEEKLY_GOAL_THRESHOLD = 3;
-const DEFAULT_GOAL_TRACKING_WEEKS = 4;
+/**
+ * Default activity summary constants (fallback values)
+ * Used when user goals cannot be loaded from the database
+ */
+const DEFAULT_WEEKLY_WORKOUT_TARGET = 5; // Default target: 5 workouts per week
+const DEFAULT_WEEKLY_GOAL_THRESHOLD = 3; // Default threshold: 3 workouts minimum
+const DEFAULT_GOAL_TRACKING_WEEKS = 4; // Default tracking period: 4 weeks
 
+/**
+ * Interface for individual workout log entries
+ */
 export interface WorkoutLog {
-  id?: string;
-  userId: string;
-  exercise: string;
-  duration: number;
-  intensity?: "low" | "moderate" | "high"; // Made optional
-  caloriesBurned: number;
-  date: Date | Timestamp | string | number;
-  createdAt?: Date | Timestamp;
+  id?: string; // Firestore document ID
+  userId: string; // Firebase Auth user ID
+  exercise: string; // Name/type of exercise performed
+  duration: number; // Duration in minutes
+  intensity?: "low" | "moderate" | "high"; // Exercise intensity level (optional)
+  caloriesBurned: number; // Estimated calories burned
+  date: Date | Timestamp | string | number; // When the workout was performed
+  createdAt?: Date | Timestamp; // When the log entry was created
 }
 
+/**
+ * Save a new workout log entry to Firestore
+ *
+ * Handles date validation and conversion, creates a new document in the user's
+ * workout subcollection, and returns the saved workout with generated ID.
+ *
+ * @param workout - Workout data (excluding id, userId, createdAt)
+ * @returns Promise<WorkoutLog> - The saved workout with generated ID and timestamps
+ * @throws Error if user is not authenticated or if there are database/validation errors
+ */
 export const saveWorkout = async (
   workout: Omit<WorkoutLog, "id" | "userId" | "createdAt">
 ): Promise<WorkoutLog> => {

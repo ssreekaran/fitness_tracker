@@ -1,67 +1,94 @@
-import React, { useState } from 'react';
-import { FaCalculator, FaInfoCircle } from 'react-icons/fa';
-import './BMICalculator.css';
+/**
+ * BMI Calculator Page Component
+ *
+ * A comprehensive Body Mass Index calculator that supports multiple units
+ * and provides detailed health category information.
+ *
+ * Features:
+ * - Dual unit support (metric/imperial)
+ * - Real-time BMI calculation
+ * - Health category classification
+ * - Form validation and error handling
+ * - Responsive design with clear visual feedback
+ */
+
+import React, { useState } from "react";
+import { FaCalculator, FaInfoCircle } from "react-icons/fa";
+import "./BMICalculator.css";
 
 const BMICalculator: React.FC = () => {
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [bmi, setBmi] = useState<number | null>(null);
-  const [category, setCategory] = useState('');
-  const [heightUnit, setHeightUnit] = useState<'cm' | 'in'>('cm');
-  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+  // Form input states
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
 
+  // Calculation result states
+  const [bmi, setBmi] = useState<number | null>(null);
+  const [category, setCategory] = useState("");
+
+  // Unit selection states
+  const [heightUnit, setHeightUnit] = useState<"cm" | "in">("cm");
+  const [weightUnit, setWeightUnit] = useState<"kg" | "lbs">("kg");
+
+  /**
+   * Calculate BMI from user inputs
+   * Handles unit conversions and BMI category classification
+   */
   const calculateBMI = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Convert height to meters
+
+    // Convert height to meters (standard unit for BMI calculation)
     let heightInMeters: number;
-    if (heightUnit === 'cm') {
+    if (heightUnit === "cm") {
       heightInMeters = parseFloat(height) / 100;
     } else {
       heightInMeters = parseFloat(height) * 0.0254; // Convert inches to meters
     }
 
-    // Convert weight to kg
+    // Convert weight to kilograms (standard unit for BMI calculation)
     let weightInKg: number;
-    if (weightUnit === 'kg') {
+    if (weightUnit === "kg") {
       weightInKg = parseFloat(weight);
     } else {
       weightInKg = parseFloat(weight) * 0.453592; // Convert pounds to kg
     }
-    
+
+    // Validate inputs and calculate BMI using standard formula: weight(kg) / height(m)²
     if (heightInMeters > 0 && weightInKg > 0) {
       const bmiValue = weightInKg / (heightInMeters * heightInMeters);
       setBmi(parseFloat(bmiValue.toFixed(1)));
-      
-      // Determine BMI category
-      if (bmiValue < 18.5) setCategory('Underweight');
-      else if (bmiValue < 25) setCategory('Normal weight');
-      else if (bmiValue < 30) setCategory('Overweight');
-      else setCategory('Obese');
+
+      // Classify BMI into health categories (WHO standards)
+      if (bmiValue < 18.5) setCategory("Underweight");
+      else if (bmiValue < 25) setCategory("Normal weight");
+      else if (bmiValue < 30) setCategory("Overweight");
+      else setCategory("Obese");
     }
   };
 
-  // Clear form when units change
-  const handleHeightUnitChange = (unit: 'cm' | 'in') => {
+  /**
+   * Handle height unit changes
+   * Clears form data to prevent confusion with different unit systems
+   */
+  const handleHeightUnitChange = (unit: "cm" | "in") => {
     setHeightUnit(unit);
-    setHeight('');
+    setHeight("");
     setBmi(null);
-    setCategory('');
+    setCategory("");
   };
 
-  const handleWeightUnitChange = (unit: 'kg' | 'lbs') => {
+  const handleWeightUnitChange = (unit: "kg" | "lbs") => {
     setWeightUnit(unit);
-    setWeight('');
+    setWeight("");
     setBmi(null);
-    setCategory('');
+    setCategory("");
   };
 
   const getHeightPlaceholder = () => {
-    return heightUnit === 'cm' ? 'Height (centimeters)' : 'Height (inches)';
+    return heightUnit === "cm" ? "Height (centimeters)" : "Height (inches)";
   };
 
   const getWeightPlaceholder = () => {
-    return weightUnit === 'kg' ? 'Weight (kilograms)' : 'Weight (pounds)';
+    return weightUnit === "kg" ? "Weight (kilograms)" : "Weight (pounds)";
   };
 
   return (
@@ -70,7 +97,10 @@ const BMICalculator: React.FC = () => {
       <section className="bmi-hero">
         <div className="bmi-hero-content">
           <h1>BMI Calculator</h1>
-          <p>Calculate your Body Mass Index to understand your weight status and potential health risks.</p>
+          <p>
+            Calculate your Body Mass Index to understand your weight status and
+            potential health risks.
+          </p>
         </div>
         <div className="calculator-icon">
           <FaCalculator />
@@ -83,17 +113,17 @@ const BMICalculator: React.FC = () => {
             <div className="form-header">
               <label>Height</label>
               <div className="unit-toggle">
-                <button 
+                <button
                   type="button"
-                  className={`unit-btn ${heightUnit === 'cm' ? 'active' : ''}`}
-                  onClick={() => handleHeightUnitChange('cm')}
+                  className={`unit-btn ${heightUnit === "cm" ? "active" : ""}`}
+                  onClick={() => handleHeightUnitChange("cm")}
                 >
                   cm
                 </button>
-                <button 
+                <button
                   type="button"
-                  className={`unit-btn ${heightUnit === 'in' ? 'active' : ''}`}
-                  onClick={() => handleHeightUnitChange('in')}
+                  className={`unit-btn ${heightUnit === "in" ? "active" : ""}`}
+                  onClick={() => handleHeightUnitChange("in")}
                 >
                   in
                 </button>
@@ -114,17 +144,17 @@ const BMICalculator: React.FC = () => {
             <div className="form-header">
               <label>Weight</label>
               <div className="unit-toggle">
-                <button 
+                <button
                   type="button"
-                  className={`unit-btn ${weightUnit === 'kg' ? 'active' : ''}`}
-                  onClick={() => handleWeightUnitChange('kg')}
+                  className={`unit-btn ${weightUnit === "kg" ? "active" : ""}`}
+                  onClick={() => handleWeightUnitChange("kg")}
                 >
                   kg
                 </button>
-                <button 
+                <button
                   type="button"
-                  className={`unit-btn ${weightUnit === 'lbs' ? 'active' : ''}`}
-                  onClick={() => handleWeightUnitChange('lbs')}
+                  className={`unit-btn ${weightUnit === "lbs" ? "active" : ""}`}
+                  onClick={() => handleWeightUnitChange("lbs")}
                 >
                   lbs
                 </button>
@@ -151,15 +181,21 @@ const BMICalculator: React.FC = () => {
             <h3>Your Results</h3>
             <div className="bmi-result">
               <div className="bmi-value">{bmi.toFixed(1)}</div>
-              <div className={`bmi-category ${category.toLowerCase().replace(' ', '-')}`}>
+              <div
+                className={`bmi-category ${category
+                  .toLowerCase()
+                  .replace(" ", "-")}`}
+              >
                 {category}
               </div>
             </div>
             <div className="bmi-info">
               <FaInfoCircle className="info-icon" />
               <p>
-                BMI is a screening tool that provides a quick estimate of body fat based on height and weight.
-                It's not a diagnostic tool and doesn't account for muscle mass, bone density, or overall health.
+                BMI is a screening tool that provides a quick estimate of body
+                fat based on height and weight. It's not a diagnostic tool and
+                doesn't account for muscle mass, bone density, or overall
+                health.
               </p>
             </div>
           </div>

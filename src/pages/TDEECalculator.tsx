@@ -1,3 +1,17 @@
+/**
+ * TDEE Calculator Page Component
+ *
+ * Total Daily Energy Expenditure calculator that determines how many calories
+ * a person burns per day based on their BMR and activity level.
+ *
+ * Features:
+ * - BMR calculation using Mifflin-St Jeor equation
+ * - Multiple activity level options
+ * - Gender-specific calculations
+ * - Detailed calorie breakdowns for different goals
+ * - Unit conversion support
+ */
+
 import React, { useState } from "react";
 import {
   FaFire,
@@ -8,6 +22,10 @@ import {
 } from "react-icons/fa";
 import "./TDEECalculator.css";
 
+/**
+ * Activity level multipliers for TDEE calculation
+ * Based on standard fitness industry guidelines
+ */
 const activityLevels = [
   {
     label: "Sedentary (little or no exercise)",
@@ -36,6 +54,16 @@ const activityLevels = [
   },
 ];
 
+/**
+ * Calculate Basal Metabolic Rate (BMR) using the Mifflin-St Jeor equation
+ * This is the most accurate formula for BMR calculation in healthy individuals
+ *
+ * @param gender - "male" or "female"
+ * @param weight - Weight in kilograms
+ * @param height - Height in centimeters
+ * @param age - Age in years
+ * @returns BMR in calories per day
+ */
 function calculateBMR(
   gender: string,
   weight: number,
@@ -43,8 +71,10 @@ function calculateBMR(
   age: number
 ) {
   if (gender === "male") {
+    // Mifflin-St Jeor equation for men
     return 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age;
   } else {
+    // Mifflin-St Jeor equation for women
     return 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age;
   }
 }

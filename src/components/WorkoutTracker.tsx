@@ -1,3 +1,20 @@
+/**
+ * WorkoutTracker Component
+ *
+ * A comprehensive workout logging and tracking system that allows users to:
+ * - Log new workouts with automatic calorie calculation
+ * - View workout history in a sortable table
+ * - Delete workout entries
+ * - Calculate calories burned using MET (Metabolic Equivalent) values
+ *
+ * Features:
+ * - Extensive exercise database with MET values
+ * - Real-time calorie calculation based on exercise type and duration
+ * - Responsive design with collapsible sections
+ * - Error handling and loading states
+ * - Date validation and formatting
+ */
+
 import React, { useState } from "react";
 import {
   Card,
@@ -19,7 +36,10 @@ import {
 import "./WorkoutTracker.css";
 import { Timestamp } from "firebase/firestore";
 
-// Date normalization helper for consistent date conversion
+/**
+ * Date normalization helper for consistent date conversion
+ * Handles various date formats from Firestore and user input
+ */
 const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
   if (dateInput instanceof Date) {
     return dateInput;
@@ -30,14 +50,22 @@ const normalizeDate = (dateInput: Date | Timestamp | string | number): Date => {
   }
 };
 
+/**
+ * Interface for workout form data structure
+ */
 interface WorkoutFormData {
-  exercise: string;
-  duration: number;
-  date: string;
+  exercise: string; // Selected exercise type
+  duration: number; // Duration in minutes
+  date: string; // Date in YYYY-MM-DD format
 }
 
+/**
+ * MET (Metabolic Equivalent of Task) values for different exercises
+ * Used to calculate calories burned: Calories = MET × weight(kg) × duration(hours)
+ * Values based on the Compendium of Physical Activities
+ */
 const exerciseMETs: Record<string, number> = {
-  // Cardio Exercises
+  // Cardio Exercises - Running (various speeds)
   "Running (5 mph/8 kmh, 12:00 min/mi)": 8,
   "Running (6 mph/9.7 kmh, 10:00 min/mi)": 10,
   "Running (7 mph/11.3 kmh, 8:34 min/mi)": 11.5,
@@ -46,6 +74,8 @@ const exerciseMETs: Record<string, number> = {
   "Running (10 mph/16.1 kmh, 6:00 min/mi)": 15,
   "Running (11 mph/17.7 kmh, 5:27 min/mi)": 16.5,
   "Running (12 mph/19.3 kmh, 5:00 min/mi)": 18,
+
+  // Cycling exercises
   "Cycling (leisurely)": 6,
   "Cycling (moderate)": 8,
   "Cycling (vigorous)": 12,

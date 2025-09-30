@@ -1,47 +1,70 @@
+/**
+ * Goals Service - User Fitness Goals Management
+ *
+ * This service handles all operations related to user fitness goals:
+ * - Creating and managing default goals for new users
+ * - CRUD operations for custom user goals
+ * - Goal tracking and progress monitoring
+ * - Fallback handling for offline/restricted database access
+ *
+ * The service supports both predefined goal types (weekly workouts, calories, etc.)
+ * and custom user-defined goals with flexible tracking periods and metrics.
+ */
+
 import { doc, setDoc, getDoc, Timestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 import { logger } from "../utils/logger";
 
+/**
+ * Interface for user's overall fitness goals configuration
+ */
 export interface UserGoals {
-  id?: string;
-  userId: string;
-  weeklyWorkoutTarget: number;
-  weeklyGoalThreshold: number; // Minimum workouts to consider goal met
-  goalTrackingWeeks: number; // Number of weeks to track for achievement
-  customGoals: CustomGoal[];
-  createdAt?: Date | Timestamp;
-  updatedAt?: Date | Timestamp;
+  id?: string; // Firestore document ID
+  userId: string; // Firebase Auth user ID
+  weeklyWorkoutTarget: number; // Target number of workouts per week
+  weeklyGoalThreshold: number; // Minimum workouts to consider weekly goal met
+  goalTrackingWeeks: number; // Number of weeks to track for achievement calculation
+  customGoals: CustomGoal[]; // Array of user-defined custom goals
+  createdAt?: Date | Timestamp; // When the goals were first created
+  updatedAt?: Date | Timestamp; // Last modification timestamp
 }
 
+/**
+ * Interface for individual custom fitness goals
+ */
 export interface CustomGoal {
-  id: string;
-  name: string;
-  description: string;
-  type: "weekly" | "monthly" | "streak";
-  target: number;
-  currentValue: number;
-  isActive: boolean;
-  category: "workout" | "calories" | "duration" | "custom";
-  unit: string; // e.g., 'workouts', 'calories', 'minutes', 'days'
-  createdAt: Date | Timestamp;
+  id: string; // Unique identifier for the goal
+  name: string; // Display name for the goal
+  description: string; // Detailed description of the goal
+  type: "weekly" | "monthly" | "streak"; // Time period for goal tracking
+  target: number; // Target value to achieve
+  currentValue: number; // Current progress towards target
+  isActive: boolean; // Whether the goal is currently being tracked
+  category: "workout" | "calories" | "duration" | "custom"; // Category of fitness metric
+  unit: string; // Unit of measurement (e.g., 'workouts', 'calories', 'minutes', 'days')
+  createdAt: Date | Timestamp; // When the goal was created
 }
 
-// Default goals configuration
+/**
+ * Default goals configuration for new users
+ * These goals are automatically created when a user first accesses the goals system
+ * Provides a comprehensive set of fitness tracking goals covering different aspects of fitness
+ */
 const DEFAULT_GOALS: Omit<
   UserGoals,
   "id" | "userId" | "createdAt" | "updatedAt"
 > = {
-  weeklyWorkoutTarget: 5,
-  weeklyGoalThreshold: 3,
-  goalTrackingWeeks: 4,
+  weeklyWorkoutTarget: 5, // Aim for 5 workouts per week
+  weeklyGoalThreshold: 3, // Consider goal met with minimum 3 workouts
+  goalTrackingWeeks: 4, // Track achievement over 4-week periods
   customGoals: [
     {
       id: "weekly-workouts",
       name: "Weekly Workouts",
       description: "Complete your target number of workouts each week",
       type: "weekly",
-      target: 5,
+      target: 5, // 5 workouts per week
       currentValue: 0,
       isActive: true,
       category: "workout",
@@ -53,7 +76,7 @@ const DEFAULT_GOALS: Omit<
       name: "Weekly Calories",
       description: "Burn your target calories each week",
       type: "weekly",
-      target: 2000,
+      target: 2000, // 2000 calories burned per week
       currentValue: 0,
       isActive: true,
       category: "calories",
@@ -65,7 +88,7 @@ const DEFAULT_GOALS: Omit<
       name: "Workout Streak",
       description: "Maintain a consistent workout streak",
       type: "streak",
-      target: 7,
+      target: 7, // 7-day workout streak
       currentValue: 0,
       isActive: true,
       category: "workout",
@@ -77,7 +100,7 @@ const DEFAULT_GOALS: Omit<
       name: "Weekly Exercise Time",
       description: "Exercise for your target duration each week",
       type: "weekly",
-      target: 300,
+      target: 300, // 300 minutes (5 hours) per week
       currentValue: 0,
       isActive: true,
       category: "duration",
@@ -87,6 +110,15 @@ const DEFAULT_GOALS: Omit<
   ],
 };
 
+/**
+ * Retrieve user's fitness goals from Firestore
+ *
+ * If no goals exist for the user, creates default goals automatically.
+ * Includes fallback handling for database access issues (returns default goals).
+ *
+ * @returns Promise<UserGoals> - User's goals configuration with all custom goals
+ * @throws Error if user is not authenticated
+ */
 export const getUserGoals = async (): Promise<UserGoals> => {
   const auth = getAuth();
   const user = auth.currentUser;

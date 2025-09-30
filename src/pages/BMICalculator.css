@@ -295,7 +295,6 @@
     flex-direction: column;
     text-align: center;
   }
-  
   .bmi-info .info-icon {
     margin: 0 auto 0.5rem;
   }
@@ -311,17 +310,17 @@
 [data-theme='dark'] .bmi-hero {
   background: linear-gradient(135deg, #2ecc71, #27ae60);
 }
-  
-  .unit-toggle {
-    background: var(--dropdown-bg);
-    border-color: var(--border-color);
-  }
-  
-  .measurement-input {
-    background-color: var(--dropdown-bg);
-    border-color: var(--border-color);
-  }
+
+.unit-toggle {
+  background: var(--dropdown-bg);
+  border-color: var(--border-color);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
 }
+
+.measurement-input {
+  background-color: var(--dropdown-bg);
+  border-color: var(--border-color);
   margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
 }
@@ -334,6 +333,7 @@
 
 /* Ensure the input container takes full width */
 .bmi-calculator .d-flex {
+  width: 100%;
   width: 100%;
 }
 

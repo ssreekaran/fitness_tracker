@@ -1,3 +1,21 @@
+/**
+ * GoalsManager Component
+ *
+ * A comprehensive fitness goals management system that allows users to:
+ * - View and edit overall fitness goal settings
+ * - Create, edit, and delete custom fitness goals
+ * - Track progress across different goal types (weekly, monthly, streak)
+ * - Manage goal categories (workout, calories, duration, custom)
+ *
+ * Features:
+ * - Real-time goal updates with Firestore synchronization
+ * - Multiple goal types and tracking periods
+ * - Visual progress indicators and status tags
+ * - Modal-based editing interface
+ * - Error handling and user feedback
+ * - Responsive design with Ant Design components
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Card,
@@ -42,11 +60,15 @@ import {
 const { Text } = Typography;
 const { Option } = Select;
 
+/**
+ * Props interface for GoalsManager component
+ */
 interface GoalsManagerProps {
-  onGoalsUpdate?: () => void;
+  onGoalsUpdate?: () => void; // Callback fired when goals are updated (for parent component refresh)
 }
 
 const GoalsManager: React.FC<GoalsManagerProps> = ({ onGoalsUpdate }) => {
+  // Main goals state
   const [goals, setGoals] = useState<UserGoals | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
