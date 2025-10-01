@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getFitnessData, type FitnessData } from "../services/fitnessService";
-import AIChatbot from "../components/AIChatbot";
+import NutritionChatbot from "../components/NutritionChatbot";
 import { UserProfile } from "../services/chatbotService";
 import "./DietRecommendations.css";
 
@@ -86,7 +86,7 @@ const DietRecommendations: React.FC = () => {
         </div>
       </div>
 
-      <AIChatbot
+      <NutritionChatbot
         userProfile={userProfile}
         initialMessage={
           fitness && fitness.age && fitness.height && fitness.weight

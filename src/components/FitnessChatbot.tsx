@@ -5,35 +5,95 @@ import {
   WorkoutUserProfile,
 } from "../services/workoutChatbotService";
 import { getBMICategory } from "../services/fitnessService";
-import "./AIWorkoutChatbot.css";
+import "./FitnessChatbot.css";
 
-interface AIWorkoutChatbotProps {
+interface FitnessChatbotProps {
   userProfile?: WorkoutUserProfile;
   onClose?: () => void;
   initialMessage?: string;
 }
 
-const AIWorkoutChatbot: React.FC<AIWorkoutChatbotProps> = ({
+const FitnessChatbot: React.FC<FitnessChatbotProps> = ({
   userProfile,
   onClose,
-  initialMessage = "Hey! I'm your AI fitness coach. I can provide workout guidance and training plans based on your profile. Remember, I'm an AI assistant and my advice shouldn't replace professional fitness or medical consultation. Let's get you moving and feeling amazing! What's your fitness goal?",
+  initialMessage = "Hey! I'm your AI fitness coach! 💪 I can see your profile and I'm pumped to help you create an awesome workout plan! What's your main fitness goal right now?",
 }) => {
+  // Storage key for conversation persistence
+  const STORAGE_KEY = "fitness_chat_history";
+
+  // Load conversation history from localStorage
+  const loadConversationHistory = (): WorkoutChatMessage[] => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Convert timestamp strings back to Date objects
+        return parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+      }
+    } catch (error) {
+      console.warn("Error loading conversation history:", error);
+    }
+
+    // Return initial message if no history
+    return [
+      {
+        id: "1",
+        role: "assistant",
+        content: userProfile
+          ? `Hey! I'm your AI fitness coach! 💪 I can see your profile (${
+              userProfile.age
+            }y, ${userProfile.height}cm, ${userProfile.weight}kg${
+              userProfile.bmi ? `, BMI ${userProfile.bmi}` : ""
+            }) and I'm pumped to help you create an awesome workout plan! What's your main fitness goal right now?`
+          : initialMessage,
+        timestamp: new Date(),
+      },
+    ];
+  };
+
+  // Save conversation history to localStorage
+  const saveConversationHistory = (messages: WorkoutChatMessage[]) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } catch (error) {
+      console.warn("Error saving conversation history:", error);
+    }
+  };
+
   // Debug: Log the user profile data
   React.useEffect(() => {
-    console.log("AIWorkoutChatbot received userProfile:", userProfile);
+    console.log("FitnessChatbot received userProfile:", userProfile);
   }, [userProfile]);
 
-  const [messages, setMessages] = useState<WorkoutChatMessage[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: initialMessage,
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<WorkoutChatMessage[]>(
+    loadConversationHistory
+  );
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Save messages whenever they change
+  useEffect(() => {
+    saveConversationHistory(messages);
+  }, [messages]);
+
+  // Update initial message when user profile changes
+  useEffect(() => {
+    if (userProfile && messages.length === 1 && messages[0].id === "1") {
+      const updatedMessage = {
+        ...messages[0],
+        content: `Hey! I'm your AI fitness coach! 💪 I can see your profile (${
+          userProfile.age
+        }y, ${userProfile.height}cm, ${userProfile.weight}kg${
+          userProfile.bmi ? `, BMI ${userProfile.bmi}` : ""
+        }) and I'm pumped to help you create an awesome workout plan! What's your main fitness goal right now?`,
+      };
+      setMessages([updatedMessage]);
+    }
+  }, [userProfile]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -92,6 +152,29 @@ const AIWorkoutChatbot: React.FC<AIWorkoutChatbotProps> = ({
     setInput(reply);
   };
 
+  // Clear conversation history
+  const clearConversation = () => {
+    const initialMessages = [
+      {
+        id: "1",
+        role: "assistant" as const,
+        content: userProfile
+          ? `Hey! I'm your AI fitness coach! 💪 I can see your profile (${
+              userProfile.age
+            }y, ${userProfile.height}cm, ${userProfile.weight}kg${
+              userProfile.bmi ? `, BMI ${userProfile.bmi}` : ""
+            }) and I'm pumped to help you create an awesome workout plan! What's your main fitness goal right now?`
+          : initialMessage,
+        timestamp: new Date(),
+      },
+    ];
+    setMessages(initialMessages);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // Check if conversation was loaded from history
+  const hasConversationHistory = messages.length > 1;
+
   // Generate personalized quick replies based on user profile
   const quickReplies = React.useMemo(() => {
     const baseReplies = [
@@ -114,18 +197,38 @@ const AIWorkoutChatbot: React.FC<AIWorkoutChatbotProps> = ({
   }, [userProfile]);
 
   return (
-    <div className="ai-workout-chatbot">
+    <div className="fitness-chatbot">
       <div className="chatbot-header">
-        <h3>💪 AI Fitness Coach</h3>
-        {onClose && (
+        <div className="header-title">
+          <h3>💪 AI Fitness Coach</h3>
+          {hasConversationHistory && (
+            <span
+              className="history-indicator"
+              title="Conversation history loaded"
+            >
+              💬
+            </span>
+          )}
+        </div>
+        <div className="header-buttons">
           <button
-            className="close-btn"
-            onClick={onClose}
-            aria-label="Close chat"
+            className="clear-btn"
+            onClick={clearConversation}
+            aria-label="Clear conversation"
+            title="Start new conversation"
           >
-            ×
+            🔄
           </button>
-        )}
+          {onClose && (
+            <button
+              className="close-btn"
+              onClick={onClose}
+              aria-label="Close chat"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="profile-display">
@@ -267,4 +370,4 @@ const AIWorkoutChatbot: React.FC<AIWorkoutChatbotProps> = ({
   );
 };
 
-export default AIWorkoutChatbot;
+export default FitnessChatbot;

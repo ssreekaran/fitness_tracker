@@ -63,8 +63,8 @@ const Navbar: React.FC = () => {
       title: "AI Tools",
       path: "#",
       children: [
-        { title: "Diet Recommendations", path: "/diet-recommendations" },
-        { title: "Workout Recommendations", path: "/workout-recommendations" },
+        { title: "Nutrition Coach", path: "/diet-recommendations" },
+        { title: "Fitness Coach", path: "/workout-recommendations" },
       ],
     },
     {

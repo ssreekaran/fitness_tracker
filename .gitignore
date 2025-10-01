@@ -110,3 +110,6 @@ build/
 dist/
 dist-ssr/
 node_modules/
+
+# Documentation (local development notes)
+docs/

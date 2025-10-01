@@ -92,6 +92,69 @@ Keep responses helpful and motivating - like you're genuinely excited to help th
 
     // Context-aware responses based on conversation flow
 
+    // Equipment/gym access questions in context of workout planning
+    if (
+      (conversationContext.includes("workout plan") ||
+        conversationContext.includes("equipment")) &&
+      (message.includes("little experience") ||
+        message.includes("high school") ||
+        message.includes("no access to fancy equipment") ||
+        message.includes("local gym") ||
+        message.includes("just my gym") ||
+        message.includes("basic gym"))
+    ) {
+      return `Perfect! A local gym with basic equipment is actually IDEAL for building muscle! 🏋️ You don't need fancy machines - the basics are where the magic happens!
+
+**Your Muscle-Building Arsenal:**
+• **Barbells & dumbbells** - the kings of muscle building
+• **Squat rack** - for safe, heavy squats and rack pulls
+• **Bench** - for pressing movements
+• **Pull-up bar** - best back and bicep builder
+
+**Since you have some high school experience, let's build on that foundation:**
+
+**Week 1-2: Form & Habit Building**
+• 3 days/week, full-body workouts
+• Focus on the big 4: squat, deadlift, bench, row
+• Start with lighter weights to nail your form
+
+**Week 3+: Progressive Overload**
+• Add weight or reps each week
+• Track your lifts (this is KEY!)
+• Listen to your body for rest days
+
+At your stats (${userProfile?.weight}kg), you've got great potential for lean muscle gains! What days of the week work best for you to hit the gym?`;
+    }
+
+    // Experience level questions in context
+    if (
+      (conversationContext.includes("muscle building") ||
+        conversationContext.includes("workout plan")) &&
+      (message.includes("little experience") ||
+        message.includes("beginner") ||
+        message.includes("high school") ||
+        message.includes("starting out"))
+    ) {
+      return `Having some high school experience is actually a HUGE advantage! 💪 You're not starting from zero - you probably remember some of the basics, which puts you ahead of true beginners.
+
+**Let's refresh and build on what you know:**
+
+🏋️ **The Muscle-Building Fundamentals:**
+• **Progressive overload** - gradually increase weight/reps (you probably remember this!)
+• **Compound movements** - squat, deadlift, bench, row (the big 4)
+• **Consistency** - 3-4x per week beats sporadic intense sessions
+• **Recovery** - muscle grows during rest, not just in the gym
+
+**Your advantage:** You likely have some muscle memory and basic form knowledge. We just need to refresh it and build a solid routine!
+
+**Starting point for you:**
+• 3 full-body sessions per week
+• Focus on form first, then gradually add weight
+• Track your progress (this is where most people fail!)
+
+What specific exercises do you remember enjoying or being good at in high school? Let's build around your strengths! 🚀`;
+    }
+
     // If user mentioned limitations after workout plan request
     if (
       conversationContext.includes("workout plan") &&
@@ -363,6 +426,111 @@ What sounds most appealing to you? Are you a "zone out with music" person or mor
 Are you completely new to lifting, or have you done some before? And what equipment do you have access to? Let's get you strong! 🚀`;
     }
 
+    // Single word or short exercise/equipment questions (common in ongoing conversations)
+    const fitnessKeywords = [
+      "squats",
+      "deadlifts",
+      "bench",
+      "press",
+      "rows",
+      "pullups",
+      "pushups",
+      "cardio",
+      "running",
+      "weights",
+      "dumbbells",
+      "barbells",
+      "machines",
+      "bands",
+    ];
+    const containsFitness = fitnessKeywords.some((term) =>
+      message.includes(term)
+    );
+
+    if (
+      (message.length < 20 && containsFitness) ||
+      (message.includes("what about") && containsFitness) ||
+      (message.includes("how about") && containsFitness)
+    ) {
+      // Extract the fitness term mentioned
+      const mentionedTerm =
+        fitnessKeywords.find((term) => message.includes(term)) ||
+        "that exercise";
+
+      return `${
+        mentionedTerm.charAt(0).toUpperCase() + mentionedTerm.slice(1)
+      } - excellent choice! 💪 This is definitely something we can work into your routine.
+
+**Why ${mentionedTerm} rocks:**
+• Great for building functional strength
+• Works multiple muscle groups
+• Perfect for your muscle-building goals
+• Fits well with basic gym equipment
+
+**How to progress with ${mentionedTerm}:**
+• Start with bodyweight or light weight
+• Focus on perfect form first
+• Gradually increase difficulty
+• Track your progress each session
+
+Since you mentioned having some high school experience and access to a local gym, ${mentionedTerm} would be a perfect addition to your routine!
+
+Want me to break down the proper form and progression for ${mentionedTerm}? Or should we talk about how to fit it into your weekly schedule? 🚀`;
+    }
+
+    // Check for very short or unclear messages (but not if they contain fitness words)
+    if (
+      (message.length < 3 || message.match(/^[a-z]{1,2}$/)) &&
+      !containsFitness
+    ) {
+      return `I didn't quite catch that! Could you ask me something more specific? I'm great at helping with:
+
+• Workout plans and exercise routines
+• Form tips and exercise modifications
+• Equipment recommendations
+• Fitness goals and motivation
+
+What would you like to know about?`;
+    }
+
+    // If user seems frustrated or confused
+    if (
+      message.includes("not paying attention") ||
+      message.includes("not working") ||
+      message.includes("don't understand") ||
+      message.includes("gives up")
+    ) {
+      return `I hear you - let me be more helpful! I can see you're ${userProfile?.age} years old, ${userProfile?.height}cm, ${userProfile?.weight}kg with a BMI of ${userProfile?.bmi}. 
+
+Let me give you something concrete:
+
+🎯 **For your muscle-building goal:**
+• 3-4 strength sessions per week
+• Focus on compound movements (squat, deadlift, bench, row)
+• Progressive overload - gradually increase weight/reps
+• Adequate rest between sessions
+
+Try asking me something specific like:
+• "Create a workout plan for me"
+• "How do I do proper squats?"
+• "What should I do on my first day?"
+
+What would be most helpful right now?`;
+    }
+
+    // Default response with user context
+    if (userProfile?.age && userProfile?.weight && userProfile?.height) {
+      return `I can see your profile (${userProfile.age}y, ${userProfile.height}cm, ${userProfile.weight}kg, BMI ${userProfile.bmi}) - let me help you with something specific!
+
+Try asking me:
+• "Create a workout plan for me"
+• "I want to build muscle"
+• "What exercises should I start with?"
+• "How many days should I work out?"
+
+What fitness question can I help you with?`;
+    }
+
     // General/unclear questions
     const generalResponses = [
       "I'm here to help you crush your fitness goals! 💪 What's on your mind? Whether it's workout plans, exercise form, or just getting motivated - I'm your guy!",
@@ -380,6 +548,31 @@ Are you completely new to lifting, or have you done some before? And what equipm
     conversationHistory: WorkoutChatMessage[] = [],
     userProfile?: WorkoutUserProfile
   ): Promise<string> {
+    // First, try our enhanced fallback system for better reliability
+    const fallbackResponse = this.getFallbackResponse(
+      message,
+      userProfile,
+      conversationHistory
+    );
+
+    // Check if we have a specific pattern match (not a generic response)
+    const isSpecificResponse =
+      !fallbackResponse.toLowerCase().includes("what's on your mind") &&
+      !fallbackResponse
+        .toLowerCase()
+        .includes("what are you looking to achieve") &&
+      !fallbackResponse
+        .toLowerCase()
+        .includes("what would you like to work on") &&
+      !fallbackResponse.toLowerCase().includes("ready to get moving");
+
+    // If we have a good specific response, use it immediately
+    if (isSpecificResponse) {
+      console.log("Using enhanced fallback response for better accuracy");
+      return fallbackResponse;
+    }
+
+    // Otherwise, try the API and fall back if needed
     try {
       // Build conversation context
       const systemPrompt = this.buildSystemPrompt(userProfile);
@@ -424,24 +617,25 @@ Are you completely new to lifting, or have you done some before? And what equipm
         generatedText.includes("I cannot") ||
         generatedText.includes("I am not able") ||
         generatedText.includes("As an AI") ||
-        (generatedText.toLowerCase().includes("consult a professional") &&
-          generatedText.length < 100)
+        generatedText.includes("I'm sorry") ||
+        generatedText.includes("I apologize") ||
+        generatedText.toLowerCase().includes("consult a professional") ||
+        generatedText.toLowerCase().includes("i'm not sure") ||
+        // Check for generic/repetitive responses
+        generatedText.toLowerCase().includes("what's on your mind") ||
+        generatedText.toLowerCase().includes("what are you looking to achieve")
       ) {
-        return this.getFallbackResponse(
-          message,
-          userProfile,
-          conversationHistory
+        console.log(
+          "Using fallback due to generic API response:",
+          generatedText
         );
+        return fallbackResponse;
       }
 
       return generatedText;
     } catch (error) {
       console.warn("Hugging Face API error, using fallback:", error);
-      return this.getFallbackResponse(
-        message,
-        userProfile,
-        conversationHistory
-      );
+      return fallbackResponse;
     }
   }
 

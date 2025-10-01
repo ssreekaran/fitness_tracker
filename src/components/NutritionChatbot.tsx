@@ -5,34 +5,95 @@ import {
   UserProfile,
 } from "../services/chatbotService";
 import { getBMICategory } from "../services/fitnessService";
-import "./AIChatbot.css";
+import "./NutritionChatbot.css";
 
-interface AIChatbotProps {
+interface NutritionChatbotProps {
   userProfile?: UserProfile;
   onClose?: () => void;
   initialMessage?: string;
 }
 
-const AIChatbot: React.FC<AIChatbotProps> = ({
+const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
   userProfile,
   onClose,
-  initialMessage = "Hi! I'm your AI nutrition coach. I can provide general nutrition guidance and meal suggestions based on your profile. Remember, I'm an AI assistant and my advice shouldn't replace professional medical or nutritional consultation. How can I help you with your diet and nutrition goals today?",
+  initialMessage = "Hi! I'm your AI nutrition coach. I can see your profile and I'm ready to help you create a personalized diet plan. I'll ask about your goals and dietary preferences as we chat. What would you like to know about nutrition or meal planning?",
 }) => {
+  // Storage key for conversation persistence
+  const STORAGE_KEY = "nutrition_chat_history";
+
+  // Load conversation history from localStorage
+  const loadConversationHistory = (): ChatMessage[] => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Convert timestamp strings back to Date objects
+        return parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+      }
+    } catch (error) {
+      console.warn("Error loading conversation history:", error);
+    }
+
+    // Return initial message if no history
+    return [
+      {
+        id: "1",
+        role: "assistant",
+        content: userProfile
+          ? `Hi! I'm your AI nutrition coach. I can see your profile (${
+              userProfile.age
+            }y, ${userProfile.height}cm, ${userProfile.weight}kg${
+              userProfile.bmi ? `, BMI ${userProfile.bmi}` : ""
+            }) and I'm ready to help you create a personalized diet plan. I'll ask about your goals and dietary preferences as we chat. What would you like to know about nutrition or meal planning?`
+          : initialMessage,
+        timestamp: new Date(),
+      },
+    ];
+  };
+
+  // Save conversation history to localStorage
+  const saveConversationHistory = (messages: ChatMessage[]) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } catch (error) {
+      console.warn("Error saving conversation history:", error);
+    }
+  };
+
   // Debug: Log the user profile data
   React.useEffect(() => {
-    console.log("AIChatbot received userProfile:", userProfile);
+    console.log("NutritionChatbot received userProfile:", userProfile);
   }, [userProfile]);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: initialMessage,
-      timestamp: new Date(),
-    },
-  ]);
+
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    loadConversationHistory
+  );
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Save messages whenever they change
+  useEffect(() => {
+    saveConversationHistory(messages);
+  }, [messages]);
+
+  // Update initial message when user profile changes
+  useEffect(() => {
+    if (userProfile && messages.length === 1 && messages[0].id === "1") {
+      const updatedMessage = {
+        ...messages[0],
+        content: `Hi! I'm your AI nutrition coach. I can see your profile (${
+          userProfile.age
+        }y, ${userProfile.height}cm, ${userProfile.weight}kg${
+          userProfile.bmi ? `, BMI ${userProfile.bmi}` : ""
+        }) and I'm ready to help you create a personalized diet plan. I'll ask about your goals and dietary preferences as we chat. What would you like to know about nutrition or meal planning?`,
+      };
+      setMessages([updatedMessage]);
+    }
+  }, [userProfile]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -91,6 +152,29 @@ const AIChatbot: React.FC<AIChatbotProps> = ({
     setInput(reply);
   };
 
+  // Clear conversation history
+  const clearConversation = () => {
+    const initialMessages = [
+      {
+        id: "1",
+        role: "assistant" as const,
+        content: userProfile
+          ? `Hi! I'm your AI nutrition coach. I can see your profile (${
+              userProfile.age
+            }y, ${userProfile.height}cm, ${userProfile.weight}kg${
+              userProfile.bmi ? `, BMI ${userProfile.bmi}` : ""
+            }) and I'm ready to help you create a personalized diet plan. I'll ask about your goals and dietary preferences as we chat. What would you like to know about nutrition or meal planning?`
+          : initialMessage,
+        timestamp: new Date(),
+      },
+    ];
+    setMessages(initialMessages);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // Check if conversation was loaded from history
+  const hasConversationHistory = messages.length > 1;
+
   // Generate personalized quick replies based on user profile
   const quickReplies = React.useMemo(() => {
     const baseReplies = [
@@ -119,18 +203,38 @@ const AIChatbot: React.FC<AIChatbotProps> = ({
   }, [userProfile]);
 
   return (
-    <div className="ai-chatbot">
+    <div className="nutrition-chatbot">
       <div className="chatbot-header">
-        <h3>🤖 AI Nutrition Coach</h3>
-        {onClose && (
+        <div className="header-title">
+          <h3>🤖 AI Nutrition Coach</h3>
+          {hasConversationHistory && (
+            <span
+              className="history-indicator"
+              title="Conversation history loaded"
+            >
+              💬
+            </span>
+          )}
+        </div>
+        <div className="header-buttons">
           <button
-            className="close-btn"
-            onClick={onClose}
-            aria-label="Close chat"
+            className="clear-btn"
+            onClick={clearConversation}
+            aria-label="Clear conversation"
+            title="Start new conversation"
           >
-            ×
+            🔄
           </button>
-        )}
+          {onClose && (
+            <button
+              className="close-btn"
+              onClick={onClose}
+              aria-label="Close chat"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="profile-display">
@@ -270,4 +374,4 @@ const AIChatbot: React.FC<AIChatbotProps> = ({
   );
 };
 
-export default AIChatbot;
+export default NutritionChatbot;

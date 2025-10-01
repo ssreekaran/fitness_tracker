@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getFitnessData, type FitnessData } from "../services/fitnessService";
-import AIWorkoutChatbot from "../components/AIWorkoutChatbot";
+import FitnessChatbot from "../components/FitnessChatbot";
 import { WorkoutUserProfile } from "../services/workoutChatbotService";
 import "./WorkoutRecommendations.css";
 
@@ -83,7 +83,7 @@ const WorkoutRecommendations: React.FC = () => {
         </div>
       </div>
 
-      <AIWorkoutChatbot
+      <FitnessChatbot
         userProfile={userProfile}
         initialMessage={
           fitness && fitness.age && fitness.height && fitness.weight
