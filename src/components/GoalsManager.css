@@ -1,229 +1,285 @@
-/* Goals Manager Styling */
-.goals-manager {
-  margin-top: 24px;
+/**
+ * Enhanced Goals Manager Styles
+ */
+
+.achievements-summary {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
-.goals-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  border: 1px solid #f0f0f0;
-}
-
-.goals-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.goals-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 0 24px;
-}
-
-.goals-card .ant-card-body {
+.achievements-summary .ant-card-body {
   padding: 24px;
 }
 
-/* Goal List Item Styling */
-.goal-item {
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  transition: all 0.3s ease;
+.level-display {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.goal-item:hover {
-  border-color: #d9d9d9;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.goal-item .ant-list-item {
-  padding: 20px;
-  border: none;
-}
-
-.goal-item .ant-list-item-meta-avatar {
-  margin-right: 16px;
-}
-
-.goal-item .ant-list-item-action {
-  margin-left: 16px;
-}
-
-/* Goal Category Icons */
-.goal-category-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.level-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
 }
 
-/* Goal Progress Indicators */
-.goal-progress {
-  margin-top: 8px;
+.level-info {
+  flex: 1;
 }
 
-.goal-progress .ant-progress-line {
-  margin-bottom: 0;
+.level-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
-/* Goal Status Tags */
-.goal-status-tag {
-  margin-left: 8px;
+.level-points {
+  font-size: 0.875rem;
+  opacity: 0.9;
 }
 
-/* Form Styling */
-.goals-form .ant-form-item {
-  margin-bottom: 16px;
+.achievements-count {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.goals-form .ant-input-number {
-  width: 100%;
+.achievement-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
 }
 
-.goals-form .ant-select {
-  width: 100%;
+.achievement-info {
+  flex: 1;
 }
 
-/* Basic Settings Form */
-.basic-settings-form {
-  background: #fafafa;
+.achievement-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.achievement-label {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+/* Goal Progress Animations */
+.goal-progress-bar {
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.goal-card {
+  transition: all 0.3s ease;
   border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
 }
 
-.basic-settings-form .ant-form-item-label > label {
-  font-weight: 500;
-  color: #262626;
+.goal-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
-/* Modal Styling */
-.goals-modal .ant-modal-header {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 16px 24px;
+/* Milestone Tags */
+.milestone-tag {
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.goals-modal .ant-modal-body {
-  padding: 24px;
+.milestone-tag:hover {
+  transform: scale(1.05);
 }
 
-.goals-modal .ant-form-item-label > label {
-  font-weight: 500;
+.milestone-completed {
+  background: linear-gradient(45deg, #52c41a, #73d13d);
+  color: white;
 }
 
-/* Empty State */
-.goals-empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #8c8c8c;
+/* Achievement Cards */
+.achievement-card {
+  transition: all 0.3s ease;
 }
 
-.goals-empty-state .ant-empty-image {
-  margin-bottom: 16px;
+.achievement-card.unlocked {
+  background: linear-gradient(135deg, #f6ffed, #f6ffed);
+  border-color: #52c41a;
+}
+
+.achievement-card.locked {
+  filter: grayscale(50%);
+}
+
+/* Difficulty Indicators */
+.difficulty-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  font-size: 8px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.difficulty-beginner {
+  background-color: #52c41a;
+}
+
+.difficulty-intermediate {
+  background-color: #1890ff;
+}
+
+.difficulty-advanced {
+  background-color: #fa8c16;
+}
+
+.difficulty-expert {
+  background-color: #f5222d;
+}
+
+/* Priority Indicators */
+.priority-low {
+  border-left: 4px solid #d9d9d9;
+}
+
+.priority-medium {
+  border-left: 4px solid #1890ff;
+}
+
+.priority-high {
+  border-left: 4px solid #fa8c16;
+}
+
+.priority-critical {
+  border-left: 4px solid #f5222d;
+}
+
+/* Trend Indicators */
+.trend-improving {
+  color: #52c41a;
+}
+
+.trend-declining {
+  color: #f5222d;
+}
+
+.trend-stable {
+  color: #d9d9d9;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .goals-card .ant-card-body {
-    padding: 16px;
+  .achievements-summary .ant-row {
+    text-align: center;
   }
 
-  .goal-item .ant-list-item {
-    padding: 16px;
+  .level-display,
+  .achievements-count {
+    justify-content: center;
+    margin-bottom: 16px;
   }
 
-  .goal-item .ant-list-item-action {
-    margin-left: 8px;
-  }
-
-  .basic-settings-form {
-    padding: 16px;
+  .goal-card {
+    margin-bottom: 16px;
   }
 }
 
-/* Animation */
-@keyframes slideIn {
-  from {
+/* Animation for newly unlocked achievements */
+@keyframes achievementUnlock {
+  0% {
+    transform: scale(0.8);
     opacity: 0;
-    transform: translateY(-10px);
   }
-  to {
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-.goals-manager {
-  animation: slideIn 0.3s ease-out;
+.achievement-unlocked {
+  animation: achievementUnlock 0.6s ease-out;
 }
 
-/* Button Styling */
-.goals-action-button {
+/* Goal completion celebration */
+@keyframes goalComplete {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.goal-completed {
+  animation: goalComplete 0.8s ease-out;
+}
+
+/* Motivational message styling */
+.motivational-message {
+  font-style: italic;
+  padding: 8px 12px;
+  background: rgba(24, 144, 255, 0.1);
   border-radius: 6px;
-  font-weight: 500;
+  border-left: 3px solid #1890ff;
+  margin-top: 8px;
+}
+
+/* Smart goal indicators */
+.adaptive-indicator {
+  position: relative;
+}
+
+.adaptive-indicator::after {
+  content: "⚡";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 12px;
+}
+
+/* Progress ring for circular progress */
+.progress-ring {
+  width: 60px;
+  height: 60px;
+}
+
+.progress-ring-circle {
+  transition: stroke-dasharray 0.6s ease-in-out;
+}
+
+/* Suggestion cards */
+.suggestion-card {
+  border: 2px dashed #d9d9d9;
   transition: all 0.3s ease;
 }
 
-.goals-action-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Switch Styling */
-.goal-toggle-switch .ant-switch {
-  margin-right: 8px;
-}
-
-/* Tooltip Styling */
-.goals-tooltip {
-  max-width: 300px;
-}
-
-/* Success/Error States */
-.goal-success {
-  border-color: #52c41a;
-  background-color: #f6ffed;
-}
-
-.goal-warning {
-  border-color: #faad14;
-  background-color: #fffbe6;
-}
-
-.goal-danger {
-  border-color: #ff4d4f;
-  background-color: #fff1f0;
-}
-
-/* Loading States */
-.goals-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-}
-
-.goals-skeleton {
-  padding: 20px;
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .goals-card {
-    background-color: #1f1f1f;
-    border-color: #303030;
-  }
-
-  .goal-item {
-    background-color: #1f1f1f;
-    border-color: #303030;
-  }
-
-  .basic-settings-form {
-    background-color: #262626;
-  }
+.suggestion-card:hover {
+  border-color: #1890ff;
+  background-color: #f0f8ff;
 }

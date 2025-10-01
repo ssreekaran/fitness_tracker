@@ -1,9 +1,9 @@
-/* Workout Planner Page Styles */
+/* AI Workout Planner Page Styles */
 
-.workout-planner-page {
+.ai-workout-planner-page {
   min-height: 100vh;
   padding: 2rem 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .page-header {
@@ -14,38 +14,27 @@
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: white;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  text-shadow: none;
 }
 
 .page-subtitle {
   font-size: 1.1rem;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.9);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
 }
 
 /* Dark mode support */
-:root.dark .workout-planner-page {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-}
-
-:root.dark .page-title {
-  color: #ffffff;
-}
-
-:root.dark .page-subtitle {
-  color: #b0b0b0;
+:root.dark .ai-workout-planner-page {
+  background: linear-gradient(135deg, #4c63d2 0%, #5a4fcf 100%);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .workout-planner-page {
+  .ai-workout-planner-page {
     padding: 1rem 0;
   }
 

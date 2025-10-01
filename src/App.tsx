@@ -23,6 +23,7 @@ import { Navbar } from "./components";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
+import NotificationCenter from "./components/NotificationCenter";
 import { auth, handleRedirectResult } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { Capacitor } from "@capacitor/core";
@@ -66,6 +67,7 @@ const WorkoutRecommendations = lazy(
 const PersonalFitness = lazy(() => import("./pages/PersonalFitness"));
 const CalorieTracker = lazy(() => import("./pages/CalorieTracker"));
 const WorkoutPlanner = lazy(() => import("./pages/WorkoutPlanner"));
+const AIWorkoutPlanner = lazy(() => import("./pages/AIWorkoutPlanner"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 /**
@@ -167,6 +169,7 @@ const AppContent = () => {
   return (
     <div className="app">
       <Navbar />
+      <NotificationCenter />
       <main className="main-content">
         <Suspense
           fallback={
@@ -239,6 +242,14 @@ const AppContent = () => {
               element={
                 <ProtectedRoute>
                   <WorkoutPlanner />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ai-workout-planner"
+              element={
+                <ProtectedRoute>
+                  <AIWorkoutPlanner />
                 </ProtectedRoute>
               }
             />

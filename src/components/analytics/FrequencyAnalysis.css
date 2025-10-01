@@ -1,0 +1,454 @@
+/**
+ * Frequency Analysis Styles
+ */
+
+.frequency-analysis .card-body {
+  padding: 1.5rem;
+}
+
+.consistency-score {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.score-header span:first-child {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.score-value {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.score-bar {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.score-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-message {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.frequency-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 1.5rem;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.active-patterns {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.pattern-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.pattern-icon {
+  font-size: 1.5rem;
+}
+
+.pattern-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pattern-label {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.pattern-value {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.weekly-distribution {
+  margin-bottom: 1.5rem;
+}
+
+.weekly-distribution h6 {
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.distribution-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 0.5rem;
+  height: 100px;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.day-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+.day-bar {
+  flex: 1;
+  width: 100%;
+  max-width: 24px;
+  background: #e9ecef;
+  border-radius: 4px;
+  display: flex;
+  align-items: end;
+  margin-bottom: 0.5rem;
+}
+
+.day-fill {
+  width: 100%;
+  border-radius: 4px;
+  min-height: 4px;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.day-count {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.day-name {
+  font-size: 0.7rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.top-hours {
+  margin-bottom: 1.5rem;
+}
+
+.top-hours h6 {
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hour-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.hour-item:hover {
+  background: #e9ecef;
+  transform: translateX(4px);
+}
+
+.hour-rank {
+  font-weight: bold;
+  color: #6c757d;
+  width: 24px;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.hour-info {
+  flex: 1;
+}
+
+.hour-time {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.hour-count {
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+
+.hour-bar {
+  width: 60px;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hour-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.frequency-insights {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.frequency-insights h6 {
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #495057;
+  line-height: 1.4;
+}
+
+.insight-icon {
+  font-size: 1rem;
+  margin-top: 0.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .frequency-analysis .card-body {
+    padding: 1rem;
+  }
+
+  .consistency-score {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .frequency-stats {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-item {
+    gap: 0.25rem;
+  }
+
+  .stat-icon {
+    font-size: 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+
+  .active-patterns {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .pattern-item {
+    gap: 0.5rem;
+  }
+
+  .pattern-icon {
+    font-size: 1.25rem;
+  }
+
+  .pattern-label {
+    font-size: 0.7rem;
+  }
+
+  .pattern-value {
+    font-size: 0.9rem;
+  }
+
+  .distribution-chart {
+    height: 80px;
+    padding: 0.75rem;
+    gap: 0.25rem;
+  }
+
+  .day-bar {
+    max-width: 20px;
+  }
+
+  .day-count {
+    font-size: 0.7rem;
+  }
+
+  .day-name {
+    font-size: 0.65rem;
+  }
+
+  .hour-item {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .hour-rank {
+    width: 20px;
+    font-size: 0.8rem;
+  }
+
+  .hour-time {
+    font-size: 0.8rem;
+  }
+
+  .hour-count {
+    font-size: 0.7rem;
+  }
+
+  .hour-bar {
+    width: 40px;
+    height: 4px;
+  }
+
+  .frequency-insights {
+    padding: 0.75rem;
+  }
+
+  .insight-item {
+    font-size: 0.8rem;
+  }
+}
+
+/* Animation */
+.day-column {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInDay 0.5s ease-out forwards;
+}
+
+.day-column:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.day-column:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.day-column:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.day-column:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.day-column:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.day-column:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.day-column:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+@keyframes slideInDay {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hour-item {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInHour 0.5s ease-out forwards;
+}
+
+.hour-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.hour-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.hour-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes slideInHour {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

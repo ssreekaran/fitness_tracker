@@ -1,20 +1,19 @@
 /**
- * Workout Calendar Page
+ * AI Workout Planner Page
  *
- * A dedicated page for the modern workout calendar planner
+ * A dedicated page for AI-powered workout planning and recommendations
  */
 
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
-import WorkoutCalendarPlanner from "../components/WorkoutCalendarPlanner";
+import IntelligentWorkoutPlanner from "../components/IntelligentWorkoutPlanner";
 import { auth } from "../firebase";
 import { User } from "firebase/auth";
-import "./WorkoutPlanner.css";
+import "./AIWorkoutPlanner.css";
 
-const WorkoutPlanner: React.FC = () => {
+const AIWorkoutPlanner: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userWeight, setUserWeight] = useState(70); // Default weight in kg
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -23,15 +22,6 @@ const WorkoutPlanner: React.FC = () => {
     });
 
     return () => unsubscribe();
-  }, []);
-
-  // You can integrate this with your user profile system to get actual weight
-  useEffect(() => {
-    // Load user weight from profile or localStorage
-    const savedWeight = localStorage.getItem("userWeight");
-    if (savedWeight) {
-      setUserWeight(parseFloat(savedWeight));
-    }
   }, []);
 
   if (loading) {
@@ -49,29 +39,29 @@ const WorkoutPlanner: React.FC = () => {
     return (
       <Container className="mt-4">
         <Alert variant="warning">
-          Please log in to access your workout planner.
+          Please log in to access the AI Workout Planner.
         </Alert>
       </Container>
     );
   }
 
   return (
-    <Container fluid className="workout-planner-page">
+    <Container fluid className="ai-workout-planner-page">
       <Row>
         <Col>
           <div className="page-header mb-4">
-            <h1 className="page-title">Workout Planner</h1>
+            <h1 className="page-title">🤖 AI Workout Planner</h1>
             <p className="page-subtitle">
-              Plan, schedule, and track your workouts with our modern calendar
-              interface
+              Get personalized workout recommendations powered by artificial
+              intelligence
             </p>
           </div>
 
-          <WorkoutCalendarPlanner userWeight={userWeight} />
+          <IntelligentWorkoutPlanner />
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default WorkoutPlanner;
+export default AIWorkoutPlanner;

@@ -556,7 +556,12 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
                 {filteredWorkouts.map((workout) => (
                   <tr key={workout.id}>
                     <td style={{ whiteSpace: "nowrap" }}>
-                      <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
                         <div>
                           {normalizeDate(workout.date).toLocaleDateString(
                             "en-US",

@@ -25,7 +25,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase";
 import { logger } from "../utils/logger";
-import { getUserGoals } from "./goalsService";
+import { getUserGoals, checkAchievements } from "./goalsService";
 
 /**
  * Safe date conversion utility
@@ -182,6 +182,27 @@ export const saveWorkout = async (
             ? workoutData.createdAt.toDate()
             : workoutData.createdAt,
       };
+
+      // Update goal progress and check for achievements
+      try {
+        const allWorkouts = await getUserWorkouts(365);
+        const workoutData = {
+          totalWorkouts: allWorkouts.length,
+          currentStreak: 0, // This would be calculated based on workout dates
+          completionRate: 0, // This would be calculated based on goals
+        };
+
+        // Check for newly unlocked achievements
+        await checkAchievements(workoutData);
+
+        logger.info("Goal progress updated after workout save");
+      } catch (goalError) {
+        logger.warn("Failed to update goal progress", {
+          error:
+            goalError instanceof Error ? goalError.message : String(goalError),
+        });
+        // Don't fail the workout save if goal update fails
+      }
 
       return savedWorkout;
     } catch (error) {

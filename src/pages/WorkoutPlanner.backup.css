@@ -1,0 +1,692 @@
+/* Full width layout without container constraints */
+.workout-planner {
+  --bs-body-bg: var(--background-color);
+  --bs-body-color: var(--text-color);
+  min-height: 100vh;
+  width: 100%;
+  padding: 1rem;
+  max-width: none;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.workout-planner .wp-layout {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  background: var(--background-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  border: 1px solid var(--button-bg);
+}
+
+.workout-planner h1 {
+  text-align: center;
+  color: var(--blog-title);
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+}
+
+.workout-planner .calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.workout-planner .calendar-container {
+  margin: 2rem auto 0 auto;
+  background: var(--card-bg, var(--background-color));
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color, var(--button-bg));
+  width: 90%;
+  max-width: 1000px;
+  flex: 1;
+  height: 100%;
+}
+
+/* Calendar styles */
+.workout-planner .rbc-month-view {
+  min-height: 600px;
+  background: var(--card-bg, var(--background-color));
+  border: 1px solid var(--border-color, var(--button-bg));
+  --bs-body-bg: var(--background-color);
+}
+
+.workout-planner .rbc-month-header {
+  background-color: color-mix(in srgb, var(--link-color) 6%, transparent);
+  padding: 10px 0;
+}
+
+.workout-planner .rbc-header {
+  padding: 10px 3px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .rbc-date-cell {
+  text-align: center;
+  padding: 5px;
+  color: var(--text-color);
+}
+
+.workout-planner .rbc-off-range-bg {
+  background-color: color-mix(in srgb, var(--text-color) 3%, transparent);
+}
+
+.workout-planner .rbc-today {
+  background-color: color-mix(in srgb, var(--link-color) 10%, transparent);
+}
+
+.workout-planner .rbc-day-bg + .rbc-day-bg,
+.workout-planner .rbc-header + .rbc-header {
+  border-left: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .rbc-month-row + .rbc-month-row {
+  border-top: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .rbc-event {
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: var(--link-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.workout-planner .rbc-event.rbc-selected {
+  background-color: color-mix(in srgb, var(--link-color) 20%, #000);
+  box-shadow: 0 0 0 2px var(--link-color);
+}
+
+/* Calendar container */
+.workout-planner .rbc-calendar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  height: 100%;
+  color: var(--text-color);
+  background: var(--card-bg, var(--background-color));
+  margin: 0 auto;
+  width: 100%;
+}
+
+.workout-planner .rbc-time-view,
+.workout-planner .rbc-month-view,
+.workout-planner .rbc-time-content {
+  flex: 1;
+  min-height: 0;
+  background: var(--card-bg, var(--background-color));
+}
+
+/* Calendar cells */
+.workout-planner .rbc-day-slot,
+.workout-planner .rbc-time-content,
+.workout-planner .rbc-time-gutter,
+.workout-planner .rbc-time-slot,
+.workout-planner .rbc-agenda-view,
+.workout-planner .rbc-agenda-date,
+.workout-planner .rbc-agenda-time,
+.workout-planner .rbc-agenda-event-cell {
+  color: var(--text-color);
+  border-color: var(--workout-border);
+}
+
+.workout-planner .rbc-time-gutter .rbc-timeslot-group {
+  border-bottom: 1px solid var(--border-color, var(--button-bg));
+}
+
+/* Toolbar */
+.workout-planner .rbc-toolbar {
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.workout-planner .rbc-toolbar button {
+  color: var(--text-color);
+  border: 1px solid var(--button-bg);
+  background: var(--background-color);
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: all 0.2s ease;
+}
+
+.workout-planner .rbc-toolbar button:hover {
+  background-color: var(--button-hover);
+  color: var(--text-color);
+}
+
+.workout-planner .rbc-toolbar button:active,
+.workout-planner .rbc-toolbar button.rbc-active {
+  background-color: var(--link-color);
+  color: white;
+  border-color: var(--link-color);
+}
+
+/* Time grid */
+.workout-planner .rbc-time-header {
+  background: var(--card-bg, var(--background-color));
+  border-bottom: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .rbc-time-gutter,
+.workout-planner .rbc-time-content > * + * > * {
+  border-left: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .rbc-time-slot {
+  color: var(--text-color);
+}
+
+/* Agenda view */
+.workout-planner .rbc-agenda-view table {
+  border: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .rbc-agenda-time-cell,
+.workout-planner .rbc-agenda-date-cell,
+.workout-planner .rbc-agenda-event-cell {
+  border-bottom: 1px solid var(--border-color, var(--button-bg));
+  padding: 8px;
+}
+
+/* Modal styles */
+.workout-planner .modal-content {
+  --bs-modal-bg: var(--card-bg, var(--background-color));
+  --bs-modal-color: var(--text-color);
+  background-color: var(--card-bg, var(--background-color));
+  color: var(--text-color);
+  border: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .modal-header {
+  background-color: var(--card-bg, var(--background-color));
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color, var(--button-bg));
+}
+
+.workout-planner .modal-body {
+  background-color: var(--card-bg, var(--background-color));
+  color: var(--text-color);
+}
+
+.workout-planner .modal-footer {
+  background-color: var(--card-bg, var(--background-color));
+  border-top: 1px solid var(--border-color, var(--button-bg));
+}
+
+/* Form controls */
+.workout-planner .form-control,
+.workout-planner .form-select,
+.workout-planner .form-control:focus,
+.workout-planner .form-select:focus {
+  background-color: var(--card-bg, var(--background-color));
+  color: var(--text-color);
+  border-color: var(--workout-border);
+}
+
+.workout-planner .form-label {
+  color: var(--text-color);
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .workout-planner {
+    padding: 10px;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .calendar-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .calendar-container {
+    padding: 10px;
+    margin: 0 -10px;
+    border-radius: 0;
+  }
+
+  .rbc-toolbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rbc-toolbar-label {
+    margin: 10px 0;
+  }
+}
+
+/* Hero header */
+.wp-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.wp-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  align-self: stretch;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+  min-height: 80vh;
+  height: auto;
+}
+
+.wp-title {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+}
+.wp-subtitle {
+  margin: 0;
+  opacity: 0.9;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.wp-actions {
+  margin-top: 0.5rem;
+}
+
+.wp-actions .wp-add-btn {
+  border-radius: 10px;
+  padding: 0.7rem 1.1rem;
+}
+
+/* Ensure hero action buttons match size and alignment */
+.wp-actions .btn.wp-add-btn,
+.wp-actions .btn.wp-delete-btn {
+  padding: 0.7rem 1.1rem; /* identical padding */
+  line-height: 1.25; /* normalize vertical alignment */
+  border-radius: 10px;
+}
+
+/* Card wrapper for calendar */
+.wp-card {
+  background: var(--card-bg, var(--background-color));
+  border: 1px solid var(--border-color, var(--button-bg));
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.wp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Type legend */
+.type-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.type-legend.inside-hero {
+  margin-top: 0.75rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.9;
+}
+.legend-item .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.legend-item .dot.strength {
+  background: #3174ad;
+}
+.legend-item .dot.cardio {
+  background: #5cb85c;
+}
+.legend-item .dot.flexibility {
+  background: #f0ad4e;
+}
+.legend-item .dot.rest {
+  background: #d9534f;
+}
+
+/* Modal themed wrapper */
+.wp-modal .modal-content {
+  background: var(--card-bg, var(--background-color));
+  color: var(--text-color);
+  border: 1px solid var(--border-color, var(--button-bg));
+}
+/* Enhanced Workout Planner with AI Integration */
+
+/* Tab Styles */
+.wp-tabs {
+  border-bottom: 2px solid #e9ecef;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.wp-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.wp-tabs .nav-link.active {
+  color: #3174ad;
+  border-bottom-color: #3174ad;
+  background: none;
+}
+
+.wp-tabs .nav-link:hover {
+  color: #3174ad;
+  border-color: transparent;
+  background: rgba(49, 116, 173, 0.05);
+}
+
+/* Tab Content */
+.tab-content-wrapper {
+  animation: fadeIn 0.3s ease-out;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ai-planner-tab-content {
+  animation: fadeIn 0.3s ease-out;
+  padding: 1rem 0;
+}
+
+/* Enhanced Hero Section - Override original styles */
+.workout-planner .wp-hero,
+.wp-layout .wp-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  padding: 2rem !important;
+  border-radius: 16px !important;
+  margin-bottom: 2rem !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  width: 100% !important;
+  align-self: stretch !important;
+  display: flex !important;
+  border: none !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 0.75rem !important;
+}
+
+.workout-planner .wp-title,
+.wp-layout .wp-title {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  color: white !important;
+}
+
+.workout-planner .wp-subtitle,
+.wp-layout .wp-subtitle {
+  font-size: 1.2rem !important;
+  opacity: 0.9 !important;
+  margin-bottom: 0 !important;
+  color: white !important;
+}
+
+/* Enhanced Actions */
+.wp-hero-actions {
+  margin-top: 1.5rem;
+}
+
+.wp-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.wp-add-btn,
+.wp-delete-btn {
+  border-radius: 12px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.wp-add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.wp-delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+}
+
+/* Enhanced Calendar Container */
+.calendar-container {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.wp-card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.wp-card-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* AI Planner Integration Styles */
+.ai-planner-tab-content .intelligent-workout-planner {
+  margin: 0;
+}
+
+.ai-planner-tab-content .intelligent-planner-card {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.ai-planner-tab-content .intelligent-planner-card .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wp-title {
+    font-size: 2rem;
+  }
+
+  .wp-subtitle {
+    font-size: 1rem;
+  }
+
+  .wp-tabs .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .wp-actions {
+    flex-direction: column;
+  }
+
+  .wp-add-btn,
+  .wp-delete-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .wp-hero {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .wp-tabs .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .wp-hero {
+    padding: 1rem;
+  }
+
+  .wp-title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced Modal Styles */
+.wp-modal .modal-content {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.wp-modal .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px 16px 0 0;
+  border: none;
+}
+
+.wp-modal .modal-title {
+  font-weight: 600;
+}
+
+.wp-modal .btn-close {
+  filter: invert(1);
+}
+
+.wp-modal .form-control,
+.wp-modal .form-select {
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wp-modal .form-control:focus,
+.wp-modal .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+/* Full width layout - no container constraints */
+
+.workout-planner .wp-layout {
+  width: 100%;
+}
+
+.workout-planner .wp-hero {
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.workout-planner .wp-hero-text {
+  width: 100%;
+}
+
+/* Tab content wrapper */
+.workout-planner .tab-content-wrapper {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Tabs */
+.workout-planner .wp-tabs {
+  width: 100%;
+}
+
+.workout-planner .tab-pane {
+  width: 100%;
+}
+/* Clean, simple solution that works reliably */
+/* Simple calendar sizing */
