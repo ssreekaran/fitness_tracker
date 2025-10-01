@@ -73,6 +73,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
   );
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Save messages whenever they change
@@ -99,9 +100,13 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Only auto-scroll when shouldAutoScroll is true (new messages)
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (shouldAutoScroll) {
+      scrollToBottom();
+      setShouldAutoScroll(false);
+    }
+  }, [messages, shouldAutoScroll]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,6 +120,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    setShouldAutoScroll(true);
     setInput("");
     setIsLoading(true);
 
@@ -133,6 +139,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
+      setShouldAutoScroll(true);
     } catch (error) {
       console.error("Error sending message:", error);
       const errorMessage: ChatMessage = {
@@ -143,6 +150,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+      setShouldAutoScroll(true);
     } finally {
       setIsLoading(false);
     }

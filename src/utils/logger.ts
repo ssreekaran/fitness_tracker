@@ -7,7 +7,7 @@
  */
 
 // Check if we're in development mode for conditional logging
-const isDevelopment = process.env.NODE_ENV === "development";
+const isDevelopment = import.meta.env.DEV;
 
 /**
  * Type definition for values that can be logged

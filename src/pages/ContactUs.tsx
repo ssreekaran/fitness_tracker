@@ -8,8 +8,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareBluesky } from "@fortawesome/free-brands-svg-icons";
+// Using a generic icon since SiBluesky might not be available in this version
 import "./ContactUs.css";
 
 const ContactUs: React.FC = () => {
@@ -199,10 +198,9 @@ const ContactUs: React.FC = () => {
                 rel="noopener noreferrer"
                 title="Follow us on Bluesky"
               >
-                <FontAwesomeIcon
-                  icon={faSquareBluesky}
-                  style={{ fontSize: "1.3rem" }}
-                />
+                <span style={{ fontSize: "1.3rem", fontWeight: "bold" }}>
+                  B
+                </span>
               </a>
             </div>
           </article>
