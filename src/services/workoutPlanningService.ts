@@ -74,8 +74,8 @@ export interface ScheduledWorkout {
 export interface WorkoutAdaptation {
   type: "intensity" | "duration" | "exercise_swap" | "rest_adjustment";
   reason: string;
-  originalValue: any;
-  adaptedValue: any;
+  originalValue: string | number;
+  adaptedValue: string | number;
   appliedAt: Date;
 }
 
@@ -253,7 +253,8 @@ const WORKOUT_TEMPLATES: WorkoutTemplate[] = [
  * Generate intelligent workout recommendations based on user data
  */
 export const generateSmartRecommendations = async (
-  _userId: string
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _userId: string // Reserved for future user-specific recommendations
 ): Promise<SmartRecommendation[]> => {
   try {
     const [workouts, goals] = await Promise.all([
@@ -266,9 +267,12 @@ export const generateSmartRecommendations = async (
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     // Normalize date function
-    const normalizeDate = (date: any): Date => {
+    const normalizeDate = (
+      date: Date | { toDate(): Date } | string | number
+    ): Date => {
       if (date instanceof Date) return date;
-      if (date?.toDate) return date.toDate();
+      if (date && typeof date === "object" && "toDate" in date)
+        return date.toDate();
       return new Date(date);
     };
 
@@ -324,12 +328,13 @@ export const generateSmartRecommendations = async (
 
     // Recommendation 3: Goal-based
     const activeGoals = Array.isArray(goals)
-      ? goals.filter((g: any) => g.isActive)
+      ? goals.filter((g: { isActive?: boolean }) => g.isActive)
       : [];
     if (activeGoals.length > 0) {
       const strengthGoals = activeGoals.filter(
-        (g: any) =>
-          g.category === "strength" || g.name.toLowerCase().includes("strength")
+        (g: { category?: string; name?: string }) =>
+          g.category === "strength" ||
+          (g.name && g.name.toLowerCase().includes("strength"))
       );
 
       if (
@@ -484,7 +489,8 @@ export const createPersonalizedPlan = async (
  * Analyze workout performance and generate insights
  */
 export const generateWorkoutInsights = async (
-  _userId: string
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _userId: string // Reserved for future user-specific insights
 ): Promise<WorkoutInsight[]> => {
   try {
     const workouts = await getUserWorkouts();
@@ -504,9 +510,12 @@ export const generateWorkoutInsights = async (
     }
 
     // Normalize date function
-    const normalizeDate = (date: any): Date => {
+    const normalizeDate = (
+      date: Date | { toDate(): Date } | string | number
+    ): Date => {
       if (date instanceof Date) return date;
-      if (date?.toDate) return date.toDate();
+      if (date && typeof date === "object" && "toDate" in date)
+        return date.toDate();
       return new Date(date);
     };
 
@@ -610,7 +619,8 @@ export const getWorkoutTemplates = (
  * Suggest next workout based on recent activity and goals
  */
 export const suggestNextWorkout = async (
-  _userId: string
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _userId: string // Reserved for future user-specific suggestions
 ): Promise<WorkoutTemplate | null> => {
   try {
     const workouts = await getUserWorkouts();

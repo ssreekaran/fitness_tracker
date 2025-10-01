@@ -57,7 +57,7 @@ const AIWorkoutPlanner: React.FC = () => {
             </p>
           </div>
 
-          <IntelligentWorkoutPlanner />
+          <IntelligentWorkoutPlanner userId={user?.uid || ""} />
         </Col>
       </Row>
     </Container>

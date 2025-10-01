@@ -607,7 +607,7 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        intensity: e.target.value as any,
+                        intensity: e.target.value as "low" | "medium" | "high",
                       })
                     }
                   >
@@ -625,7 +625,12 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        category: e.target.value as any,
+                        category: e.target.value as
+                          | "cardio"
+                          | "strength"
+                          | "flexibility"
+                          | "sports"
+                          | "other",
                       })
                     }
                   >

@@ -9,7 +9,7 @@
  * - Adaptive planning based on progress
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Card,
   Button,
@@ -46,7 +46,6 @@ interface IntelligentWorkoutPlannerProps {
 
 const IntelligentWorkoutPlanner: React.FC<IntelligentWorkoutPlannerProps> = ({
   userId,
-  userWeight: _userWeight,
   onWorkoutSelected,
 }) => {
   // State management
@@ -64,7 +63,9 @@ const IntelligentWorkoutPlanner: React.FC<IntelligentWorkoutPlannerProps> = ({
   const [workoutTemplates, setWorkoutTemplates] = useState<WorkoutTemplate[]>(
     []
   );
-  const [userGoals, setUserGoals] = useState<any[]>([]);
+  const [userGoals, setUserGoals] = useState<
+    { id: string; title: string; name: string; type: string }[]
+  >([]);
 
   // Plan creation state
   const [showPlanModal, setShowPlanModal] = useState(false);
@@ -82,12 +83,7 @@ const IntelligentWorkoutPlanner: React.FC<IntelligentWorkoutPlannerProps> = ({
     useState<WorkoutTemplate | null>(null);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
 
-  // Load data on component mount
-  useEffect(() => {
-    loadPlanningData();
-  }, [userId]);
-
-  const loadPlanningData = async () => {
+  const loadPlanningData = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -112,7 +108,12 @@ const IntelligentWorkoutPlanner: React.FC<IntelligentWorkoutPlannerProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  // Load data on component mount
+  useEffect(() => {
+    loadPlanningData();
+  }, [loadPlanningData]);
 
   const handleCreatePlan = async () => {
     try {
@@ -572,7 +573,10 @@ const IntelligentWorkoutPlanner: React.FC<IntelligentWorkoutPlannerProps> = ({
                     onChange={(e) =>
                       setPlanFormData((prev) => ({
                         ...prev,
-                        fitnessLevel: e.target.value as any,
+                        fitnessLevel: e.target.value as
+                          | "beginner"
+                          | "intermediate"
+                          | "advanced",
                       }))
                     }
                   >

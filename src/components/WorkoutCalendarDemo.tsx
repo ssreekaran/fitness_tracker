@@ -13,6 +13,7 @@ import {
   FaRunning,
   FaHeart,
 } from "react-icons/fa";
+import "./WorkoutCalendarDemo.css";
 
 const WorkoutCalendarDemo: React.FC = () => {
   const features = [
@@ -83,7 +84,7 @@ const WorkoutCalendarDemo: React.FC = () => {
             <ol>
               <li>
                 Navigate to{" "}
-                <Badge bg="primary">Tracker → Workout Calendar</Badge> in the
+                <Badge bg="primary">Tracker → Workout Planner</Badge> in the
                 menu
               </li>
               <li>Click on any date to schedule a new workout</li>
@@ -97,115 +98,6 @@ const WorkoutCalendarDemo: React.FC = () => {
           </div>
         </Card.Body>
       </Card>
-
-      <style jsx>{`
-        .workout-calendar-demo {
-          margin: 2rem 0;
-        }
-
-        .demo-card {
-          border-radius: 16px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          border: none;
-          overflow: hidden;
-        }
-
-        .demo-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          text-align: center;
-          padding: 2rem;
-        }
-
-        .demo-header h3 {
-          margin: 0 0 0.5rem 0;
-          font-weight: 600;
-        }
-
-        .demo-header p {
-          margin: 0;
-          opacity: 0.9;
-        }
-
-        .feature-card {
-          text-align: center;
-          padding: 1.5rem;
-          border-radius: 12px;
-          background: #f8f9fa;
-          height: 100%;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .feature-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-icon {
-          font-size: 2rem;
-          margin-bottom: 1rem;
-        }
-
-        .feature-card h5 {
-          color: #2c3e50;
-          margin-bottom: 1rem;
-          font-weight: 600;
-        }
-
-        .feature-card p {
-          color: #6c757d;
-          font-size: 0.9rem;
-          line-height: 1.5;
-        }
-
-        .demo-instructions {
-          margin-top: 2rem;
-          padding: 1.5rem;
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-          border-radius: 12px;
-        }
-
-        .demo-instructions h5 {
-          color: #2c3e50;
-          margin-bottom: 1rem;
-          font-weight: 600;
-        }
-
-        .demo-instructions ol {
-          margin: 0;
-          padding-left: 1.5rem;
-        }
-
-        .demo-instructions li {
-          margin-bottom: 0.5rem;
-          color: #495057;
-        }
-
-        /* Dark mode */
-        :root.dark .feature-card {
-          background: #3d3d3d;
-        }
-
-        :root.dark .feature-card h5 {
-          color: #ffffff;
-        }
-
-        :root.dark .feature-card p {
-          color: #b0b0b0;
-        }
-
-        :root.dark .demo-instructions {
-          background: linear-gradient(135deg, #3d3d3d 0%, #4a4a4a 100%);
-        }
-
-        :root.dark .demo-instructions h5 {
-          color: #ffffff;
-        }
-
-        :root.dark .demo-instructions li {
-          color: #b0b0b0;
-        }
-      `}</style>
     </div>
   );
 };
