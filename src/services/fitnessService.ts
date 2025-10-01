@@ -410,17 +410,32 @@ export const calculateBMI = (
   weight: number,
   height: number,
   weightUnit: "kg" | "lbs" = "kg",
-  heightUnit: "cm" | "in" = "cm"
+  heightUnit: "cm" | "in" | "m" = "cm"
 ): number => {
+  // Validate inputs
+  if (weight <= 0 || height <= 0) {
+    throw new Error("Weight and height must be positive numbers");
+  }
+
   // Convert height to meters
-  const heightInMeters = heightUnit === "cm" ? height / 100 : height * 0.0254;
+  let heightInMeters: number;
+  if (heightUnit === "cm") {
+    heightInMeters = height / 100;
+  } else if (heightUnit === "in") {
+    heightInMeters = height * 0.0254;
+  } else if (heightUnit === "m") {
+    heightInMeters = height;
+  } else {
+    // Auto-detect based on value - if height is less than 3, assume meters, otherwise cm
+    heightInMeters = height < 3 ? height : height / 100;
+  }
 
   // Convert weight to kg if needed
   const weightInKg = weightUnit === "lbs" ? weight / 2.20462 : weight;
 
   // Calculate and return BMI
   return parseFloat(
-    (weightInKg / (heightInMeters * heightInMeters)).toFixed(1)
+    (weightInKg / (heightInMeters * heightInMeters)).toFixed(2)
   );
 };
 
