@@ -28,10 +28,12 @@ const FitnessChatbot: React.FC<FitnessChatbotProps> = ({
       if (saved) {
         const parsed = JSON.parse(saved);
         // Convert timestamp strings back to Date objects
-        return parsed.map((msg: any) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp),
-        }));
+        return parsed.map(
+          (msg: WorkoutChatMessage & { timestamp: string }) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          })
+        );
       }
     } catch (error) {
       console.warn("Error loading conversation history:", error);
@@ -93,7 +95,7 @@ const FitnessChatbot: React.FC<FitnessChatbotProps> = ({
       };
       setMessages([updatedMessage]);
     }
-  }, [userProfile]);
+  }, [userProfile, messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

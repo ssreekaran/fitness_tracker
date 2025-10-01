@@ -28,7 +28,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
       if (saved) {
         const parsed = JSON.parse(saved);
         // Convert timestamp strings back to Date objects
-        return parsed.map((msg: any) => ({
+        return parsed.map((msg: ChatMessage & { timestamp: string }) => ({
           ...msg,
           timestamp: new Date(msg.timestamp),
         }));
@@ -93,7 +93,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
       };
       setMessages([updatedMessage]);
     }
-  }, [userProfile]);
+  }, [userProfile, messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

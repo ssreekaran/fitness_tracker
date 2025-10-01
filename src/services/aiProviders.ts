@@ -1,9 +1,15 @@
 // AI Provider Configuration
 // This allows easy switching between different LLM providers
 
+export interface AIContext {
+  systemPrompt: string;
+  userProfile?: Record<string, unknown>;
+  conversationHistory?: Array<{ role: string; content: string }>;
+}
+
 export interface AIProvider {
   name: string;
-  sendMessage: (message: string, context: any) => Promise<string>;
+  sendMessage: (message: string, context: AIContext) => Promise<string>;
   isAvailable: () => boolean;
 }
 
@@ -20,7 +26,7 @@ export class OpenAIProvider implements AIProvider {
     return !!this.apiKey && this.apiKey !== "your_openai_api_key_here";
   }
 
-  async sendMessage(message: string, context: any): Promise<string> {
+  async sendMessage(message: string, context: AIContext): Promise<string> {
     if (!this.isAvailable()) {
       throw new Error("OpenAI API key not configured");
     }
@@ -73,7 +79,7 @@ export class AnthropicProvider implements AIProvider {
     return !!this.apiKey && this.apiKey !== "your_anthropic_api_key_here";
   }
 
-  async sendMessage(message: string, context: any): Promise<string> {
+  async sendMessage(message: string, context: AIContext): Promise<string> {
     if (!this.isAvailable()) {
       throw new Error("Anthropic API key not configured");
     }
@@ -117,7 +123,13 @@ export class OllamaProvider implements AIProvider {
     this.model = model;
   }
 
-  async isAvailable(): Promise<boolean> {
+  isAvailable(): boolean {
+    // For Ollama, we'll assume it's available if the environment variable is set
+    // The actual connection check will happen during sendMessage
+    return import.meta.env.VITE_USE_OLLAMA === "true";
+  }
+
+  private async checkConnection(): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/api/tags`);
       return response.ok;
@@ -126,7 +138,13 @@ export class OllamaProvider implements AIProvider {
     }
   }
 
-  async sendMessage(message: string, context: any): Promise<string> {
+  async sendMessage(message: string, context: AIContext): Promise<string> {
+    // Check if Ollama is actually running
+    const isConnected = await this.checkConnection();
+    if (!isConnected) {
+      throw new Error("Ollama server is not running or not accessible");
+    }
+
     const response = await fetch(`${this.baseUrl}/api/generate`, {
       method: "POST",
       headers: {
