@@ -27,65 +27,79 @@ import {
   AnalyticsDashboard as AnalyticsDashboardData,
   AnalyticsPeriod,
 } from "../services/analyticsService";
-// Temporarily comment out complex components and create simple versions
-// import TrendChart from "./analytics/TrendChart";
-// import GoalProgressChart from "./analytics/GoalProgressChart";
-// import CalorieBurnHeatmap from "./analytics/CalorieBurnHeatmap";
-// import StreakAnalysis from "./analytics/StreakAnalysis";
-// import PerformanceInsights from "./analytics/PerformanceInsights";
-// import FrequencyAnalysis from "./analytics/FrequencyAnalysis";
-// import PredictiveInsights from "./analytics/PredictiveInsights";
+// Simple inline components for analytics dashboard
 import "./AnalyticsDashboard.css";
 
 // Simple inline components for now
 const TrendChart: React.FC<{ data: any[]; period: AnalyticsPeriod }> = ({
   data,
-}) => (
-  <div className="trend-chart-simple">
-    <div className="chart-placeholder">
-      <div className="chart-icon">📈</div>
-      <h5>Workout Trends</h5>
-      <p>
-        Total workouts:{" "}
-        {data.reduce((sum: number, d: any) => sum + d.workouts, 0)}
-      </p>
-      <p>
-        Total calories:{" "}
-        {data
-          .reduce((sum: number, d: any) => sum + d.calories, 0)
-          .toLocaleString()}
-      </p>
-      <p>
-        Total duration:{" "}
-        {Math.round(
-          data.reduce((sum: number, d: any) => sum + d.duration, 0) / 60
-        )}
-        h
-      </p>
-    </div>
-  </div>
-);
+}) => {
+  const safeData = Array.isArray(data) ? data : [];
 
-const GoalProgressChart: React.FC<{ goals: any[] }> = ({ goals }) => (
-  <div className="goal-progress-simple">
-    <div className="goals-list-simple">
-      {goals.map((goal) => (
-        <div key={goal.goalId} className="goal-item-simple">
-          <div className="goal-name">{goal.goalName}</div>
-          <div className="goal-progress">
-            <div className="progress-bar-simple">
-              <div
-                className="progress-fill-simple"
-                style={{ width: `${Math.min(100, goal.completionRate || 0)}%` }}
-              />
-            </div>
-            <span className="progress-text">{goal.completionRate || 0}%</span>
-          </div>
-        </div>
-      ))}
+  return (
+    <div className="trend-chart-simple">
+      <div className="chart-placeholder">
+        <div className="chart-icon">📈</div>
+        <h5>Workout Trends</h5>
+        <p>
+          Total workouts:{" "}
+          {safeData.reduce((sum: number, d: any) => sum + (d.workouts || 0), 0)}
+        </p>
+        <p>
+          Total calories:{" "}
+          {safeData
+            .reduce((sum: number, d: any) => sum + (d.calories || 0), 0)
+            .toLocaleString()}
+        </p>
+        <p>
+          Total duration:{" "}
+          {Math.round(
+            safeData.reduce(
+              (sum: number, d: any) => sum + (d.duration || 0),
+              0
+            ) / 60
+          )}
+          h
+        </p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+const GoalProgressChart: React.FC<{ goals: any[] }> = ({ goals }) => {
+  const safeGoals = Array.isArray(goals) ? goals : [];
+
+  return (
+    <div className="goal-progress-simple">
+      <div className="goals-list-simple">
+        {safeGoals.length > 0 ? (
+          safeGoals.map((goal) => (
+            <div key={goal.goalId} className="goal-item-simple">
+              <div className="goal-name">{goal.goalName}</div>
+              <div className="goal-progress">
+                <div className="progress-bar-simple">
+                  <div
+                    className="progress-fill-simple"
+                    style={{
+                      width: `${Math.min(100, goal.completionRate || 0)}%`,
+                    }}
+                  />
+                </div>
+                <span className="progress-text">
+                  {goal.completionRate || 0}%
+                </span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-muted text-center py-3">
+            No goals set yet. Create some goals to track progress!
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const CalorieBurnHeatmap: React.FC<{
   trends: any;

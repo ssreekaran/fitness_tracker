@@ -439,8 +439,9 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
             <Row>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Exercise</Form.Label>
+                  <Form.Label htmlFor="exercise-select">Exercise</Form.Label>
                   <Form.Select
+                    id="exercise-select"
                     name="exercise"
                     value={formData.exercise}
                     onChange={handleInputChange}
@@ -458,8 +459,11 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
 
               <Col md={2}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Duration (min)</Form.Label>
+                  <Form.Label htmlFor="duration-input">
+                    Duration (min)
+                  </Form.Label>
                   <Form.Control
+                    id="duration-input"
                     type="number"
                     name="duration"
                     min="1"
@@ -472,8 +476,9 @@ const WorkoutTracker: React.FC<{ userWeight: number }> = ({ userWeight }) => {
 
               <Col md={3}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Date & Time</Form.Label>
+                  <Form.Label htmlFor="date-input">Date & Time</Form.Label>
                   <Form.Control
+                    id="date-input"
                     type="datetime-local"
                     name="date"
                     value={formData.date}

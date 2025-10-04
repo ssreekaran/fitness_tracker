@@ -1,28 +1,4 @@
-/* Body Fat Calculator - Styled to match app design system */
-:root {
-  --primary: #4a90e2;
-  --primary-hover: #357ab8;
-  --text-color: #2c3e50;
-  --text-secondary: #7f8c8d;
-  --background: #f5f7fa;
-  --card-bg: #ffffff;
-  --border-color: #e1e4e8;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
-  --border-radius: 12px;
-  --success: #2ecc71;
-  --warning: #f39c12;
-  --danger: #e74c3c;
-  --info: #3498db;
-}
-
-/* Dark theme variables */
-[data-theme="dark"] {
-  --text-color: #ecf0f1;
-  --text-secondary: #bdc3c7;
-  --background: #1a1a1a;
-  --card-bg: #2d2d2d;
-  --border-color: #3e3e3e;
-}
+/* Body Fat Calculator - Uses shared variables from CalculatorBase.css */
 
 /* Base styles */
 .page-container {
