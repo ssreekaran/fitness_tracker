@@ -44,7 +44,7 @@ export default defineConfig({
         {
           name: "chromium",
           use: { ...devices["Desktop Chrome"] },
-          testMatch: "**/environment.spec.ts", // Only run environment check in CI
+          testMatch: "**/production.spec.ts", // Only run production-critical tests in CI
         },
       ]
     : [
