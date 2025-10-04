@@ -23,6 +23,14 @@ const config: StorybookConfig = {
         prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
     },
   },
+  viteFinal: async (config) => {
+    // Ensure modern JavaScript support for Storybook builds
+    config.build = config.build || {};
+    config.build.target = "esnext";
+    config.esbuild = config.esbuild || {};
+    config.esbuild.target = "esnext";
+    return config;
+  },
 };
 
 export default config;

@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ '**' ]
+    branches: ["**"]
   pull_request:
-    branches: [ '**' ]
+    branches: ["**"]
 
 env:
   UPLOAD_STORE_PASSWORD: ${{ secrets.UPLOAD_STORE_PASSWORD }}
@@ -16,71 +16,71 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: |
-        rm -rf node_modules package-lock.json
-        npm install --no-optional
-        npm install -D @rollup/wasm-node jsdom
-        npx rollup --version
-      env:
-        ROLLUP_PLATFORM: node
-    
-    - name: Run TypeScript type check
-      run: npx tsc --noEmit
-    
-    - name: Run linter
-      run: npm run lint
-    
-    - name: Run tests with detailed output
-      run: |
-        npm test -- --reporter=verbose
-        npm test -- --reporter=junit --outputFile=junit.xml
-      env:
-        NODE_ENV: test
-        
-    - name: Upload test results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results
-        path: junit.xml
-        retention-days: 7
-        
-    - name: Show test summary
-      if: always()
-      run: |
-        echo "Test Summary:"
-        echo "-------------"
-        echo "View the detailed test output above in the 'Run tests with detailed output' step"
-        echo "Test results are also available as a downloadable artifact named 'test-results'"
-    
-    - name: Generate coverage report
-      run: npx vitest run --coverage
-      env:
-        NODE_ENV: test
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage/lcov.info
-        fail_ci_if_error: false
-    
-    - name: Build web application
-      run: |
-        echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> .env
-        echo "VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" >> .env
-        echo "VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}" >> .env
-        echo "VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}" >> .env
-        echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
-        echo "VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}" >> .env
-        echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}" >> .env
-        npm run build
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install --no-optional
+          npm install -D @rollup/wasm-node jsdom
+          npx rollup --version
+        env:
+          ROLLUP_PLATFORM: node
+
+      - name: Run TypeScript type check
+        run: npx tsc --noEmit
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests with detailed output
+        run: |
+          npm test -- --reporter=verbose
+          npm test -- --reporter=junit --outputFile=junit.xml
+        env:
+          NODE_ENV: test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: junit.xml
+          retention-days: 7
+
+      - name: Show test summary
+        if: always()
+        run: |
+          echo "Test Summary:"
+          echo "-------------"
+          echo "View the detailed test output above in the 'Run tests with detailed output' step"
+          echo "Test results are also available as a downloadable artifact named 'test-results'"
+
+      - name: Generate coverage report
+        run: npx vitest run --coverage
+        env:
+          NODE_ENV: test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+      - name: Build web application
+        run: |
+          echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> .env
+          echo "VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" >> .env
+          echo "VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}" >> .env
+          echo "VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}" >> .env
+          echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
+          echo "VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}" >> .env
+          echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}" >> .env
+          npm run build

@@ -86,8 +86,8 @@ export const WithManyGoals: Story = {
         url: "/api/goals",
         method: "GET",
         status: 200,
-        response: Promise.resolve([
-          ...(await mockGoalsService.getGoals()),
+        response: mockGoalsService.getGoals().then((goals) => [
+          ...goals,
           {
             id: "3",
             name: "Strength Training",
