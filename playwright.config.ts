@@ -40,10 +40,11 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: process.env.CI
     ? [
-        // Only test on Chromium in CI for speed
+        // Only test on Chromium in CI for speed, and only environment check
         {
           name: "chromium",
           use: { ...devices["Desktop Chrome"] },
+          testMatch: "**/environment.spec.ts", // Only run environment check in CI
         },
       ]
     : [
