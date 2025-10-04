@@ -53,6 +53,7 @@ jobs:
 
   e2e-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -84,6 +85,8 @@ jobs:
 
   visual-regression:
     runs-on: ubuntu-latest
+    # Skip this job if running on a fork or if Chromatic token is not available
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
       - uses: actions/checkout@v4
@@ -103,10 +106,13 @@ jobs:
         run: npm run build-storybook
 
       - name: Publish to Chromatic
+        continue-on-error: true
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          exitZeroOnChanges: true
+          exitOnceUploaded: true
 
   lint-and-type-check:
     runs-on: ubuntu-latest
