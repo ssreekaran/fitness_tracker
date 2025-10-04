@@ -294,15 +294,15 @@
   .personal-fitness-container {
     padding-top: 5rem;
   }
-  
+
   .personal-fitness-content {
     padding: 1rem;
   }
-  
+
   .personal-fitness-title {
     font-size: 2rem;
   }
-  
+
   .unit-toggle {
     flex-direction: column;
   }
@@ -313,8 +313,12 @@
   margin: 2rem auto 1.5rem;
   padding: 1.75rem;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(74,144,226,0.10), rgba(129,140,248,0.08));
-  border: 1px solid rgba(100,108,255,0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.1),
+    rgba(129, 140, 248, 0.08)
+  );
+  border: 1px solid rgba(100, 108, 255, 0.15);
 }
 
 .pf-title {
@@ -363,7 +367,7 @@
   background: var(--card-bg) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 12px !important;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   padding: 0.25rem;
 }
 
@@ -425,36 +429,73 @@
   border: 1px solid var(--border-color);
 }
 
-.pf-modal .modal-header, .pf-modal .modal-footer {
+.pf-modal .modal-header,
+.pf-modal .modal-footer {
   border-color: var(--border-color);
 }
 
 /* Colorful card variants - light mode subtle tints */
-.pf-card--indigo { background: linear-gradient(180deg, rgba(99,102,241,0.06), rgba(99,102,241,0.03)) !important; }
-.pf-card--teal { background: linear-gradient(180deg, rgba(20,184,166,0.06), rgba(20,184,166,0.03)) !important; }
-.pf-card--violet { background: linear-gradient(180deg, rgba(139,92,246,0.06), rgba(139,92,246,0.03)) !important; }
+.pf-card--indigo {
+  background: linear-gradient(
+    180deg,
+    rgba(99, 102, 241, 0.06),
+    rgba(99, 102, 241, 0.03)
+  ) !important;
+}
+.pf-card--teal {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 184, 166, 0.06),
+    rgba(20, 184, 166, 0.03)
+  ) !important;
+}
+.pf-card--violet {
+  background: linear-gradient(
+    180deg,
+    rgba(139, 92, 246, 0.06),
+    rgba(139, 92, 246, 0.03)
+  ) !important;
+}
 
-.pf-card--indigo { border-color: rgba(99,102,241,0.25) !important; }
-.pf-card--teal { border-color: rgba(20,184,166,0.25) !important; }
-.pf-card--violet { border-color: rgba(139,92,246,0.25) !important; }
+.pf-card--indigo {
+  border-color: rgba(99, 102, 241, 0.25) !important;
+}
+.pf-card--teal {
+  border-color: rgba(20, 184, 166, 0.25) !important;
+}
+.pf-card--violet {
+  border-color: rgba(139, 92, 246, 0.25) !important;
+}
 
 /* Colorful card variants - dark mode richer tints */
 :root.dark .pf-card--indigo {
-  background: radial-gradient(1200px 300px at 10% -10%, rgba(99,102,241,0.28), transparent),
-              linear-gradient(180deg, rgba(99,102,241,0.20), rgba(99,102,241,0.10)) !important;
-  border-color: rgba(99,102,241,0.35) !important;
+  background: radial-gradient(
+      1200px 300px at 10% -10%,
+      rgba(99, 102, 241, 0.28),
+      transparent
+    ),
+    linear-gradient(180deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1)) !important;
+  border-color: rgba(99, 102, 241, 0.35) !important;
 }
 
 :root.dark .pf-card--teal {
-  background: radial-gradient(1200px 300px at 90% -10%, rgba(20,184,166,0.26), transparent),
-              linear-gradient(180deg, rgba(20,184,166,0.18), rgba(20,184,166,0.10)) !important;
-  border-color: rgba(20,184,166,0.35) !important;
+  background: radial-gradient(
+      1200px 300px at 90% -10%,
+      rgba(20, 184, 166, 0.26),
+      transparent
+    ),
+    linear-gradient(180deg, rgba(20, 184, 166, 0.18), rgba(20, 184, 166, 0.1)) !important;
+  border-color: rgba(20, 184, 166, 0.35) !important;
 }
 
 :root.dark .pf-card--violet {
-  background: radial-gradient(1200px 300px at 50% -10%, rgba(139,92,246,0.28), transparent),
-              linear-gradient(180deg, rgba(139,92,246,0.20), rgba(139,92,246,0.10)) !important;
-  border-color: rgba(139,92,246,0.35) !important;
+  background: radial-gradient(
+      1200px 300px at 50% -10%,
+      rgba(139, 92, 246, 0.28),
+      transparent
+    ),
+    linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1)) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
 }
 
 /* Ensure text remains readable on tinted cards */
@@ -468,4 +509,81 @@
 .pf-card--teal .muted,
 .pf-card--violet .muted {
   opacity: 0.8;
+} /* An
+alytics Tab Integration */
+.analytics-tab-content {
+  padding: 0;
+}
+
+.pf-analytics {
+  margin: 0;
+}
+
+.pf-analytics .analytics-dashboard {
+  background: transparent;
+}
+
+.pf-analytics .metric-card {
+  margin-bottom: 1rem;
+}
+
+.pf-analytics .chart-card {
+  margin-bottom: 1rem;
+}
+
+/* Responsive adjustments for analytics in PersonalFitness */
+@media (max-width: 768px) {
+  .analytics-tab-content {
+    padding: 0;
+    margin: 0 -15px;
+  }
+
+  .pf-analytics .analytics-dashboard .btn-group {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .pf-analytics .analytics-dashboard .btn-group .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Tab styling improvements */
+.pf-tabs .nav-link {
+  font-weight: 500;
+  color: #6c757d;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.pf-tabs .nav-link.active {
+  color: #0d6efd;
+  border-bottom-color: #0d6efd;
+  background: none;
+}
+
+.pf-tabs .nav-link:hover {
+  color: #0d6efd;
+  border-color: transparent;
+}
+
+/* Analytics integration with PersonalFitness theme */
+.pf-analytics .metric-card--workouts {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.pf-analytics .metric-card--calories {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.pf-analytics .metric-card--streak {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.pf-analytics .metric-card--consistency {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }

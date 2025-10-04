@@ -163,3 +163,246 @@
   background-color: #c82333;
   border-color: #bd2130;
 }
+/* Smart Workout System Enhancements */
+.workout-tracker-container {
+  margin-bottom: 2rem;
+}
+
+.workout-tracker-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.workout-tracker-card .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1.5rem;
+}
+
+.workout-tracker-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+/* Tab Styles */
+.workout-tracker-card .nav-tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 0;
+}
+
+.workout-tracker-card .nav-tabs .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+}
+
+.workout-tracker-card .nav-tabs .nav-link.active {
+  color: white;
+  border-bottom-color: white;
+  background: none;
+}
+
+.workout-tracker-card .nav-tabs .nav-link:hover {
+  color: white;
+  border-color: transparent;
+}
+
+.tab-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Enhanced Form Styles */
+.workout-tracker-card .form-control,
+.workout-tracker-card .form-select {
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workout-tracker-card .form-control:focus,
+.workout-tracker-card .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Enhanced Table Styles */
+.workout-tracker-card .table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.workout-tracker-card .table thead th {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: none;
+  font-weight: 600;
+  color: #495057;
+  padding: 1rem 0.75rem;
+}
+
+.workout-tracker-card .table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.workout-tracker-card .table tbody tr:hover {
+  background-color: rgba(102, 126, 234, 0.05);
+}
+
+.workout-tracker-card .table tfoot {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.workout-tracker-card .table tfoot td {
+  border: none;
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+}
+
+/* Button Enhancements */
+.workout-tracker-card .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workout-tracker-card .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.workout-tracker-card .btn-outline-primary {
+  border-color: #667eea;
+  color: #667eea;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.workout-tracker-card .btn-outline-primary:hover {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+/* Alert Enhancements */
+.workout-tracker-card .alert {
+  border-radius: 12px;
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+.workout-tracker-card .alert-info {
+  background: linear-gradient(
+    135deg,
+    rgba(23, 162, 184, 0.1) 0%,
+    rgba(23, 162, 184, 0.05) 100%
+  );
+  color: #0c5460;
+}
+
+.workout-tracker-card .alert-danger {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 53, 69, 0.1) 0%,
+    rgba(220, 53, 69, 0.05) 100%
+  );
+  color: #721c24;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .workout-tracker-card .card-header {
+    padding: 1rem;
+  }
+
+  .workout-tracker-card .card-title {
+    font-size: 1.1rem;
+  }
+
+  .workout-tracker-card .nav-tabs .nav-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .tab-header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .workout-tracker-card .table {
+    font-size: 0.875rem;
+  }
+
+  .workout-tracker-card .table thead th,
+  .workout-tracker-card .table tbody td,
+  .workout-tracker-card .table tfoot td {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .workout-tracker-card .card-header .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+
+  .workout-tracker-card .nav-tabs {
+    flex-wrap: wrap;
+  }
+
+  .workout-tracker-card .nav-tabs .nav-link {
+    flex: 1;
+    text-align: center;
+    min-width: 120px;
+  }
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.workout-tracker-card .tab-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Integration with Intelligent Planner */
+.workout-tracker-card .intelligent-workout-planner {
+  margin: 0;
+}
+
+.workout-tracker-card .intelligent-planner-card {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.workout-tracker-card .intelligent-planner-card .card-header {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.workout-tracker-card .intelligent-planner-card .card-body {
+  padding: 0;
+}

@@ -1,0 +1,271 @@
+/**
+ * Notification Center Styles
+ */
+
+.notification-center {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 350px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.notification-center > * {
+  pointer-events: auto;
+}
+
+.notification-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 12px 16px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 8px;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notification-item {
+  animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.notification-content {
+  padding: 4px 0;
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.notification-title {
+  font-size: 0.9rem;
+  color: #262626;
+}
+
+.notification-message {
+  font-size: 0.85rem;
+  color: #595959;
+  line-height: 1.4;
+  display: block;
+}
+
+/* Notification type specific styles */
+.notification-achievement {
+  border-left-color: #52c41a !important;
+}
+
+.notification-achievement .notification-icon {
+  animation: bounce 0.6s ease-in-out;
+}
+
+.notification-goal {
+  border-left-color: #1890ff !important;
+}
+
+.notification-milestone {
+  border-left-color: #faad14 !important;
+}
+
+.notification-celebration {
+  border-left-color: #722ed1 !important;
+}
+
+.notification-celebration .notification-icon {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.notification-reminder {
+  border-left-color: #fa8c16 !important;
+}
+
+.notification-reminder .notification-item {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Fade out animation for removal */
+.notification-item.removing {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .notification-center {
+    width: calc(100vw - 40px);
+    right: 20px;
+    left: 20px;
+    top: 70px;
+  }
+
+  .notification-item {
+    margin-bottom: 8px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .notification-header {
+    background: rgba(20, 20, 20, 0.95);
+    border-bottom-color: #303030;
+  }
+
+  .notification-item {
+    background: rgba(30, 30, 30, 0.95) !important;
+  }
+
+  .notification-title {
+    color: #f0f0f0;
+  }
+
+  .notification-message {
+    color: #d9d9d9;
+  }
+}
+
+/* Special effects for achievements */
+.notification-achievement::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(82, 196, 26, 0.1) 50%,
+    transparent 70%
+  );
+  animation: shimmer 2s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Celebration confetti effect */
+.notification-celebration::after {
+  content: "🎉✨🎊";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 0.8rem;
+  animation: confetti 2s ease-out;
+  pointer-events: none;
+}
+
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) rotate(360deg);
+    opacity: 0;
+  }
+}

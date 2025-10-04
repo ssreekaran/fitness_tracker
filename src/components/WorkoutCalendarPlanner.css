@@ -1,0 +1,604 @@
+/* Modern Workout Calendar Planner Styles */
+
+.workout-calendar-planner {
+  margin: 2rem 0;
+}
+
+.calendar-card {
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.calendar-header {
+  background: transparent;
+  border: none;
+  padding: 2rem;
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-title h4 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+  opacity: 0.9;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.view-buttons .btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  background: transparent;
+}
+
+.view-buttons .btn-primary {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.view-buttons .btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+.category-filter {
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  min-width: 150px;
+}
+
+.category-filter:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.category-filter option {
+  background: #2c3e50;
+  color: white;
+}
+
+.calendar-body {
+  background: white;
+  padding: 2rem;
+}
+
+.calendar-container {
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* React Big Calendar Customization */
+.modern-calendar {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.modern-calendar .rbc-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  color: #495057;
+  font-weight: 600;
+  padding: 1rem 0.5rem;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.modern-calendar .rbc-month-view {
+  border: none;
+}
+
+.modern-calendar .rbc-date-cell {
+  padding: 0.5rem;
+  border-right: 1px solid #f1f3f4;
+}
+
+.modern-calendar .rbc-date-cell button {
+  color: #495057;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.modern-calendar .rbc-date-cell button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.modern-calendar .rbc-today {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.modern-calendar .rbc-off-range-bg {
+  background: #f8f9fa;
+}
+
+.modern-calendar .rbc-event {
+  border-radius: 8px;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 1px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modern-calendar .rbc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modern-calendar .rbc-event-content {
+  font-weight: 500;
+}
+
+.modern-calendar .rbc-toolbar {
+  margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.modern-calendar .rbc-toolbar button {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.modern-calendar .rbc-toolbar button:hover {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+.modern-calendar .rbc-toolbar button.rbc-active {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+.modern-calendar .rbc-toolbar-label {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Quick Templates */
+.quick-templates {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #f1f3f4;
+}
+
+.templates-title {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.template-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.template-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #f8f9fa;
+}
+
+.template-button span {
+  flex: 1;
+  margin: 0 0.5rem;
+}
+
+.template-button .badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Workout Modal */
+.workout-modal .modal-content {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.workout-modal .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 16px 16px 0 0;
+  padding: 1.5rem 2rem;
+}
+
+.workout-modal .modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.workout-modal .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.workout-modal .modal-body {
+  padding: 2rem;
+}
+
+.workout-modal .form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.workout-modal .form-control,
+.workout-modal .form-select {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workout-modal .form-control:focus,
+.workout-modal .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.workout-modal .modal-footer {
+  border: none;
+  padding: 1.5rem 2rem;
+  background: #f8f9fa;
+  border-radius: 0 0 16px 16px;
+}
+
+.modal-footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.workout-modal .btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.workout-modal .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.workout-modal .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.workout-modal .btn-danger {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  border: none;
+}
+
+.workout-modal .btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .calendar-card {
+    border-radius: 16px;
+    margin: 1rem;
+  }
+
+  .calendar-header {
+    padding: 1.5rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions {
+    justify-content: space-between;
+  }
+
+  .view-buttons {
+    flex: 1;
+  }
+
+  .view-buttons .btn {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .category-filter {
+    min-width: auto;
+    flex: 1;
+  }
+
+  .calendar-body {
+    padding: 1rem;
+  }
+
+  .templates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .template-button {
+    padding: 1rem;
+  }
+
+  .modern-calendar .rbc-toolbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .modern-calendar .rbc-toolbar .rbc-btn-group {
+    width: 100%;
+    display: flex;
+  }
+
+  .modern-calendar .rbc-toolbar button {
+    flex: 1;
+    padding: 0.75rem;
+  }
+
+  .workout-modal .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-footer-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .footer-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .footer-actions .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .calendar-card {
+    margin: 0.5rem;
+    border-radius: 12px;
+  }
+
+  .header-title h4 {
+    font-size: 1.25rem;
+  }
+
+  .calendar-container {
+    margin-bottom: 1rem;
+  }
+
+  .modern-calendar {
+    font-size: 0.875rem;
+  }
+
+  .modern-calendar .rbc-header {
+    padding: 0.75rem 0.25rem;
+    font-size: 0.8rem;
+  }
+
+  .modern-calendar .rbc-event {
+    font-size: 0.7rem;
+    padding: 0.125rem 0.25rem;
+  }
+
+  .templates-title {
+    font-size: 1rem;
+  }
+
+  .template-button {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Dark Mode Support */
+:root.dark .calendar-card {
+  background: linear-gradient(135deg, #4c63d2 0%, #5a4fcf 100%);
+}
+
+:root.dark .calendar-body {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+:root.dark .modern-calendar .rbc-header {
+  background: linear-gradient(135deg, #3d3d3d 0%, #4a4a4a 100%);
+  color: #ffffff;
+}
+
+:root.dark .modern-calendar .rbc-date-cell button {
+  color: #ffffff;
+}
+
+:root.dark .modern-calendar .rbc-date-cell button:hover {
+  background: rgba(129, 140, 248, 0.2);
+  color: #818cf8;
+}
+
+:root.dark .modern-calendar .rbc-today {
+  background: rgba(129, 140, 248, 0.1);
+}
+
+:root.dark .modern-calendar .rbc-off-range-bg {
+  background: #1a1a1a;
+}
+
+:root.dark .modern-calendar .rbc-toolbar button {
+  background: #3d3d3d;
+  border-color: #555555;
+  color: #ffffff;
+}
+
+:root.dark .modern-calendar .rbc-toolbar button:hover,
+:root.dark .modern-calendar .rbc-toolbar button.rbc-active {
+  background: #818cf8;
+  border-color: #818cf8;
+}
+
+:root.dark .modern-calendar .rbc-toolbar-label {
+  color: #ffffff;
+}
+
+:root.dark .quick-templates {
+  border-top-color: #404040;
+}
+
+:root.dark .templates-title {
+  color: #ffffff;
+}
+
+:root.dark .template-button {
+  background: #3d3d3d;
+  border-color: #555555;
+  color: #ffffff;
+}
+
+:root.dark .template-button:hover {
+  background: #4a4a4a;
+}
+
+:root.dark .workout-modal .modal-content {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+:root.dark .workout-modal .modal-body {
+  background: #2d2d2d;
+}
+
+:root.dark .workout-modal .form-label {
+  color: #ffffff;
+}
+
+:root.dark .workout-modal .form-control,
+:root.dark .workout-modal .form-select {
+  background: #3d3d3d;
+  border-color: #555555;
+  color: #ffffff;
+}
+
+:root.dark .workout-modal .form-control:focus,
+:root.dark .workout-modal .form-select:focus {
+  background: #3d3d3d;
+  border-color: #818cf8;
+  color: #ffffff;
+}
+
+:root.dark .workout-modal .modal-footer {
+  background: #3d3d3d;
+}
+
+/* Animation Enhancements */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.calendar-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.modern-calendar .rbc-event {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.template-button {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.workout-modal .modal-content {
+  animation: slideInUp 0.4s ease-out;
+}
