@@ -3,29 +3,15 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import viteCompression from "vite-plugin-compression";
 
-// Only use visualizer in development to avoid CI compatibility issues
-const isCI = process.env.CI === "true";
-const visualizer = !isCI
-  ? require("rollup-plugin-visualizer").visualizer
-  : null;
+// Bundle visualizer disabled to avoid CI compatibility issues
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
   plugins: [
     react(),
-    // Only include visualizer in development
-    ...(visualizer
-      ? [
-          visualizer({
-            template: "treemap",
-            open: true,
-            gzipSize: true,
-            brotliSize: true,
-            filename: "bundle-analysis.html",
-          }),
-        ]
-      : []),
+    // Bundle visualizer disabled to avoid CI compatibility issues
+    // To enable locally: npm install rollup-plugin-visualizer and add to plugins array
     viteCompression({
       algorithm: "gzip",
       ext: ".gz",
