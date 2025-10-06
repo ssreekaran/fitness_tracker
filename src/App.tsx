@@ -96,25 +96,17 @@ const TermsOfService = () => (
 
 /**
  * Deep link handler for OAuth redirects in mobile apps
- * Handles Firebase authentication redirects when the app is opened from external URLs
+ * Handles OAuth callbacks when the app is opened from external URLs
  */
 const handleDeepLink = (url: string) => {
-  if (url.includes("__/auth/handler")) {
+  console.log("Deep link received:", url);
+
+  if (url.includes("__/auth/handler") || url.includes("firebaseapp.com")) {
     // This is a Firebase auth redirect, let Firebase handle it automatically
+    // The auth state change listener will handle the successful login
     return;
   }
 };
-
-// Set up deep link handling for mobile platforms
-if (Capacitor.isNativePlatform()) {
-  // Listen for app being opened from a URL (like OAuth redirect from Google)
-  CapApp.addListener("appUrlOpen", (data: { url: string }) => {
-    // Handle deep links for all platforms (including iOS universal links)
-    if (data.url) {
-      handleDeepLink(data.url);
-    }
-  });
-}
 
 /**
  * AppContent Component
@@ -124,6 +116,7 @@ if (Capacitor.isNativePlatform()) {
  * - Firebase auth state observer setup
  * - Route configuration and protected routes
  * - Loading states for lazy-loaded components
+ * - Deep link handling for OAuth callbacks
  */
 const AppContent = () => {
   const navigate = useNavigate();
@@ -159,11 +152,31 @@ const AppContent = () => {
       }
     });
 
+    // Set up deep link handling for mobile platforms
+    let deepLinkListener: any;
+    if (Capacitor.isNativePlatform()) {
+      // Listen for app being opened from a URL (like OAuth redirect from Google)
+      deepLinkListener = CapApp.addListener(
+        "appUrlOpen",
+        (data: { url: string }) => {
+          // Handle deep links for OAuth callbacks
+          if (data.url) {
+            handleDeepLink(data.url);
+          }
+        }
+      );
+    }
+
     // Check for authentication redirect result on app initialization
     handleAuthRedirect();
 
-    // Cleanup function to unsubscribe from auth state changes
-    return () => unsubscribe();
+    // Cleanup function to unsubscribe from auth state changes and remove listeners
+    return () => {
+      unsubscribe();
+      if (deepLinkListener) {
+        deepLinkListener.remove();
+      }
+    };
   }, [navigate]);
 
   return (

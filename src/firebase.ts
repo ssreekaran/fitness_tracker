@@ -16,7 +16,6 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   getRedirectResult,
   OAuthProvider,
 } from "firebase/auth";
@@ -67,17 +66,35 @@ provider.setCustomParameters({
  *
  * Handles Google authentication for both web and mobile platforms:
  * - Web: Uses popup-based authentication for better UX
- * - Mobile: Uses redirect-based authentication (required for mobile apps)
+ * - Mobile: Uses Browser plugin for OAuth flow
  *
  * @returns Promise containing user object and access token
  */
 export const signInWithGoogle = async () => {
   try {
+    // Debug: Log current domain
+    console.log("Current domain:", window.location.origin);
+    console.log("Current URL:", window.location.href);
+
     // Platform-specific authentication strategy
     if (Capacitor.isNativePlatform()) {
-      // Mobile platforms: Use redirect flow
-      // The redirect result will be handled in the App component
-      await signInWithRedirect(auth, provider);
+      // Mobile platforms: Open web app in browser for authentication
+      // This is the most reliable approach for mobile OAuth
+      const { Browser } = await import("@capacitor/browser");
+
+      // Open your deployed web app where OAuth works perfectly
+      const webAppUrl = "https://fitness-tracker-00001.web.app/login";
+
+      await Browser.open({
+        url: webAppUrl,
+        windowName: "_system",
+      });
+
+      // Show a message to the user
+      alert(
+        "Please complete sign-in in the browser, then return to the app. You may need to refresh the app after signing in."
+      );
+
       return { user: null, token: null };
     } else {
       // Web platform: Use popup flow for better user experience
@@ -96,18 +113,27 @@ export const signInWithGoogle = async () => {
 /**
  * Handle Authentication Redirect Result
  *
- * Processes the result of redirect-based authentication (used on mobile platforms)
- * This function should be called when the app loads to check if the user
- * has returned from an OAuth provider redirect
+ * For mobile platforms, this checks if the user is already authenticated
+ * (e.g., after returning from browser authentication)
  *
  * @returns Promise containing user object and access token, or null if no redirect result
  */
 export const handleRedirectResult = async () => {
   try {
+    // For mobile, just check if user is already authenticated
     if (Capacitor.isNativePlatform()) {
+      // Check current auth state
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        return {
+          user: currentUser,
+          token: await currentUser.getIdToken(),
+        };
+      }
+    } else {
+      // For web, use the standard redirect result
       const result = await getRedirectResult(auth);
       if (result) {
-        // Extract user credentials from the redirect result
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         const user = result.user;
@@ -119,4 +145,11 @@ export const handleRedirectResult = async () => {
     console.error("Error handling redirect result:", error);
     throw error;
   }
+};
+
+/**
+ * Check if user is authenticated (useful for mobile after browser auth)
+ */
+export const checkAuthStatus = () => {
+  return auth.currentUser;
 };
