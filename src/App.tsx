@@ -153,10 +153,10 @@ const AppContent = () => {
     });
 
     // Set up deep link handling for mobile platforms
-    let deepLinkListener: any;
+    let deepLinkListenerPromise: Promise<{ remove: () => void }> | undefined;
     if (Capacitor.isNativePlatform()) {
       // Listen for app being opened from a URL (like OAuth redirect from Google)
-      deepLinkListener = CapApp.addListener(
+      deepLinkListenerPromise = CapApp.addListener(
         "appUrlOpen",
         (data: { url: string }) => {
           // Handle deep links for OAuth callbacks
@@ -173,8 +173,8 @@ const AppContent = () => {
     // Cleanup function to unsubscribe from auth state changes and remove listeners
     return () => {
       unsubscribe();
-      if (deepLinkListener) {
-        deepLinkListener.remove();
+      if (deepLinkListenerPromise) {
+        deepLinkListenerPromise.then((listener) => listener.remove());
       }
     };
   }, [navigate]);

@@ -6,7 +6,7 @@ import viteCompression from "vite-plugin-compression";
 // Bundle visualizer disabled to avoid CI compatibility issues
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(() => {
   const isMobile =
     process.env.CAPACITOR_PLATFORM === "android" ||
     process.env.CAPACITOR_PLATFORM === "ios";
