@@ -1,120 +1,197 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper function to check if user is admin
+    // Enhanced security helper functions
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+    
     function isAdmin() {
-      return request.auth != null && 
+      return isAuthenticated() && 
              (request.auth.token.admin == true || 
               request.auth.token.role == 'admin');
     }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isValidEmail() {
+      return isAuthenticated() && 
+             request.auth.token.email_verified == true;
+    }
+    
+    function hasValidTimestamp(data) {
+      return data.createdAt is timestamp && 
+             data.updatedAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt <= request.time;
+    }
+    
+    function isRecentRequest() {
+      return request.time < timestamp.date(2030, 1, 1); // Prevent future dates
+    }
 
-    // Public read access to foods collection (for food database)
+    // DENY ALL by default - explicit allow only
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Public read access to foods collection (for food database) - RESTRICTED
     match /foods/{foodId} {
-      allow read: if true;
+      allow read: if isAuthenticated() && 
+                     foodId.matches('^[a-zA-Z0-9_-]{1,50}$'); // Sanitize food IDs
       allow write: if isAdmin();
     }
     
-    // User-specific food entries
+    // User-specific food entries - ENHANCED SECURITY
     match /foodEntries/{entryId} {
-      allow read, create, update, delete: if request.auth != null && 
-        (request.auth.uid == resource.data.userId || 
-         request.auth.uid == request.resource.data.userId);
+      allow read, create, update, delete: if isAuthenticated() && 
+        isRecentRequest() &&
+        (
+          (resource != null && isOwner(resource.data.userId)) ||
+          (request.resource != null && isOwner(request.resource.data.userId))
+        ) &&
+        // Validate entry ID format
+        entryId.matches('^[a-zA-Z0-9_-]{1,50}$') &&
+        // Additional data validation for writes
+        (request.method == 'get' || (
+          request.resource.data.userId is string &&
+          request.resource.data.userId.size() > 0 &&
+          request.resource.data.userId.size() <= 128 &&
+          hasValidTimestamp(request.resource.data)
+        ));
     }
     
-    // User-specific rules
+    // User-specific rules - MAXIMUM SECURITY
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isOwner(userId) && isValidEmail();
+      allow write: if isOwner(userId) && 
+                      isValidEmail() && 
+                      isRecentRequest() &&
+                      userId.matches('^[a-zA-Z0-9_-]{1,128}$') &&
+                      // Prevent sensitive field manipulation
+                      (!('role' in request.resource.data) || request.resource.data.role == 'user') &&
+                      (!('admin' in request.resource.data) || request.resource.data.admin == false);
       
       match /fitnessData/{document=**} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, write: if isOwner(userId) && 
+                              isValidEmail() && 
+                              isRecentRequest() &&
+                              document.matches('^[a-zA-Z0-9_-]{1,100}$');
       }
       
       match /workouts/{workoutId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, write: if isOwner(userId) && 
+                              isValidEmail() && 
+                              isRecentRequest() &&
+                              workoutId.matches('^[a-zA-Z0-9_-]{1,50}$') &&
+                              // Additional validation for workout data
+                              (request.method == 'get' || (
+                                request.resource.data.userId == userId &&
+                                hasValidTimestamp(request.resource.data) &&
+                                // Validate workout fields
+                                request.resource.data.exercise is string &&
+                                request.resource.data.exercise.size() <= 200 &&
+                                request.resource.data.duration is number &&
+                                request.resource.data.duration >= 0 &&
+                                request.resource.data.duration <= 86400 // Max 24 hours
+                              ));
       }
       
       match /workoutPlans/{planId} {
-        // Allow read if authenticated and owner
-        allow read: if request.auth != null && request.auth.uid == userId;
+        allow read: if isOwner(userId) && isValidEmail();
         
-        // Allow create with validation
-        allow create: if request.auth != null 
-          && request.auth.uid == userId  // Path userId must match auth
-          && request.auth.uid == request.resource.data.userId  // Document userId must match auth
-          && request.resource.data.title is string
-          && request.resource.data.title.matches('^.{1,100}$')
-          && request.resource.data.type is string
-          && request.resource.data.notes is string
-          && request.resource.data.start is timestamp
-          && request.resource.data.end is timestamp
-          && request.resource.data.start < request.resource.data.end  // Validate start < end
-          && (request.resource.data.createdAt == request.time || request.resource.data.createdAt is timestamp)
-          && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
+        allow create: if isOwner(userId) && 
+          isValidEmail() && 
+          isRecentRequest() &&
+          planId.matches('^[a-zA-Z0-9_-]{1,50}$') &&
+          request.resource.data.userId == userId &&
+          request.resource.data.title is string &&
+          request.resource.data.title.size() >= 1 &&
+          request.resource.data.title.size() <= 100 &&
+          request.resource.data.title.matches('^[^<>"\';\\\\]*$') && // Prevent XSS
+          request.resource.data.type is string &&
+          request.resource.data.type.size() <= 50 &&
+          request.resource.data.notes is string &&
+          request.resource.data.notes.size() <= 1000 &&
+          request.resource.data.notes.matches('^[^<>"\';\\\\]*$') && // Prevent XSS
+          request.resource.data.start is timestamp &&
+          request.resource.data.end is timestamp &&
+          request.resource.data.start < request.resource.data.end &&
+          request.resource.data.start >= request.time.date() && // No past dates
+          hasValidTimestamp(request.resource.data);
           
-        // Allow update with validation
-        allow update: if request.auth != null 
-          && request.auth.uid == userId  // Path userId must match auth
-          && request.auth.uid == resource.data.userId  // Existing doc owner check
-          && request.auth.uid == request.resource.data.userId  // New data owner check
-          && resource.data.userId == request.resource.data.userId  // userId cannot change
-          && request.resource.data.title is string
-          && request.resource.data.title.matches('^.{1,100}$')
-          && request.resource.data.type is string
-          && request.resource.data.notes is string
-          && request.resource.data.start is timestamp
-          && request.resource.data.end is timestamp
-          && request.resource.data.start < request.resource.data.end  // Validate start < end
-          && request.resource.data.createdAt == resource.data.createdAt  // createdAt cannot change
-          && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
+        allow update: if isOwner(userId) && 
+          isValidEmail() && 
+          isRecentRequest() &&
+          isOwner(resource.data.userId) &&
+          request.resource.data.userId == resource.data.userId &&
+          request.resource.data.title is string &&
+          request.resource.data.title.size() >= 1 &&
+          request.resource.data.title.size() <= 100 &&
+          request.resource.data.title.matches('^[^<>"\';\\\\]*$') &&
+          request.resource.data.type is string &&
+          request.resource.data.type.size() <= 50 &&
+          request.resource.data.notes is string &&
+          request.resource.data.notes.size() <= 1000 &&
+          request.resource.data.notes.matches('^[^<>"\';\\\\]*$') &&
+          request.resource.data.start is timestamp &&
+          request.resource.data.end is timestamp &&
+          request.resource.data.start < request.resource.data.end &&
+          request.resource.data.createdAt == resource.data.createdAt &&
+          request.resource.data.updatedAt is timestamp;
           
-        // Allow delete if owner (both path and document owner must match)
-        allow delete: if request.auth != null 
-          && request.auth.uid == userId  // Path userId must match auth
-          && request.auth.uid == resource.data.userId;  // Document must be owned by auth user
+        allow delete: if isOwner(userId) && 
+          isValidEmail() && 
+          isOwner(resource.data.userId);
       }
     }
     
-    // User goals collection - allow users to manage their own goals
+    // User goals collection - ENHANCED VALIDATION
     match /userGoals/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
+      allow read: if isOwner(userId) && isValidEmail();
       
-      allow create: if request.auth != null 
-        && request.auth.uid == userId  // Path userId must match auth
-        && request.auth.uid == request.resource.data.userId  // Document userId must match auth
-        && request.resource.data.weeklyWorkoutTarget is number
-        && request.resource.data.weeklyWorkoutTarget >= 1
-        && request.resource.data.weeklyWorkoutTarget <= 14
-        && request.resource.data.weeklyGoalThreshold is number
-        && request.resource.data.weeklyGoalThreshold >= 1
-        && request.resource.data.weeklyGoalThreshold <= 14
-        && request.resource.data.goalTrackingWeeks is number
-        && request.resource.data.goalTrackingWeeks >= 1
-        && request.resource.data.goalTrackingWeeks <= 12
-        && request.resource.data.customGoals is list
-        && (request.resource.data.createdAt == request.time || request.resource.data.createdAt is timestamp)
-        && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
+      allow create: if isOwner(userId) && 
+        isValidEmail() && 
+        isRecentRequest() &&
+        userId.matches('^[a-zA-Z0-9_-]{1,128}$') &&
+        request.resource.data.userId == userId &&
+        request.resource.data.weeklyWorkoutTarget is number &&
+        request.resource.data.weeklyWorkoutTarget >= 1 &&
+        request.resource.data.weeklyWorkoutTarget <= 14 &&
+        request.resource.data.weeklyGoalThreshold is number &&
+        request.resource.data.weeklyGoalThreshold >= 1 &&
+        request.resource.data.weeklyGoalThreshold <= 14 &&
+        request.resource.data.goalTrackingWeeks is number &&
+        request.resource.data.goalTrackingWeeks >= 1 &&
+        request.resource.data.goalTrackingWeeks <= 12 &&
+        request.resource.data.customGoals is list &&
+        request.resource.data.customGoals.size() <= 20 && // Limit custom goals
+        hasValidTimestamp(request.resource.data);
         
-      allow update: if request.auth != null 
-        && request.auth.uid == userId  // Path userId must match auth
-        && request.auth.uid == resource.data.userId  // Existing doc owner check
-        && request.auth.uid == request.resource.data.userId  // New data owner check
-        && resource.data.userId == request.resource.data.userId  // userId cannot change
-        && request.resource.data.weeklyWorkoutTarget is number
-        && request.resource.data.weeklyWorkoutTarget >= 1
-        && request.resource.data.weeklyWorkoutTarget <= 14
-        && request.resource.data.weeklyGoalThreshold is number
-        && request.resource.data.weeklyGoalThreshold >= 1
-        && request.resource.data.weeklyGoalThreshold <= 14
-        && request.resource.data.goalTrackingWeeks is number
-        && request.resource.data.goalTrackingWeeks >= 1
-        && request.resource.data.goalTrackingWeeks <= 12
-        && request.resource.data.customGoals is list
-        && request.resource.data.createdAt == resource.data.createdAt  // createdAt cannot change
-        && (request.resource.data.updatedAt == request.time || request.resource.data.updatedAt is timestamp);
+      allow update: if isOwner(userId) && 
+        isValidEmail() && 
+        isRecentRequest() &&
+        isOwner(resource.data.userId) &&
+        request.resource.data.userId == resource.data.userId &&
+        request.resource.data.weeklyWorkoutTarget is number &&
+        request.resource.data.weeklyWorkoutTarget >= 1 &&
+        request.resource.data.weeklyWorkoutTarget <= 14 &&
+        request.resource.data.weeklyGoalThreshold is number &&
+        request.resource.data.weeklyGoalThreshold >= 1 &&
+        request.resource.data.weeklyGoalThreshold <= 14 &&
+        request.resource.data.goalTrackingWeeks is number &&
+        request.resource.data.goalTrackingWeeks >= 1 &&
+        request.resource.data.goalTrackingWeeks <= 12 &&
+        request.resource.data.customGoals is list &&
+        request.resource.data.customGoals.size() <= 20 &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.updatedAt is timestamp;
         
-      allow delete: if request.auth != null 
-        && request.auth.uid == userId  // Path userId must match auth
-        && request.auth.uid == resource.data.userId;  // Document must be owned by auth user
+      allow delete: if isOwner(userId) && 
+        isValidEmail() && 
+        isOwner(resource.data.userId);
     }
   }
 }
