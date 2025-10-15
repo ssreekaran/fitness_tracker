@@ -12,7 +12,7 @@ test.describe("Production Critical Tests", () => {
 
     // 2. Basic app structure is present
     const title = await page.title();
-    expect(title).toBe("Fitness Tracker");
+    expect(title).toBe("Fitness Tracker - Secure Health & Fitness Management");
 
     // 3. Navigation is functional
     const navigation = page.locator("nav");
@@ -109,7 +109,7 @@ test.describe("Production Critical Tests", () => {
 
     // Should still be functional on mobile
     const title = await page.title();
-    expect(title).toBe("Fitness Tracker");
+    expect(title).toBe("Fitness Tracker - Secure Health & Fitness Management");
 
     // On mobile, navigation might be hidden behind a hamburger menu
     // Just check that the page loads and has content
