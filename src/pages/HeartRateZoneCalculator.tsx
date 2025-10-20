@@ -110,8 +110,8 @@ const HeartRateZoneCalculator: React.FC = () => {
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <section className="hr-hero">
-        <div className="hr-hero-content">
+      <section className="calculator-hero hr-hero">
+        <div className="calculator-hero-content">
           <h1>Heart Rate Zone Calculator</h1>
           <p>
             Calculate your target heart rate zones for optimal training
@@ -123,7 +123,7 @@ const HeartRateZoneCalculator: React.FC = () => {
         </div>
       </section>
 
-      <div className="hr-calculator">
+      <div className="calculator-form hr-calculator">
         <form onSubmit={calculateHeartRateZones} className="hr-form">
           {/* Age */}
           <div className="form-group">

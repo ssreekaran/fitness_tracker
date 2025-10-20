@@ -130,8 +130,8 @@ const OneRepMaxCalculator: React.FC = () => {
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <section className="orm-hero">
-        <div className="orm-hero-content">
+      <section className="calculator-hero orm-hero">
+        <div className="calculator-hero-content">
           <h1>One Rep Max Calculator</h1>
           <p>
             Estimate your maximum lift capacity and plan your training loads
@@ -143,7 +143,7 @@ const OneRepMaxCalculator: React.FC = () => {
         </div>
       </section>
 
-      <div className="orm-calculator">
+      <div className="calculator-form orm-calculator">
         <form onSubmit={calculateOneRepMax} className="orm-form">
           {/* Exercise Selection */}
           <div className="form-group">

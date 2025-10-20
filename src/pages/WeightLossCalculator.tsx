@@ -82,8 +82,8 @@ const WeightLossCalculator: React.FC = () => {
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <section className="wl-hero">
-        <div className="wl-hero-content">
+      <section className="calculator-hero wl-hero">
+        <div className="calculator-hero-content">
           <h1>Weight Loss Calculator</h1>
           <p>
             Calculate your daily calorie needs to reach your weight loss goals
@@ -95,7 +95,7 @@ const WeightLossCalculator: React.FC = () => {
         </div>
       </section>
 
-      <div className="wl-calculator">
+      <div className="calculator-form wl-calculator">
         <form onSubmit={calculateWeightLoss} className="wl-form">
           {/* Gender Selection */}
           <div className="form-group">

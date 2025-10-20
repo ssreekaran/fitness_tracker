@@ -128,8 +128,8 @@ const MacroCalculator: React.FC = () => {
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <section className="macro-hero">
-        <div className="macro-hero-content">
+      <section className="calculator-hero macro-hero">
+        <div className="calculator-hero-content">
           <h1>Macro Calculator</h1>
           <p>
             Calculate your optimal protein, carbohydrate, and fat intake based
@@ -141,7 +141,7 @@ const MacroCalculator: React.FC = () => {
         </div>
       </section>
 
-      <div className="macro-calculator">
+      <div className="calculator-form macro-calculator">
         <form onSubmit={calculateMacros} className="macro-form">
           {/* Gender Selection */}
           <div className="form-group">

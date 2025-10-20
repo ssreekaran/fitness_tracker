@@ -1,35 +1,30 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Enhanced security helper functions
+    // Security helper functions
     function isAuthenticated() {
       return request.auth != null && request.auth.uid != null;
-    }
-    
-    function isAdmin() {
-      return isAuthenticated() && 
-             (request.auth.token.admin == true || 
-              request.auth.token.role == 'admin');
     }
     
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
     
-    function isValidEmail() {
-      return isAuthenticated() && 
-             request.auth.token.email_verified == true;
+    function isValidUserId(userId) {
+      return userId is string && 
+             userId.size() > 0 && 
+             userId.size() <= 128 &&
+             userId.matches('^[a-zA-Z0-9_-]+$');
     }
     
-    function hasValidTimestamp(data) {
-      return data.createdAt is timestamp && 
-             data.updatedAt is timestamp &&
-             data.createdAt <= request.time &&
-             data.updatedAt <= request.time;
+    function hasValidUserData(data) {
+      return data.keys().hasAll(['userId']) &&
+             data.userId is string &&
+             data.userId == request.auth.uid;
     }
     
     function isRecentRequest() {
-      return request.time < timestamp.date(2030, 1, 1); // Prevent future dates
+      return request.time <= timestamp.date(2025, 12, 31);
     }
 
     // DENY ALL by default - explicit allow only
@@ -37,161 +32,62 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Public read access to foods collection (for food database) - RESTRICTED
+    // Food database - READ ONLY for all users (public food data)
     match /foods/{foodId} {
-      allow read: if isAuthenticated() && 
-                     foodId.matches('^[a-zA-Z0-9_-]{1,50}$'); // Sanitize food IDs
-      allow write: if isAdmin();
+      allow read: if true;
+      allow write: if false; // No writes allowed to food database
     }
     
-    // User-specific food entries - ENHANCED SECURITY
+    // User-specific food entries (calorie tracking)
     match /foodEntries/{entryId} {
-      allow read, create, update, delete: if isAuthenticated() && 
+      allow read, write: if isAuthenticated() && 
         isRecentRequest() &&
         (
           (resource != null && isOwner(resource.data.userId)) ||
-          (request.resource != null && isOwner(request.resource.data.userId))
-        ) &&
-        // Validate entry ID format
-        entryId.matches('^[a-zA-Z0-9_-]{1,50}$') &&
-        // Additional data validation for writes
-        (request.method == 'get' || (
-          request.resource.data.userId is string &&
-          request.resource.data.userId.size() > 0 &&
-          request.resource.data.userId.size() <= 128 &&
-          hasValidTimestamp(request.resource.data)
-        ));
+          (request.resource != null && 
+           hasValidUserData(request.resource.data) &&
+           isOwner(request.resource.data.userId))
+        );
     }
     
-    // User-specific rules - MAXIMUM SECURITY
+    // User profiles and personal data
     match /users/{userId} {
-      allow read: if isOwner(userId) && isValidEmail();
-      allow write: if isOwner(userId) && 
-                      isValidEmail() && 
-                      isRecentRequest() &&
-                      userId.matches('^[a-zA-Z0-9_-]{1,128}$') &&
-                      // Prevent sensitive field manipulation
-                      (!('role' in request.resource.data) || request.resource.data.role == 'user') &&
-                      (!('admin' in request.resource.data) || request.resource.data.admin == false);
+      allow read, write: if isAuthenticated() && 
+        isOwner(userId) && 
+        isValidUserId(userId) &&
+        isRecentRequest();
       
-      match /fitnessData/{document=**} {
-        allow read, write: if isOwner(userId) && 
-                              isValidEmail() && 
-                              isRecentRequest() &&
-                              document.matches('^[a-zA-Z0-9_-]{1,100}$');
+      // User's fitness data (nested under user document)
+      match /fitnessData/{dataId} {
+        allow read, write: if isAuthenticated() && 
+          isOwner(userId) && 
+          isValidUserId(userId) &&
+          isRecentRequest();
       }
       
+      // User's workout data (nested under user document)
       match /workouts/{workoutId} {
-        allow read, write: if isOwner(userId) && 
-                              isValidEmail() && 
-                              isRecentRequest() &&
-                              workoutId.matches('^[a-zA-Z0-9_-]{1,50}$') &&
-                              // Additional validation for workout data
-                              (request.method == 'get' || (
-                                request.resource.data.userId == userId &&
-                                hasValidTimestamp(request.resource.data) &&
-                                // Validate workout fields
-                                request.resource.data.exercise is string &&
-                                request.resource.data.exercise.size() <= 200 &&
-                                request.resource.data.duration is number &&
-                                request.resource.data.duration >= 0 &&
-                                request.resource.data.duration <= 86400 // Max 24 hours
-                              ));
+        allow read, write: if isAuthenticated() && 
+          isOwner(userId) && 
+          isValidUserId(userId) &&
+          isRecentRequest();
       }
       
+      // User's workout plans (nested under user document)
       match /workoutPlans/{planId} {
-        allow read: if isOwner(userId) && isValidEmail();
-        
-        allow create: if isOwner(userId) && 
-          isValidEmail() && 
-          isRecentRequest() &&
-          planId.matches('^[a-zA-Z0-9_-]{1,50}$') &&
-          request.resource.data.userId == userId &&
-          request.resource.data.title is string &&
-          request.resource.data.title.size() >= 1 &&
-          request.resource.data.title.size() <= 100 &&
-          request.resource.data.title.matches('^[^<>"\';\\\\]*$') && // Prevent XSS
-          request.resource.data.type is string &&
-          request.resource.data.type.size() <= 50 &&
-          request.resource.data.notes is string &&
-          request.resource.data.notes.size() <= 1000 &&
-          request.resource.data.notes.matches('^[^<>"\';\\\\]*$') && // Prevent XSS
-          request.resource.data.start is timestamp &&
-          request.resource.data.end is timestamp &&
-          request.resource.data.start < request.resource.data.end &&
-          request.resource.data.start >= request.time.date() && // No past dates
-          hasValidTimestamp(request.resource.data);
-          
-        allow update: if isOwner(userId) && 
-          isValidEmail() && 
-          isRecentRequest() &&
-          isOwner(resource.data.userId) &&
-          request.resource.data.userId == resource.data.userId &&
-          request.resource.data.title is string &&
-          request.resource.data.title.size() >= 1 &&
-          request.resource.data.title.size() <= 100 &&
-          request.resource.data.title.matches('^[^<>"\';\\\\]*$') &&
-          request.resource.data.type is string &&
-          request.resource.data.type.size() <= 50 &&
-          request.resource.data.notes is string &&
-          request.resource.data.notes.size() <= 1000 &&
-          request.resource.data.notes.matches('^[^<>"\';\\\\]*$') &&
-          request.resource.data.start is timestamp &&
-          request.resource.data.end is timestamp &&
-          request.resource.data.start < request.resource.data.end &&
-          request.resource.data.createdAt == resource.data.createdAt &&
-          request.resource.data.updatedAt is timestamp;
-          
-        allow delete: if isOwner(userId) && 
-          isValidEmail() && 
-          isOwner(resource.data.userId);
+        allow read, write: if isAuthenticated() && 
+          isOwner(userId) && 
+          isValidUserId(userId) &&
+          isRecentRequest();
       }
     }
     
-    // User goals collection - ENHANCED VALIDATION
+    // User goals (separate collection for easier querying)
     match /userGoals/{userId} {
-      allow read: if isOwner(userId) && isValidEmail();
-      
-      allow create: if isOwner(userId) && 
-        isValidEmail() && 
-        isRecentRequest() &&
-        userId.matches('^[a-zA-Z0-9_-]{1,128}$') &&
-        request.resource.data.userId == userId &&
-        request.resource.data.weeklyWorkoutTarget is number &&
-        request.resource.data.weeklyWorkoutTarget >= 1 &&
-        request.resource.data.weeklyWorkoutTarget <= 14 &&
-        request.resource.data.weeklyGoalThreshold is number &&
-        request.resource.data.weeklyGoalThreshold >= 1 &&
-        request.resource.data.weeklyGoalThreshold <= 14 &&
-        request.resource.data.goalTrackingWeeks is number &&
-        request.resource.data.goalTrackingWeeks >= 1 &&
-        request.resource.data.goalTrackingWeeks <= 12 &&
-        request.resource.data.customGoals is list &&
-        request.resource.data.customGoals.size() <= 20 && // Limit custom goals
-        hasValidTimestamp(request.resource.data);
-        
-      allow update: if isOwner(userId) && 
-        isValidEmail() && 
-        isRecentRequest() &&
-        isOwner(resource.data.userId) &&
-        request.resource.data.userId == resource.data.userId &&
-        request.resource.data.weeklyWorkoutTarget is number &&
-        request.resource.data.weeklyWorkoutTarget >= 1 &&
-        request.resource.data.weeklyWorkoutTarget <= 14 &&
-        request.resource.data.weeklyGoalThreshold is number &&
-        request.resource.data.weeklyGoalThreshold >= 1 &&
-        request.resource.data.weeklyGoalThreshold <= 14 &&
-        request.resource.data.goalTrackingWeeks is number &&
-        request.resource.data.goalTrackingWeeks >= 1 &&
-        request.resource.data.goalTrackingWeeks <= 12 &&
-        request.resource.data.customGoals is list &&
-        request.resource.data.customGoals.size() <= 20 &&
-        request.resource.data.createdAt == resource.data.createdAt &&
-        request.resource.data.updatedAt is timestamp;
-        
-      allow delete: if isOwner(userId) && 
-        isValidEmail() && 
-        isOwner(resource.data.userId);
+      allow read, write: if isAuthenticated() && 
+        isOwner(userId) && 
+        isValidUserId(userId) &&
+        isRecentRequest();
     }
   }
 }

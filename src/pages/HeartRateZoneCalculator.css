@@ -1,4 +1,5 @@
 /* Heart Rate Zone Calculator - Specific styles only */
+@import "../styles/CalculatorBase.css";
 
 /* Hero Section */
 .hr-hero {

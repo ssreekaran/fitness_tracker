@@ -115,8 +115,8 @@ const TDEECalculator: React.FC = () => {
   return (
     <div className="page-container">
       {/* Hero Section */}
-      <section className="tdee-hero">
-        <div className="tdee-hero-content">
+      <section className="calculator-hero tdee-hero">
+        <div className="calculator-hero-content">
           <h1>TDEE Calculator</h1>
           <p>
             Calculate your Total Daily Energy Expenditure to understand how many
@@ -128,7 +128,7 @@ const TDEECalculator: React.FC = () => {
         </div>
       </section>
 
-      <div className="tdee-calculator">
+      <div className="calculator-form tdee-calculator">
         <form onSubmit={calculateTDEE} className="tdee-form">
           {/* Gender Selection */}
           <div className="form-group">
