@@ -31,9 +31,34 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
 
+      - name: Check if Firebase service account is available
+        id: check-firebase-secret
+        run: |
+          if [ -n "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN }}" ]; then
+            echo "firebase-available=true" >> $GITHUB_OUTPUT
+          else
+            echo "firebase-available=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Firebase service account secret not found. Skipping deployment."
+            echo "To enable automatic deployment, add FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN to your repository secrets."
+          fi
+
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
+        if: steps.check-firebase-secret.outputs.firebase-available == 'true'
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN }}
           projectId: fitness-tracker-clean
+          channelId: live
+
+      - name: Manual deployment instructions
+        if: steps.check-firebase-secret.outputs.firebase-available == 'false'
+        run: |
+          echo "🚀 To deploy manually, run:"
+          echo "   npm run build"
+          echo "   firebase deploy --only hosting"
+          echo ""
+          echo "📋 To enable automatic deployment:"
+          echo "1. Go to Firebase Console > Project Settings > Service Accounts"
+          echo "2. Generate a new private key"
+          echo "3. Add the JSON content as FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN secret in GitHub"

@@ -20,8 +20,7 @@
     "test:all": "npm run test:component && npm run test:e2e",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "echo 'To use Chromatic: 1) Sign up at https://chromatic.com 2) Create project 3) Set CHROMATIC_PROJECT_TOKEN secret 4) Run: npx chromatic --project-token=YOUR_TOKEN'",
-    "transfer-all-data": "node scripts/discoverAndTransfer.js"
+    "chromatic": "echo 'To use Chromatic: 1) Sign up at https://chromatic.com 2) Create project 3) Set CHROMATIC_PROJECT_TOKEN secret 4) Run: npx chromatic --project-token=YOUR_TOKEN'"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.2",
