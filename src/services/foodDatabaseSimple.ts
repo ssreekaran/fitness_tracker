@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, query, where, limit } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 interface FoodItem {
   foodCode: string;
@@ -180,7 +180,7 @@ export async function searchFoodsByName(
     const searchLower = searchTerm.toLowerCase();
     const results: FoodItem[] = [];
 
-    for (const [code, item] of foodItemsCache.entries()) {
+    for (const [, item] of foodItemsCache.entries()) {
       if (item.foodName.toLowerCase().includes(searchLower)) {
         results.push(item);
         if (results.length >= maxResults) {
