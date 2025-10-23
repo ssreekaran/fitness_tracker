@@ -301,18 +301,3 @@ button:focus-visible {
 .dropdown-item:hover {
   background-color: var(--button-bg); /* Use theme color for hover */
 }
-
-/* Legal Pages */
-.legal-page {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.legal-iframe {
-  width: 100%;
-  min-height: 80vh;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  background: white;
-}

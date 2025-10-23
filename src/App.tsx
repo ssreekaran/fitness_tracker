@@ -72,27 +72,9 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 /**
  * Legal pages components
- * These components render legal documents in iframes for better security and isolation
  */
-const PrivacyPolicy = () => (
-  <div className="legal-page">
-    <iframe
-      src="/legal/privacy-policy.html"
-      title="Privacy Policy"
-      className="legal-iframe"
-    />
-  </div>
-);
-
-const TermsOfService = () => (
-  <div className="legal-page">
-    <iframe
-      src="/legal/terms-of-service.html"
-      title="Terms of Service"
-      className="legal-iframe"
-    />
-  </div>
-);
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 /**
  * Deep link handler for OAuth redirects in mobile apps
