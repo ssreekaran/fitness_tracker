@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
-                      android:host="fitness-tracker-00001.firebaseapp.com" />
+                      android:host="fitness-tracker-clean.firebaseapp.com" />
             </intent-filter>
             
             <!-- Custom URL scheme for OAuth redirects -->

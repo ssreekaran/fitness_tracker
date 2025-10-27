@@ -181,7 +181,7 @@ const ContactUs: React.FC = () => {
                 <FaInstagram />
               </a>
               <a
-                href="https://www.linkedin.com/company/fitness-tracker-00001"
+                href="https://www.linkedin.com/company/fitness-tracker-clean"
                 className="social-link"
                 aria-label="LinkedIn"
                 target="_blank"

@@ -11,7 +11,7 @@
  * The app supports both web and mobile platforms using Capacitor
  */
 
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,7 +24,11 @@ import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 import NotificationCenter from "./components/NotificationCenter";
-import { auth, handleRedirectResult } from "./firebase";
+import {
+  auth,
+  handleRedirectResult,
+  handleAuthRedirectResult,
+} from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { Capacitor } from "@capacitor/core";
 import { App as CapApp } from "@capacitor/app";
@@ -51,6 +55,7 @@ const HeartRateZoneCalculator = lazy(
 // Authentication pages
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
+const MobileLoginPage = lazy(() => import("./pages/MobileLoginPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
@@ -77,20 +82,6 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 
 /**
- * Deep link handler for OAuth redirects in mobile apps
- * Handles OAuth callbacks when the app is opened from external URLs
- */
-const handleDeepLink = (url: string) => {
-  console.log("Deep link received:", url);
-
-  if (url.includes("__/auth/handler") || url.includes("firebaseapp.com")) {
-    // This is a Firebase auth redirect, let Firebase handle it automatically
-    // The auth state change listener will handle the successful login
-    return;
-  }
-};
-
-/**
  * AppContent Component
  *
  * Main content component that handles:
@@ -103,6 +94,52 @@ const handleDeepLink = (url: string) => {
 const AppContent = () => {
   const navigate = useNavigate();
 
+  /**
+   * Deep link handler for OAuth redirects in mobile apps
+   * Handles OAuth callbacks when the app is opened from external URLs
+   */
+  const handleDeepLink = useCallback(
+    (url: string) => {
+      console.log("Deep link received:", url);
+
+      if (url.includes("__/auth/handler") || url.includes("firebaseapp.com")) {
+        // This is a Firebase auth redirect, let Firebase handle it automatically
+        // The auth state change listener will handle the successful login
+        return;
+      }
+
+      // Handle mobile authentication success
+      if (url.includes("auth-success")) {
+        console.log("Mobile authentication completed, checking auth state...");
+
+        // The user completed authentication in the browser
+        // We need to trigger a re-authentication in the mobile app
+        // Force a check of the authentication state
+        setTimeout(async () => {
+          try {
+            // Force reload the auth state
+            await auth.authStateReady();
+            const currentUser = auth.currentUser;
+
+            if (currentUser) {
+              console.log("User is authenticated:", currentUser);
+              navigate("/");
+            } else {
+              console.log(
+                "User not authenticated in mobile app, need to sign in again"
+              );
+              // The authentication didn't transfer, which is expected
+              // The user will need to use the regular mobile auth flow
+            }
+          } catch (error) {
+            console.error("Error checking auth state:", error);
+          }
+        }, 1000);
+      }
+    },
+    [navigate]
+  );
+
   useEffect(() => {
     /**
      * Handle Firebase authentication redirect results
@@ -110,6 +147,18 @@ const AppContent = () => {
      */
     const handleAuthRedirect = async () => {
       try {
+        // Check for redirect results (for mobile)
+        const redirectUser = await handleAuthRedirectResult();
+        if (redirectUser) {
+          console.log(
+            "Mobile redirect authentication successful:",
+            redirectUser
+          );
+          navigate("/");
+          return;
+        }
+
+        // Fallback to original method
         const result = await handleRedirectResult();
         if (result?.user) {
           // Redirect to home page after successful authentication
@@ -159,7 +208,7 @@ const AppContent = () => {
         deepLinkListenerPromise.then((listener) => listener.remove());
       }
     };
-  }, [navigate]);
+  }, [navigate, handleDeepLink]);
 
   return (
     <div className="app">
@@ -198,6 +247,7 @@ const AppContent = () => {
             />
             <Route path="/food-database" element={<FoodDatabase />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/mobile-login" element={<MobileLoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/profile" element={<ProfilePage />} />

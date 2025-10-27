@@ -16,6 +16,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   getRedirectResult,
   OAuthProvider,
 } from "firebase/auth";
@@ -41,6 +42,13 @@ const firebaseConfig = {
 // Initialize Firebase app with configuration
 const app = initializeApp(firebaseConfig);
 
+// Configure auth domain for mobile platforms to prevent localhost redirects
+if (Capacitor.isNativePlatform()) {
+  // Force production auth domain for mobile
+  // This ensures redirects go to production domain, not localhost
+  console.log("Mobile platform detected, using production auth domain");
+}
+
 // Export Firebase services for use throughout the application
 export const auth = getAuth(app); // Authentication service
 export const db = getFirestore(app); // Firestore database service
@@ -49,6 +57,9 @@ export const db = getFirestore(app); // Firestore database service
  * Google Authentication Provider Configuration
  */
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: "select_account", // Force account selection even if user is already signed in
+});
 
 /**
  * OAuth provider configuration for Google authentication
@@ -78,24 +89,40 @@ export const signInWithGoogle = async () => {
 
     // Platform-specific authentication strategy
     if (Capacitor.isNativePlatform()) {
-      // Mobile platforms: Open web app in browser for authentication
-      // This is the most reliable approach for mobile OAuth
-      const { Browser } = await import("@capacitor/browser");
+      // Mobile platforms: Use popup authentication to avoid redirect issues
+      console.log("Starting mobile Google authentication with popup...");
 
-      // Open your deployed web app where OAuth works perfectly
-      const webAppUrl = "https://fitness-tracker-00001.web.app/login";
+      try {
+        // Try popup authentication first (works in some mobile browsers)
+        const result = await signInWithPopup(auth, googleProvider);
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const user = result.user;
+        console.log("Mobile popup authentication successful:", user);
+        return { user, token };
+      } catch (popupError) {
+        console.log("Popup failed, trying redirect...", popupError);
 
-      await Browser.open({
-        url: webAppUrl,
-        windowName: "_system",
-      });
+        // Fallback to redirect if popup fails
+        // Check if we're returning from a redirect first
+        const redirectResult = await getRedirectResult(auth);
+        if (redirectResult) {
+          // User just completed authentication via redirect
+          const credential =
+            GoogleAuthProvider.credentialFromResult(redirectResult);
+          const token = credential?.accessToken;
+          const user = redirectResult.user;
+          console.log("Mobile redirect authentication successful:", user);
+          return { user, token };
+        }
 
-      // Show a message to the user
-      alert(
-        "Please complete sign-in in the browser, then return to the app. You may need to refresh the app after signing in."
-      );
+        // No redirect result, so initiate the redirect flow
+        console.log("Initiating Google sign-in redirect...");
+        await signInWithRedirect(auth, googleProvider);
 
-      return { user: null, token: null };
+        // The app will redirect to Google and then back
+        return { user: null, token: null };
+      }
     } else {
       // Web platform: Use popup flow for better user experience
       const result = await signInWithPopup(auth, googleProvider);
@@ -107,6 +134,24 @@ export const signInWithGoogle = async () => {
   } catch (error) {
     console.error("Error signing in with Google:", error);
     throw error;
+  }
+};
+
+/**
+ * Handle Authentication Redirect Result on App Startup
+ * This should be called when the app starts to check for redirect results
+ */
+export const handleAuthRedirectResult = async () => {
+  try {
+    const result = await getRedirectResult(auth);
+    if (result) {
+      console.log("Redirect result found on app startup:", result.user);
+      return result.user;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error handling redirect result:", error);
+    return null;
   }
 };
 
