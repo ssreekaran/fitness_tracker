@@ -25,7 +25,7 @@ const MobileLoginPage: React.FC = () => {
         // Get the user's ID token to share with the mobile app
         const idToken = await user.getIdToken();
 
-        // Store the token in localStorage for the mobile app to access
+        // Store the authentication data for the mobile app
         localStorage.setItem("mobileAuthToken", idToken);
         localStorage.setItem(
           "mobileAuthUser",
@@ -36,6 +36,9 @@ const MobileLoginPage: React.FC = () => {
             photoURL: user.photoURL,
           })
         );
+
+        // Also store a flag to indicate successful authentication
+        localStorage.setItem("mobileAuthSuccess", "true");
 
         // Wait a moment to show success message, then redirect back to app
         setTimeout(() => {

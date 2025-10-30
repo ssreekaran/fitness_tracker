@@ -16,7 +16,6 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
   getRedirectResult,
   OAuthProvider,
 } from "firebase/auth";
@@ -61,6 +60,11 @@ googleProvider.setCustomParameters({
   prompt: "select_account", // Force account selection even if user is already signed in
 });
 
+// Additional configuration for mobile platforms
+if (Capacitor.isNativePlatform()) {
+  console.log("Configuring Google provider for mobile platform");
+}
+
 /**
  * OAuth provider configuration for Google authentication
  * Configured with custom parameters for better user experience and refresh token access
@@ -87,50 +91,12 @@ export const signInWithGoogle = async () => {
     console.log("Current domain:", window.location.origin);
     console.log("Current URL:", window.location.href);
 
-    // Platform-specific authentication strategy
-    if (Capacitor.isNativePlatform()) {
-      // Mobile platforms: Use popup authentication to avoid redirect issues
-      console.log("Starting mobile Google authentication with popup...");
-
-      try {
-        // Try popup authentication first (works in some mobile browsers)
-        const result = await signInWithPopup(auth, googleProvider);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        const user = result.user;
-        console.log("Mobile popup authentication successful:", user);
-        return { user, token };
-      } catch (popupError) {
-        console.log("Popup failed, trying redirect...", popupError);
-
-        // Fallback to redirect if popup fails
-        // Check if we're returning from a redirect first
-        const redirectResult = await getRedirectResult(auth);
-        if (redirectResult) {
-          // User just completed authentication via redirect
-          const credential =
-            GoogleAuthProvider.credentialFromResult(redirectResult);
-          const token = credential?.accessToken;
-          const user = redirectResult.user;
-          console.log("Mobile redirect authentication successful:", user);
-          return { user, token };
-        }
-
-        // No redirect result, so initiate the redirect flow
-        console.log("Initiating Google sign-in redirect...");
-        await signInWithRedirect(auth, googleProvider);
-
-        // The app will redirect to Google and then back
-        return { user: null, token: null };
-      }
-    } else {
-      // Web platform: Use popup flow for better user experience
-      const result = await signInWithPopup(auth, googleProvider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      return { user, token };
-    }
+    // Use popup flow for all platforms (Firebase handles mobile properly)
+    const result = await signInWithPopup(auth, googleProvider);
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential?.accessToken;
+    const user = result.user;
+    return { user, token };
   } catch (error) {
     console.error("Error signing in with Google:", error);
     throw error;

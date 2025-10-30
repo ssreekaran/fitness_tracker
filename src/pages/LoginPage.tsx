@@ -12,8 +12,10 @@ import {
   signInWithEmailAndPassword,
   sendEmailVerification,
   onAuthStateChanged,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
-import { auth, signInWithGoogle } from "../firebase";
+import { auth, googleProvider } from "../firebase";
 import { Capacitor } from "@capacitor/core";
 import "./LoginPage.css";
 
@@ -30,6 +32,20 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Add a reset mechanism for stuck loading state
+  useEffect(() => {
+    if (isLoading) {
+      // Auto-reset loading state after 10 seconds to prevent permanent stuck state
+      const timeout = setTimeout(() => {
+        console.log("Auto-resetting loading state after timeout");
+        setIsLoading(false);
+        setError("Authentication timed out. Please try again.");
+      }, 10000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading]);
   const location = useLocation();
   const navigate = useNavigate();
   const locationState = location.state as LocationState;
@@ -50,15 +66,19 @@ const LoginPage: React.FC = () => {
       setError("");
 
       if (Capacitor.isNativePlatform()) {
-        // For mobile, use redirect authentication
-        await signInWithGoogle();
-        // The app will redirect to Google, so we don't need to reset loading here
-        // The redirect will handle the authentication flow
+        // For mobile, use Firebase's built-in redirect authentication
+        console.log("Starting mobile Google sign-in with redirect...");
+        await signInWithRedirect(auth, googleProvider);
+        // The page will redirect to Google, then back to this page
+        // getRedirectResult will handle the result when we return
       } else {
-        // For web, use the popup flow
-        await signInWithGoogle();
-        const from = locationState?.from?.pathname || "/";
-        navigate(from, { replace: true });
+        // For web, use popup flow
+        const { signInWithPopup } = await import("firebase/auth");
+        const result = await signInWithPopup(auth, googleProvider);
+        if (result.user) {
+          const from = locationState?.from?.pathname || "/";
+          navigate(from, { replace: true });
+        }
       }
     } catch (error: unknown) {
       console.error("Google sign in error:", error);
@@ -71,21 +91,59 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  // Listen for auth state changes on mobile
+  // Handle redirect result and auth state changes
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          console.log("User authenticated, navigating to app...");
-          setError(""); // Clear any error messages
+    const handleAuthFlow = async () => {
+      try {
+        // Check for redirect result (mobile authentication)
+        console.log("Checking for redirect result...");
+        const result = await getRedirectResult(auth);
+
+        if (result) {
+          // User just completed authentication via redirect
+          console.log("Redirect authentication successful:", result.user.email);
+          setError("");
+          setIsLoading(false);
           const from = locationState?.from?.pathname || "/";
           navigate(from, { replace: true });
+          return;
         }
-        setIsLoading(false);
-      });
 
-      return () => unsubscribe();
-    }
+        // No redirect result, check current auth state
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          console.log("User already authenticated:", currentUser.email);
+          setError("");
+          setIsLoading(false);
+          const from = locationState?.from?.pathname || "/";
+          navigate(from, { replace: true });
+          return;
+        }
+
+        // No user authenticated, reset loading state
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error handling auth flow:", error);
+        setIsLoading(false);
+        setError("Authentication failed. Please try again.");
+      }
+    };
+
+    // Handle auth flow on component mount
+    handleAuthFlow();
+
+    // Listen for auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Auth state changed - user authenticated:", user.email);
+        setError("");
+        setIsLoading(false);
+        const from = locationState?.from?.pathname || "/";
+        navigate(from, { replace: true });
+      }
+    });
+
+    return () => unsubscribe();
   }, [navigate, locationState]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -211,6 +269,30 @@ const LoginPage: React.FC = () => {
               </>
             )}
           </button>
+
+          {isLoading && (
+            <button
+              type="button"
+              onClick={() => {
+                setIsLoading(false);
+                setError("");
+                console.log("Manual reset of loading state");
+              }}
+              className="reset-button"
+              style={{
+                marginTop: "10px",
+                padding: "8px 16px",
+                background: "transparent",
+                border: "1px solid #666",
+                color: "#666",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Cancel / Reset
+            </button>
+          )}
+
           <div className="divider">
             <span>or</span>
           </div>
