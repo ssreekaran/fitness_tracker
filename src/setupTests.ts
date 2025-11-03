@@ -58,7 +58,10 @@ vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(() => ({
     currentUser: { uid: "test-user", email: "test@example.com" },
   })),
-  GoogleAuthProvider: vi.fn(() => ({})),
+  GoogleAuthProvider: vi.fn(() => ({
+    setCustomParameters: vi.fn(),
+    credentialFromResult: vi.fn(),
+  })),
   signInWithPopup: vi.fn(() =>
     Promise.resolve({
       user: { uid: "test-user", email: "test@example.com" },
