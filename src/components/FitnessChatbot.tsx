@@ -96,7 +96,8 @@ const FitnessChatbot: React.FC<FitnessChatbotProps> = ({
       };
       setMessages([updatedMessage]);
     }
-  }, [userProfile]); // Removed messages from dependency array to prevent infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProfile]); // Intentionally excluding messages to prevent infinite loop
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
