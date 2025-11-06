@@ -94,7 +94,7 @@ const NutritionChatbot: React.FC<NutritionChatbotProps> = ({
       };
       setMessages([updatedMessage]);
     }
-  }, [userProfile, messages]);
+  }, [userProfile]); // Removed messages from dependency array to prevent infinite loop
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

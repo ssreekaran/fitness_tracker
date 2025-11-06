@@ -2,8 +2,36 @@
 @import "../styles/CalculatorBase.css";
 
 /* Hero Section */
-.orm-hero {
-  background: linear-gradient(135deg, #34495e, #2c3e50);
+.calculator-hero.orm-hero {
+  background: linear-gradient(135deg, #34495e, #2c3e50) !important;
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.orm-hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+}
+
+.orm-hero p {
+  font-size: 1.1rem;
+  margin: 0;
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+  opacity: 0.9;
+  line-height: 1.6;
 }
 
 /* Exercise Info */

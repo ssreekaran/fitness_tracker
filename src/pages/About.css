@@ -90,6 +90,7 @@
   height: 3px;
   background: var(--primary-color);
   border-radius: 3px;
+  pointer-events: none;
 }
 
 /* Feature Grid */
@@ -113,9 +114,10 @@
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   border-color: var(--primary-color);
+  transition: all 0.2s ease;
 }
 
 .feature-icon {
@@ -140,6 +142,7 @@
   width: 40px;
   height: 2px;
   background: var(--primary-color);
+  pointer-events: none;
 }
 
 .feature-list {
@@ -163,6 +166,7 @@
   left: 0;
   color: var(--primary-color);
   font-weight: bold;
+  pointer-events: none;
 }
 
 .feature-link {
@@ -180,13 +184,14 @@
   text-decoration: underline;
 }
 
-.feature-link::after {
+.about-container .feature-link::after {
   content: "→";
   margin-left: 0.5rem;
   transition: transform 0.2s ease;
+  pointer-events: none;
 }
 
-.feature-link:hover::after {
+.about-container .feature-link:hover::after {
   transform: translateX(3px);
 }
 
@@ -419,8 +424,9 @@
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
 }
 
 .feature-card h3 {
@@ -514,6 +520,7 @@
   );
   transition: all 0.3s ease;
   z-index: 0;
+  pointer-events: none; /* Prevent pseudo-element from blocking clicks */
 }
 
 :root.dark .feature-card:hover::before,
@@ -532,9 +539,10 @@
 
 :root.dark .feature-card:hover,
 .feature-card[data-theme="dark"]:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   border-color: var(--primary-color);
+  transition: all 0.2s ease;
 }
 
 :root.dark .feature-card li,
@@ -549,7 +557,8 @@
 :root.dark .feature-card li:hover,
 .feature-card[data-theme="dark"] li:hover {
   opacity: 1;
-  padding-left: 5px;
+  transform: translateX(2px);
+  transition: all 0.2s ease;
 }
 
 :root.dark .feature-card li::before,

@@ -1,22 +1,22 @@
-/* BMI Calculator - Styled to match app design system */
-:root {
-  --primary: #4a90e2;
-  --primary-hover: #357ab8;
-  --text-color: #2c3e50;
-  --text-secondary: #7f8c8d;
-  --background: #f5f7fa;
-  --card-bg: #ffffff;
-  --border-color: #e1e4e8;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
-  --border-radius: 12px;
-  --success: #2ecc71;
-  --warning: #f39c12;
-  --danger: #e74c3c;
-  --info: #3498db;
+/* BMI Calculator - Styled to match app design system - Scoped Variables */
+.bmi-calculator-page {
+  --bmi-primary: #4a90e2;
+  --bmi-primary-hover: #357ab8;
+  --bmi-text-color: #2c3e50;
+  --bmi-text-secondary: #7f8c8d;
+  --bmi-background: #f5f7fa;
+  --bmi-card-bg: #ffffff;
+  --bmi-border-color: #e1e4e8;
+  --bmi-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  --bmi-border-radius: 12px;
+  --bmi-success: #2ecc71;
+  --bmi-warning: #f39c12;
+  --bmi-danger: #e74c3c;
+  --bmi-info: #3498db;
 }
 
 /* Dark theme variables */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --text-color: #ecf0f1;
   --text-secondary: #bdc3c7;
   --background: #1a1a1a;
@@ -39,11 +39,11 @@
   background: linear-gradient(135deg, #2ecc71, #27ae60);
   color: white;
   padding: 3rem 2rem;
-  border-radius: var(--border-radius);
+  border-radius: var(--bmi-border-radius, 12px);
   margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: var(--bmi-shadow);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -266,31 +266,31 @@
   .page-container {
     padding: 0 0.75rem 1.5rem;
   }
-  
+
   .bmi-hero {
     padding: 1.75rem 1.25rem;
     flex-direction: column;
     text-align: center;
   }
-  
+
   .bmi-hero-content {
     max-width: 100%;
     margin-bottom: 1.5rem;
   }
-  
+
   .calculator-icon {
     margin: 0.5rem 0 0;
     font-size: 3rem;
   }
-  
+
   .bmi-calculator {
     padding: 1.5rem 1rem;
   }
-  
+
   .bmi-value {
     font-size: 3rem;
   }
-  
+
   .bmi-info {
     flex-direction: column;
     text-align: center;
@@ -307,7 +307,7 @@
   }
 }
 
-[data-theme='dark'] .bmi-hero {
+[data-theme="dark"] .bmi-hero {
   background: linear-gradient(135deg, #2ecc71, #27ae60);
 }
 

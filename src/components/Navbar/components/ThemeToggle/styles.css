@@ -16,8 +16,8 @@
 }
 
 .theme-toggle:hover {
-  background: var(--background-hover);
-  border-color: var(--primary);
+  background: var(--button-bg);
+  border-color: var(--primary-color);
 }
 
 .theme-toggle:focus {
@@ -32,8 +32,12 @@
 
 /* Animation for theme toggle */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .theme-toggle:hover svg {

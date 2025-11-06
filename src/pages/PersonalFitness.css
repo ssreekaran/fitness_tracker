@@ -23,11 +23,11 @@
 }
 
 .personal-fitness-form {
-  background-color: var(--card-bg, #ffffff);
+  background-color: var(--pf-card-bg, #ffffff);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--border-color, #e0e0e0);
+  border: 1px solid var(--pf-border-color, #e0e0e0);
   color: var(--text-color);
   transition: none !important;
   width: 100%;
@@ -51,7 +51,7 @@
 
 .form-group label,
 .form-label {
-  color: var(--label-color, #333333);
+  color: var(--pf-label-color, #333333);
   font-weight: 500;
   margin-bottom: 0.5rem;
   display: block;
@@ -59,9 +59,9 @@
 
 .measurement-input,
 .form-select {
-  background-color: var(--input-bg, #ffffff) !important;
-  color: var(--input-text, #333333) !important;
-  border: 1px solid var(--input-border, #dddddd);
+  background-color: var(--pf-input-bg, #ffffff) !important;
+  color: var(--pf-input-text, #333333) !important;
+  border: 1px solid var(--pf-input-border, #dddddd);
   height: 48px;
   border-radius: 8px;
   padding: 0.75rem 1rem;
@@ -78,8 +78,8 @@
 
 .measurement-input:focus,
 .form-select:focus {
-  background-color: var(--input-focus-bg, #ffffff) !important;
-  border-color: var(--primary-color, #4a9eff) !important;
+  background-color: var(--pf-input-focus-bg, #ffffff) !important;
+  border-color: var(--pf-primary-color, #4a9eff) !important;
   box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25) !important;
   outline: none;
 }
@@ -116,8 +116,8 @@
 }
 
 .result-card {
-  background-color: var(--card-bg, #ffffff);
-  border: 1px solid var(--border-color, #e0e0e0);
+  background-color: var(--pf-card-bg, #ffffff);
+  border: 1px solid var(--pf-border-color, #e0e0e0);
   border-radius: 8px;
   padding: 1.5rem;
   margin-top: 2rem;
@@ -157,18 +157,18 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  background-color: var(--toggle-bg, #f5f5f5);
+  background-color: var(--pf-toggle-bg, #f5f5f5);
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid var(--toggle-border, #e0e0e0);
+  border: 1px solid var(--pf-toggle-border, #e0e0e0);
   transition: all 0.3s ease;
 }
 
 .unit-toggle-button {
   flex: 1;
-  background-color: var(--toggle-button-bg, #ffffff);
-  color: var(--toggle-button-text, #555555);
-  border: 1px solid var(--toggle-button-border, #dddddd);
+  background-color: var(--pf-toggle-button-bg, #ffffff);
+  color: var(--pf-toggle-button-text, #555555);
+  border: 1px solid var(--pf-toggle-button-border, #dddddd);
   padding: 0.5rem;
   border-radius: 4px;
   cursor: pointer;
@@ -178,17 +178,17 @@
 }
 
 .unit-toggle-button.active {
-  background-color: var(--primary-color, #4a9eff);
+  background-color: var(--pf-primary-color, #4a9eff);
   color: white;
-  border-color: var(--primary-hover, #3a8bef);
+  border-color: var(--pf-primary-hover, #3a8bef);
   box-shadow: 0 2px 6px rgba(74, 158, 255, 0.2);
   transform: translateY(-1px);
 }
 
 .unit-toggle-button:not(.active):hover {
-  background-color: var(--toggle-button-hover, #f0f0f0);
-  color: var(--toggle-button-hover-text, #333333);
-  border-color: var(--toggle-button-hover-border, #cccccc);
+  background-color: var(--pf-toggle-button-hover, #f0f0f0);
+  color: var(--pf-toggle-button-hover-text, #333333);
+  border-color: var(--pf-toggle-button-hover-border, #cccccc);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -200,8 +200,8 @@
 
 /* Form select dropdown menu */
 .form-select option {
-  background-color: var(--input-bg, #ffffff);
-  color: var(--input-text, #333333);
+  background-color: var(--pf-input-bg, #ffffff);
+  color: var(--pf-input-text, #333333);
   padding: 0.5rem;
 }
 
@@ -236,58 +236,57 @@
 }
 
 .btn-outline-primary {
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .btn-outline-primary:hover {
-  background-color: var(--primary);
+  background-color: var(--primary-color);
   color: white;
 }
 
 /* Removed global body spacing to avoid pushing navbar down. */
 
-/* Dark mode specific styles */
-/* Dark mode overrides */
-:root.dark {
-  --card-bg: #1e1e1e;
-  --border-color: #333;
-  --input-bg: #2d2d2d;
-  --input-text: #ffffff;
-  --input-border: #444;
-  --input-focus-bg: #333;
-  --toggle-bg: #2a2a2a;
-  --toggle-border: #3a3a3a;
-  --toggle-button-bg: #333;
-  --toggle-button-text: #e0e0e0;
-  --toggle-button-border: #444;
-  --toggle-button-hover: #3d3d3d;
-  --toggle-button-hover-text: #ffffff;
-  --toggle-button-hover-border: #5a5a5a;
-  --primary-color: #4a9eff;
-  --primary-hover: #5aa8ff;
-  --label-color: #e0e0e0;
+/* Dark mode specific styles - scoped to personal fitness */
+:root.dark .personal-fitness-container {
+  --pf-card-bg: #1e1e1e;
+  --pf-border-color: #333;
+  --pf-input-bg: #2d2d2d;
+  --pf-input-text: #ffffff;
+  --pf-input-border: #444;
+  --pf-input-focus-bg: #333;
+  --pf-toggle-bg: #2a2a2a;
+  --pf-toggle-border: #3a3a3a;
+  --pf-toggle-button-bg: #333;
+  --pf-toggle-button-text: #e0e0e0;
+  --pf-toggle-button-border: #444;
+  --pf-toggle-button-hover: #3d3d3d;
+  --pf-toggle-button-hover-text: #ffffff;
+  --pf-toggle-button-hover-border: #5a5a5a;
+  --pf-primary-color: #4a9eff;
+  --pf-primary-hover: #5aa8ff;
+  --pf-label-color: #e0e0e0;
 }
 
-/* Light mode overrides */
-:root {
-  --card-bg: #ffffff;
-  --border-color: #e0e0e0;
-  --input-bg: #ffffff;
-  --input-text: #333333;
-  --input-border: #dddddd;
-  --input-focus-bg: #ffffff;
-  --toggle-bg: #f5f5f5;
-  --toggle-border: #e0e0e0;
-  --toggle-button-bg: #ffffff;
-  --toggle-button-text: #555555;
-  --toggle-button-border: #dddddd;
-  --toggle-button-hover: #f0f0f0;
-  --toggle-button-hover-text: #333333;
-  --toggle-button-hover-border: #cccccc;
-  --primary-color: #4a9eff;
-  --primary-hover: #3a8bef;
-  --label-color: #333333;
+/* Light mode overrides - scoped to personal fitness */
+.personal-fitness-container {
+  --pf-card-bg: #ffffff;
+  --pf-border-color: #e0e0e0;
+  --pf-input-bg: #ffffff;
+  --pf-input-text: #333333;
+  --pf-input-border: #dddddd;
+  --pf-input-focus-bg: #ffffff;
+  --pf-toggle-bg: #f5f5f5;
+  --pf-toggle-border: #e0e0e0;
+  --pf-toggle-button-bg: #ffffff;
+  --pf-toggle-button-text: #555555;
+  --pf-toggle-button-border: #dddddd;
+  --pf-toggle-button-hover: #f0f0f0;
+  --pf-toggle-button-hover-text: #333333;
+  --pf-toggle-button-hover-border: #cccccc;
+  --pf-primary-color: #4a9eff;
+  --pf-primary-hover: #3a8bef;
+  --pf-label-color: #333333;
 }
 
 @media (max-width: 768px) {
@@ -339,8 +338,8 @@
 }
 
 .pf-stat {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--pf-card-bg);
+  border: 1px solid var(--pf-border-color);
   border-radius: 12px;
   padding: 0.9rem 1rem;
   text-align: center;
@@ -364,8 +363,8 @@
 
 /* Card wrapper for consistent theming */
 .pf-card {
-  background: var(--card-bg) !important;
-  border: 1px solid var(--border-color) !important;
+  background: var(--pf-card-bg) !important;
+  border: 1px solid var(--pf-border-color) !important;
   border-radius: 12px !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   padding: 0.25rem;
@@ -386,7 +385,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0.25rem;
-  border-bottom: 1px dashed var(--border-color);
+  border-bottom: 1px dashed var(--pf-border-color);
 }
 
 .fitness-stats .stat-row:last-child {
@@ -413,9 +412,9 @@
 }
 
 .pf-tabs .nav-link.active {
-  background: var(--card-bg);
+  background: var(--pf-card-bg);
   color: var(--text-color);
-  border-color: var(--border-color) var(--border-color) var(--card-bg);
+  border-color: var(--pf-border-color) var(--pf-border-color) var(--pf-card-bg);
 }
 
 .pf-tabs .tab-content {
@@ -424,14 +423,14 @@
 
 /* Modal */
 .pf-modal .modal-content {
-  background: var(--card-bg);
+  background: var(--pf-card-bg);
   color: var(--text-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--pf-border-color);
 }
 
 .pf-modal .modal-header,
 .pf-modal .modal-footer {
-  border-color: var(--border-color);
+  border-color: var(--pf-border-color);
 }
 
 /* Colorful card variants - light mode subtle tints */

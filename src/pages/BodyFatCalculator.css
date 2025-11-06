@@ -15,11 +15,11 @@
   background: linear-gradient(135deg, #4a90e2, #6b5b95);
   color: white;
   padding: 3rem 2rem;
-  border-radius: var(--border-radius);
+  border-radius: 12px;
   margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -113,7 +113,7 @@
 
 .measurement-input:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
@@ -151,7 +151,7 @@
 
 .gender-btn.active,
 .unit-btn.active {
-  background-color: var(--primary);
+  background-color: var(--primary-color);
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -168,7 +168,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: white;
-  background-color: var(--primary);
+  background-color: var(--primary-color);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -211,7 +211,7 @@
 .bf-value {
   font-size: 3.5rem;
   font-weight: 800;
-  color: var(--primary);
+  color: var(--primary-color);
   line-height: 1;
   margin-bottom: 0.5rem;
 }
@@ -334,7 +334,7 @@
 }
 
 .bf-info .info-icon {
-  color: var(--primary);
+  color: var(--primary-color);
   font-size: 1.25rem;
   margin-top: 0.2rem;
   flex-shrink: 0;

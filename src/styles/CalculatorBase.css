@@ -76,8 +76,8 @@
 .calculator-form .form-control:focus {
   background-color: var(--background-color);
   color: var(--text-color);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(74, 111, 165, 0.25);
 }
 
 .calculator-form .alert {
@@ -109,23 +109,23 @@
 }
 
 .calculator-form .btn-outline-primary {
-  border-color: var(--primary);
-  color: var(--primary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .calculator-form .btn-outline-primary:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .calculator-form .btn-primary {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .calculator-form .btn-primary:hover {
-  background-color: var(--primary-dark);
-  border-color: var(--primary-dark);
+  background-color: var(--primary-accent);
+  border-color: var(--primary-accent);
 }
 
 .calculator-form .unit-toggle {
@@ -247,7 +247,7 @@
 }
 
 .unit-btn.active {
-  background: var(--link-color);
+  background: var(--link-color, #4a6fa5);
   color: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -309,7 +309,7 @@
 .calculator-form .calculate-button {
   width: 100%;
   padding: 1rem 0.75rem;
-  background: var(--link-color);
+  background: var(--link-color, #4a6fa5);
   color: white;
   border: none;
   border-radius: 8px;
@@ -323,7 +323,7 @@
 
 .calculate-btn:hover,
 .calculator-form .calculate-button:hover {
-  background: var(--link-hover);
+  background: var(--link-hover, #3a5a80);
   transform: translateY(-1px);
 }
 
@@ -499,9 +499,9 @@
 }
 
 .gender-btn.active {
-  background: var(--link-color);
+  background: var(--link-color, #4a6fa5);
   color: white;
-  border-color: var(--link-color);
+  border-color: var(--link-color, #4a6fa5);
 }
 
 .gender-btn:hover:not(.active) {
@@ -544,22 +544,4 @@
   padding: 0.25rem 0.5rem;
 }
 
-.calculator-form .btn-outline-primary {
-  border-color: var(--link-color);
-  color: var(--link-color);
-}
-
-.calculator-form .btn-outline-primary:hover {
-  background-color: var(--link-color);
-  border-color: var(--link-color);
-}
-
-.calculator-form .btn-primary {
-  background-color: var(--link-color);
-  border-color: var(--link-color);
-}
-
-.calculator-form .btn-primary:hover {
-  background-color: var(--link-hover);
-  border-color: var(--link-hover);
-}
+/* Note: These duplicate selectors are intentionally kept for specificity */

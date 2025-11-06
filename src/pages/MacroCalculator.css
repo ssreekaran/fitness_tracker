@@ -1,9 +1,11 @@
 /* Macro Calculator - Specific styles only */
 @import "../styles/CalculatorBase.css";
-:root {
-  --protein-color: #e74c3c;
-  --carbs-color: #3498db;
-  --fat-color: #f39c12;
+
+/* Scoped macro calculator variables */
+.macro-calculator-page {
+  --macro-protein-color: #e74c3c;
+  --macro-carbs-color: #3498db;
+  --macro-fat-color: #f39c12;
 }
 
 /* Hero Section */
@@ -67,27 +69,27 @@
 }
 
 .result-card.protein {
-  border: 2px solid var(--protein-color);
+  border: 2px solid var(--macro-protein-color);
 }
 
 .result-card.carbs {
-  border: 2px solid var(--carbs-color);
+  border: 2px solid var(--macro-carbs-color);
 }
 
 .result-card.fat {
-  border: 2px solid var(--fat-color);
+  border: 2px solid var(--macro-fat-color);
 }
 
 .result-card.protein .result-value {
-  color: var(--protein-color);
+  color: var(--macro-protein-color);
 }
 
 .result-card.carbs .result-value {
-  color: var(--carbs-color);
+  color: var(--macro-carbs-color);
 }
 
 .result-card.fat .result-value {
-  color: var(--fat-color);
+  color: var(--macro-fat-color);
 }
 
 /* Macro Breakdown */
@@ -125,15 +127,15 @@
 }
 
 .protein-bar {
-  background-color: var(--protein-color);
+  background-color: var(--macro-protein-color);
 }
 
 .carbs-bar {
-  background-color: var(--carbs-color);
+  background-color: var(--macro-carbs-color);
 }
 
 .fat-bar {
-  background-color: var(--fat-color);
+  background-color: var(--macro-fat-color);
 }
 
 /* Responsive Design */

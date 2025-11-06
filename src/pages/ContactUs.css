@@ -1,12 +1,12 @@
-/* Contact Page Styling - Bootstrap Override */
-:root {
-  --text-secondary: #7f8c8d;
+/* Contact Page Styling - Bootstrap Override - Scoped Variables */
+.contact-container {
+  --contact-text-secondary: #7f8c8d;
   --contact-primary: #4a6fa5;
   --contact-primary-dark: #3a5a80;
 }
 
-:root.dark {
-  --text-secondary: #bdc3c7;
+:root.dark .contact-container {
+  --contact-text-secondary: #bdc3c7;
   --contact-primary: #818cf8;
   --contact-primary-dark: #93c5fd;
 }
@@ -162,7 +162,7 @@
 .contact-details p,
 .contact-details a {
   margin: 0;
-  color: var(--text-secondary);
+  color: var(--contact-text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -356,7 +356,7 @@
 }
 
 .form-control::placeholder {
-  color: var(--text-secondary);
+  color: var(--contact-text-secondary);
   opacity: 0.7;
 }
 
@@ -412,7 +412,7 @@
 .privacy-note {
   margin-top: 1.5rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--contact-text-secondary);
   text-align: center;
   line-height: 1.5;
 }

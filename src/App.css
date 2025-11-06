@@ -38,6 +38,15 @@
   --blog-card-text: #4e3f2c;
   --blog-card-hover: #f2e7d8;
   --blog-card-hover-text: #b86b1d;
+
+  /* Additional variables for Navbar compatibility */
+  --text: #213547;
+  --background: #ffffff;
+  --background-secondary: #f5f5f5;
+  --background-hover: #f0f0f0;
+  --text-muted: #666666;
+  --primary-light: rgba(74, 111, 165, 0.1);
+  --transition: all 0.3s ease;
 }
 
 /* Dark mode */
@@ -69,6 +78,14 @@
   --blog-card-text: #ffe6b2;
   --blog-card-hover: #3c3227;
   --blog-card-hover-text: #ffd27c;
+
+  /* Dark mode additional variables for Navbar compatibility */
+  --text: #ffffff;
+  --background: #1a1a1a;
+  --background-secondary: #2d2d2d;
+  --background-hover: #3d3d3d;
+  --text-muted: #a0a0a0;
+  --primary-light: rgba(129, 140, 248, 0.1);
 }
 
 body {
@@ -155,14 +172,14 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--button-bg);
-  color: var(--text-color);
+  background-color: var(--button-bg, #f9f9f9);
+  color: var(--text-color, #213547);
   cursor: pointer;
   transition: border-color 0.25s, background-color 0.3s, color 0.3s;
 }
 
 button:hover {
-  border-color: var(--button-hover);
+  border-color: var(--button-hover, #3a5a80);
 }
 
 button:focus,
