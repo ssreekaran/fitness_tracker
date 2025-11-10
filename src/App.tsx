@@ -72,7 +72,6 @@ const WorkoutRecommendations = lazy(
 const PersonalFitness = lazy(() => import("./pages/PersonalFitness"));
 const CalorieTracker = lazy(() => import("./pages/CalorieTracker"));
 const WorkoutPlanner = lazy(() => import("./pages/WorkoutPlanner"));
-const AIWorkoutPlanner = lazy(() => import("./pages/AIWorkoutPlanner"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 /**
@@ -287,14 +286,6 @@ const AppContent = () => {
               element={
                 <ProtectedRoute>
                   <WorkoutPlanner />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ai-workout-planner"
-              element={
-                <ProtectedRoute>
-                  <AIWorkoutPlanner />
                 </ProtectedRoute>
               }
             />
