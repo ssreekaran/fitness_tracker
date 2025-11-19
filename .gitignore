@@ -159,6 +159,3 @@ build-storybook.log
 # Chromatic
 build-storybook.log
 chromatic-build/
-
-# Documentation (local development notes)
-docs/
