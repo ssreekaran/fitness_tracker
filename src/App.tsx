@@ -20,10 +20,10 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Navbar } from "./components";
-import Footer from "./components/Footer";
-import ProtectedRoute from "./components/ProtectedRoute";
-import LoadingSpinner from "./components/LoadingSpinner";
-import NotificationCenter from "./components/NotificationCenter";
+import Footer from "./components/common/Footer";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import LoadingSpinner from "./components/common/LoadingSpinner";
+import NotificationCenter from "./components/fitness/NotificationCenter";
 import {
   auth,
   handleRedirectResult,

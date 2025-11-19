@@ -3,8 +3,8 @@ import {
   chatbotService,
   ChatMessage,
   UserProfile,
-} from "../services/chatbotService";
-import { getBMICategory } from "../services/fitnessService";
+} from "../../services/chatbotService";
+import { getBMICategory } from "../../services/fitnessService";
 import "./NutritionChatbot.css";
 
 interface NutritionChatbotProps {

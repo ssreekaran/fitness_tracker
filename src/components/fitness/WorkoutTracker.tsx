@@ -32,7 +32,7 @@ import {
   saveWorkout,
   getUserWorkouts,
   deleteWorkout,
-} from "../services/workoutService";
+} from "../../services/workoutService";
 import "./WorkoutTracker.css";
 import { Timestamp } from "firebase/firestore";
 

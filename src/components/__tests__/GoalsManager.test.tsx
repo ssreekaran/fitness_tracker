@@ -1,7 +1,7 @@
 import { renderWithoutRouter, screen, waitFor } from "../../utils/test-utils";
 // import userEvent from "@testing-library/user-event"; // Uncomment when user interactions are tested
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import GoalsManager from "../GoalsManager";
+import GoalsManager from "../fitness/GoalsManager";
 
 // Mock the goals service
 vi.mock("../../services/goalsService", () => ({

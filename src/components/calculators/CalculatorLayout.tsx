@@ -6,7 +6,7 @@
 
 import React from "react";
 import { FaInfoCircle } from "react-icons/fa";
-import "../styles/CalculatorBase.css";
+import "../../styles/CalculatorBase.css";
 
 interface CalculatorLayoutProps {
   title: string;

@@ -23,7 +23,7 @@ import {
   TrophyOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import GoalsManager from "../components/GoalsManager";
+import GoalsManager from "../components/fitness/GoalsManager";
 import "./SettingsPage.css";
 
 const { Title } = Typography;

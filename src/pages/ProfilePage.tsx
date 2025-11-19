@@ -8,7 +8,7 @@ import {
   getActivitySummary,
   ActivitySummary,
 } from "../services/workoutService";
-import GoalsManager from "../components/GoalsManager";
+import GoalsManager from "../components/fitness/GoalsManager";
 import {
   Card,
   Typography,

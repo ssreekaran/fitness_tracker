@@ -1,7 +1,7 @@
 import { renderWithoutRouter, screen, waitFor } from "../../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import WorkoutTracker from "../WorkoutTracker";
+import WorkoutTracker from "../fitness/WorkoutTracker";
 
 // Mock the workout service
 vi.mock("../../services/workoutService", () => ({

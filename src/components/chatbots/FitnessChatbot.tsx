@@ -3,8 +3,8 @@ import {
   workoutChatbotService,
   WorkoutChatMessage,
   WorkoutUserProfile,
-} from "../services/workoutChatbotService";
-import { getBMICategory } from "../services/fitnessService";
+} from "../../services/workoutChatbotService";
+import { getBMICategory } from "../../services/fitnessService";
 import "./FitnessChatbot.css";
 
 interface FitnessChatbotProps {

@@ -40,7 +40,7 @@ import {
   saveWorkout,
   getUserWorkouts,
   deleteWorkout,
-} from "../services/workoutService";
+} from "../../services/workoutService";
 import { Timestamp } from "firebase/firestore";
 import "./WorkoutCalendarPlanner.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";

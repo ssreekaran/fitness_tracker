@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
-import WorkoutCalendarPlanner from "../components/WorkoutCalendarPlanner";
+import WorkoutCalendarPlanner from "../components/fitness/WorkoutCalendarPlanner";
 import { auth } from "../firebase";
 import { User } from "firebase/auth";
 import "./WorkoutPlanner.css";

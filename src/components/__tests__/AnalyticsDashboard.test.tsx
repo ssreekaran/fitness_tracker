@@ -1,6 +1,6 @@
 import { renderWithoutRouter, screen } from "../../utils/test-utils";
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import AnalyticsDashboard from "../AnalyticsDashboard";
+import AnalyticsDashboard from "../fitness/AnalyticsDashboard";
 
 // Mock the analytics service with minimal data
 vi.mock("../../services/analyticsService", () => ({

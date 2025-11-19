@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { server } from "../../mocks/server";
 
-import WorkoutTracker from "../../components/WorkoutTracker";
+import WorkoutTracker from "../../components/fitness/WorkoutTracker";
 
 // Mock the workout service for integration tests
 vi.mock("../../services/workoutService", () => ({

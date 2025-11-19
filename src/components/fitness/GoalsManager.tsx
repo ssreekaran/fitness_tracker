@@ -67,7 +67,7 @@ import {
   SmartGoal,
   GoalDifficulty,
   GoalPriority,
-} from "../services/goalsService";
+} from "../../services/goalsService";
 
 const { Text } = Typography;
 const { Option } = Select;

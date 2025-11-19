@@ -26,7 +26,7 @@ import {
   getAnalyticsDashboard,
   AnalyticsDashboard as AnalyticsDashboardData,
   AnalyticsPeriod,
-} from "../services/analyticsService";
+} from "../../services/analyticsService";
 // Simple inline components for analytics dashboard
 import "./AnalyticsDashboard.css";
 

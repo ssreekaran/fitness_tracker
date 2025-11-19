@@ -11,7 +11,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import {
   useNotifications,
   NotificationConfig,
-} from "../services/notificationService";
+} from "../../services/notificationService";
 import "./NotificationCenter.css";
 
 const { Text } = Typography;

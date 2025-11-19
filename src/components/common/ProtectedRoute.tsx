@@ -14,7 +14,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 interface ProtectedRouteProps {
   children: React.ReactNode; // The protected content to render if authenticated

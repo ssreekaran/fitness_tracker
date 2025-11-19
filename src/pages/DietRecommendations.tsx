@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getFitnessData, type FitnessData } from "../services/fitnessService";
-import NutritionChatbot from "../components/NutritionChatbot";
+import NutritionChatbot from "../components/chatbots/NutritionChatbot";
 import { UserProfile } from "../services/chatbotService";
 import "./DietRecommendations.css";
 
