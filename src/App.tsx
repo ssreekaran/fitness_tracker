@@ -55,7 +55,6 @@ const HeartRateZoneCalculator = lazy(
 // Authentication pages
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
-const MobileLoginPage = lazy(() => import("./pages/MobileLoginPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
@@ -246,7 +245,6 @@ const AppContent = () => {
             />
             <Route path="/food-database" element={<FoodDatabase />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/mobile-login" element={<MobileLoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/profile" element={<ProfilePage />} />
