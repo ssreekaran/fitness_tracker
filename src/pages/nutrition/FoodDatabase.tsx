@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs, query } from 'firebase/firestore';
-import { db } from '../firebase';
-import './FoodDatabase.css';
-import { FaSearch, FaInfoCircle } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../firebase";
+import "./FoodDatabase.css";
+import { FaSearch, FaInfoCircle } from "react-icons/fa";
 
 interface Nutrient {
   NutrientID: string;
@@ -20,22 +20,22 @@ interface Food {
 
 const FoodDatabase: React.FC = () => {
   const [foods, setFoods] = useState<Food[]>([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [nutrientList, setNutrientList] = useState<Nutrient[]>([]);
 
   useEffect(() => {
     async function fetchFoods() {
       setLoading(true);
-      const foodsRef = collection(db, 'foods');
+      const foodsRef = collection(db, "foods");
       const q = query(foodsRef);
       const snapshot = await getDocs(q);
-      const foodsArr: Food[] = snapshot.docs.map(doc => doc.data() as Food);
+      const foodsArr: Food[] = snapshot.docs.map((doc) => doc.data() as Food);
       setFoods(foodsArr);
       // Collect all unique nutrients for header
       const nutrientMap: { [nutrientID: string]: Nutrient } = {};
-      foodsArr.forEach(food => {
-        (food.Nutrients || []).forEach(nut => {
+      foodsArr.forEach((food) => {
+        (food.Nutrients || []).forEach((nut) => {
           if (nut.NutrientID && !nutrientMap[nut.NutrientID]) {
             nutrientMap[nut.NutrientID] = nut;
           }
@@ -48,10 +48,13 @@ const FoodDatabase: React.FC = () => {
   }, []);
 
   const filteredFoods = foods.filter((f) => {
-    const descMatch = f.FoodDescription?.toLowerCase().includes(search.toLowerCase());
-    const codeMatch = search === ''
-      ? true
-      : !Number.isNaN(Number(search)) && Number(f.FoodID) === Number(search);
+    const descMatch = f.FoodDescription?.toLowerCase().includes(
+      search.toLowerCase()
+    );
+    const codeMatch =
+      search === ""
+        ? true
+        : !Number.isNaN(Number(search)) && Number(f.FoodID) === Number(search);
     return descMatch || codeMatch;
   });
 
@@ -61,7 +64,10 @@ const FoodDatabase: React.FC = () => {
       <section className="food-db-hero">
         <div className="food-db-hero-content">
           <h1>Food Database</h1>
-          <p>Search and explore nutritional information for thousands of foods from the Canadian Nutrient File.</p>
+          <p>
+            Search and explore nutritional information for thousands of foods
+            from the Canadian Nutrient File.
+          </p>
           <div className="food-search-container">
             <div className="search-icon">
               <FaSearch />
@@ -85,10 +91,10 @@ const FoodDatabase: React.FC = () => {
             <div className="food-db-table-wrapper">
               <table className="food-db-table">
                 <colgroup>
-                  <col style={{ width: '80px' }} />
-                  <col style={{ minWidth: '200px' }} />
+                  <col style={{ width: "80px" }} />
+                  <col style={{ minWidth: "200px" }} />
                   {nutrientList.map((_, index) => (
-                    <col key={`col-${index}`} style={{ minWidth: '100px' }} />
+                    <col key={`col-${index}`} style={{ minWidth: "100px" }} />
                   ))}
                 </colgroup>
                 <thead>
@@ -111,10 +117,12 @@ const FoodDatabase: React.FC = () => {
                         <td>{food.FoodID}</td>
                         <td>{food.FoodDescription}</td>
                         {nutrientList.map((nutrient) => {
-                          const found = (food.Nutrients || []).find(n => n.NutrientID === nutrient.NutrientID);
+                          const found = (food.Nutrients || []).find(
+                            (n) => n.NutrientID === nutrient.NutrientID
+                          );
                           return (
                             <td key={nutrient.NutrientID}>
-                              {found ? found.NutrientValue : ''}
+                              {found ? found.NutrientValue : ""}
                             </td>
                           );
                         })}
@@ -125,7 +133,10 @@ const FoodDatabase: React.FC = () => {
             </div>
             <div className="data-source">
               <FaInfoCircle className="info-icon" />
-              <span>Showing all filtered foods and 10 nutrients for performance. Data: Canadian Nutrient File, Health Canada.</span>
+              <span>
+                Showing all filtered foods and 10 nutrients for performance.
+                Data: Canadian Nutrient File, Health Canada.
+              </span>
             </div>
           </div>
         )}

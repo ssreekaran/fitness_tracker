@@ -11,18 +11,18 @@ import {
   Modal,
   InputGroup,
 } from "react-bootstrap";
-import { useAuth } from "../components/Navbar/hooks/useAuth";
+import { useAuth } from "../../components/Navbar/hooks/useAuth";
 import {
   addFoodEntry,
   getFoodEntries,
   deleteFoodEntry,
   FoodEntry,
-} from "../services/foodService";
+} from "../../services/foodService";
 import {
   getFoodByCode,
   initFoodDatabase,
   checkDatabaseReady,
-} from "../services/foodDatabase";
+} from "../../services/foodDatabase";
 import "./CalorieTracker.css";
 
 const CalorieTracker: React.FC = () => {

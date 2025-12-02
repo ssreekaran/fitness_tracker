@@ -304,52 +304,54 @@
   - Update route in App.tsx
   - _Requirements: 4.4, 4.5, 4.6, 6.2_
 
-- [ ] 25. Phase 4: Move nutrition pages
-- [ ] 25.1 Move CalorieTracker to nutrition/
+- [x] 25. Phase 4: Move nutrition pages
+
+- [x] 25.1 Move CalorieTracker to nutrition/
 
   - Move CalorieTracker.tsx and CalorieTracker.css to nutrition/
   - Update route in App.tsx
   - _Requirements: 4.5, 4.6, 6.2_
 
-- [ ] 25.2 Move FoodDatabase to nutrition/
+- [x] 25.2 Move FoodDatabase to nutrition/
 
   - Move FoodDatabase.tsx and FoodDatabase.css to nutrition/
   - Update route in App.tsx
   - _Requirements: 4.5, 4.6, 6.2_
 
-- [ ] 25.3 Move HealthyFood to nutrition/
+- [x] 25.3 Move HealthyFood to nutrition/
 
   - Move HealthyFood.tsx and HealthyFood.css to nutrition/
   - Update route in App.tsx
   - _Requirements: 4.5, 4.6, 6.2_
 
-- [ ] 25.4 Move DietRecommendations to nutrition/
+- [x] 25.4 Move DietRecommendations to nutrition/
 
   - Move DietRecommendations.tsx and DietRecommendations.css to nutrition/
   - Update route in App.tsx
   - _Requirements: 4.5, 4.6, 6.2_
 
-- [ ] 26. Phase 4: Move legal pages
-- [ ] 26.1 Move TermsOfService to legal/
+- [x] 26. Phase 4: Move legal pages
+
+- [x] 26.1 Move TermsOfService to legal/
 
   - Move TermsOfService.tsx to legal/
   - Update route in App.tsx
   - _Requirements: 4.3, 4.5, 4.6, 6.2_
 
-- [ ] 26.2 Move PrivacyPolicy to legal/
+- [x] 26.2 Move PrivacyPolicy to legal/
 
   - Move PrivacyPolicy.tsx to legal/
   - Update route in App.tsx
   - Update LegalPages.css location or keep shared
   - _Requirements: 4.3, 4.5, 4.6, 6.2_
 
-- [ ] 27. Phase 4: Update integration test imports
+- [x] 27. Phase 4: Update integration test imports
 
   - Update imports in `src/__tests__/integration/workout-flow.test.tsx`
   - Update any other integration test imports
   - _Requirements: 6.4_
 
-- [ ] 28. Phase 4: Verify page reorganization
+- [-] 28. Phase 4: Verify page reorganization
 
   - Run TypeScript compiler
   - Run full test suite

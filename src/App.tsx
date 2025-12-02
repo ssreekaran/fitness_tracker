@@ -70,24 +70,26 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 // Information and database pages
 const ContactUs = lazy(() => import("./pages/ContactUs"));
-const FoodDatabase = lazy(() => import("./pages/FoodDatabase"));
-const HealthyFood = lazy(() => import("./pages/HealthyFood"));
-const DietRecommendations = lazy(() => import("./pages/DietRecommendations"));
+const FoodDatabase = lazy(() => import("./pages/nutrition/FoodDatabase"));
+const HealthyFood = lazy(() => import("./pages/nutrition/HealthyFood"));
+const DietRecommendations = lazy(
+  () => import("./pages/nutrition/DietRecommendations")
+);
 const WorkoutRecommendations = lazy(
   () => import("./pages/fitness/WorkoutRecommendations")
 );
 
 // Protected pages (authentication required)
 const PersonalFitness = lazy(() => import("./pages/fitness/PersonalFitness"));
-const CalorieTracker = lazy(() => import("./pages/CalorieTracker"));
+const CalorieTracker = lazy(() => import("./pages/nutrition/CalorieTracker"));
 const WorkoutPlanner = lazy(() => import("./pages/fitness/WorkoutPlanner"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 /**
  * Legal pages components
  */
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
+import TermsOfService from "./pages/legal/TermsOfService";
 
 /**
  * AppContent Component
