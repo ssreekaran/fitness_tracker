@@ -15,7 +15,7 @@ import {
   signInWithRedirect,
   getRedirectResult,
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import { auth, googleProvider } from "../../firebase";
 import { Capacitor } from "@capacitor/core";
 import "./LoginPage.css";
 

@@ -14,11 +14,11 @@ import {
   saveFitnessData,
   clearFitnessData,
   FitnessData,
-} from "../services/fitnessService";
-import { auth } from "../firebase";
+} from "../../services/fitnessService";
+import { auth } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import WorkoutTracker from "../components/fitness/WorkoutTracker";
-import AnalyticsDashboard from "../components/fitness/AnalyticsDashboard";
+import WorkoutTracker from "../../components/fitness/WorkoutTracker";
+import AnalyticsDashboard from "../../components/fitness/AnalyticsDashboard";
 import "./PersonalFitness.css";
 
 const PersonalFitness: React.FC = () => {

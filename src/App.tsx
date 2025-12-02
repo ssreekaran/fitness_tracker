@@ -42,20 +42,30 @@ const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
 
 // Health calculators (public access)
-const BMICalculator = lazy(() => import("./pages/BMICalculator"));
-const BodyFatCalculator = lazy(() => import("./pages/BodyFatCalculator"));
-const WeightLossCalculator = lazy(() => import("./pages/WeightLossCalculator"));
-const TDEECalculator = lazy(() => import("./pages/TDEECalculator"));
-const MacroCalculator = lazy(() => import("./pages/MacroCalculator"));
-const OneRepMaxCalculator = lazy(() => import("./pages/OneRepMaxCalculator"));
+const BMICalculator = lazy(() => import("./pages/calculators/BMICalculator"));
+const BodyFatCalculator = lazy(
+  () => import("./pages/calculators/BodyFatCalculator")
+);
+const WeightLossCalculator = lazy(
+  () => import("./pages/calculators/WeightLossCalculator")
+);
+const TDEECalculator = lazy(() => import("./pages/calculators/TDEECalculator"));
+const MacroCalculator = lazy(
+  () => import("./pages/calculators/MacroCalculator")
+);
+const OneRepMaxCalculator = lazy(
+  () => import("./pages/calculators/OneRepMaxCalculator")
+);
 const HeartRateZoneCalculator = lazy(
-  () => import("./pages/HeartRateZoneCalculator")
+  () => import("./pages/calculators/HeartRateZoneCalculator")
 );
 
 // Authentication pages
-const SignUpPage = lazy(() => import("./pages/SignUpPage"));
-const LoginPage = lazy(() => import("./pages/LoginPage"));
-const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
+const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const ForgotPasswordPage = lazy(
+  () => import("./pages/auth/ForgotPasswordPage")
+);
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 // Information and database pages
@@ -64,13 +74,13 @@ const FoodDatabase = lazy(() => import("./pages/FoodDatabase"));
 const HealthyFood = lazy(() => import("./pages/HealthyFood"));
 const DietRecommendations = lazy(() => import("./pages/DietRecommendations"));
 const WorkoutRecommendations = lazy(
-  () => import("./pages/WorkoutRecommendations")
+  () => import("./pages/fitness/WorkoutRecommendations")
 );
 
 // Protected pages (authentication required)
-const PersonalFitness = lazy(() => import("./pages/PersonalFitness"));
+const PersonalFitness = lazy(() => import("./pages/fitness/PersonalFitness"));
 const CalorieTracker = lazy(() => import("./pages/CalorieTracker"));
-const WorkoutPlanner = lazy(() => import("./pages/WorkoutPlanner"));
+const WorkoutPlanner = lazy(() => import("./pages/fitness/WorkoutPlanner"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 
 /**

@@ -198,7 +198,7 @@
   - Update imports in `src/components/__tests__/AnalyticsDashboard.test.tsx`
   - _Requirements: 6.4_
 
-- [-] 20. Phase 3: Verify component reorganization
+- [x] 20. Phase 3: Verify component reorganization
 
   - Run TypeScript compiler
   - Run full test suite
@@ -206,7 +206,7 @@
   - Commit changes with message "Phase 3: Reorganize components by feature"
   - _Requirements: 6.5, 7.1, 7.2, 7.3_
 
-- [ ] 21. Phase 4: Create page subdirectories
+- [x] 21. Phase 4: Create page subdirectories
 
   - Create `src/pages/auth/` directory
   - Create `src/pages/calculators/` directory
@@ -215,8 +215,9 @@
   - Create `src/pages/legal/` directory
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 22. Phase 4: Move authentication pages
-- [ ] 22.1 Move LoginPage to auth/
+- [x] 22. Phase 4: Move authentication pages
+
+- [x] 22.1 Move LoginPage to auth/
 
   - Move LoginPage.tsx and LoginPage.css to auth/
   - Update imports within LoginPage
@@ -224,7 +225,7 @@
   - Update all files importing LoginPage
   - _Requirements: 4.2, 4.5, 4.6, 6.2_
 
-- [ ] 22.2 Move SignUpPage to auth/
+- [x] 22.2 Move SignUpPage to auth/
 
   - Move SignUpPage.tsx and SignUpPage.css to auth/
   - Update imports within SignUpPage
@@ -232,70 +233,72 @@
   - Update all files importing SignUpPage
   - _Requirements: 4.2, 4.5, 4.6, 6.2_
 
-- [ ] 22.3 Move ForgotPasswordPage to auth/
+- [x] 22.3 Move ForgotPasswordPage to auth/
 
   - Move ForgotPasswordPage.tsx and ForgotPasswordPage.css to auth/
   - Update imports within ForgotPasswordPage
   - Update route in App.tsx
   - _Requirements: 4.2, 4.5, 4.6, 6.2_
 
-- [ ] 23. Phase 4: Move calculator pages
-- [ ] 23.1 Move BMICalculator to calculators/
+- [x] 23. Phase 4: Move calculator pages
+
+- [x] 23.1 Move BMICalculator to calculators/
 
   - Move BMICalculator.tsx and BMICalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 23.2 Move BodyFatCalculator to calculators/
+- [x] 23.2 Move BodyFatCalculator to calculators/
 
   - Move BodyFatCalculator.tsx and BodyFatCalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 23.3 Move TDEECalculator to calculators/
+- [x] 23.3 Move TDEECalculator to calculators/
 
   - Move TDEECalculator.tsx and TDEECalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 23.4 Move MacroCalculator to calculators/
+- [x] 23.4 Move MacroCalculator to calculators/
 
   - Move MacroCalculator.tsx and MacroCalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 23.5 Move WeightLossCalculator to calculators/
+- [x] 23.5 Move WeightLossCalculator to calculators/
 
   - Move WeightLossCalculator.tsx and WeightLossCalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 23.6 Move HeartRateZoneCalculator to calculators/
+- [x] 23.6 Move HeartRateZoneCalculator to calculators/
 
   - Move HeartRateZoneCalculator.tsx and HeartRateZoneCalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 23.7 Move OneRepMaxCalculator to calculators/
+- [x] 23.7 Move OneRepMaxCalculator to calculators/
 
   - Move OneRepMaxCalculator.tsx and OneRepMaxCalculator.css to calculators/
   - Update route in App.tsx
   - _Requirements: 4.1, 4.5, 4.6, 6.2_
 
-- [ ] 24. Phase 4: Move fitness pages
-- [ ] 24.1 Move PersonalFitness to fitness/
+- [x] 24. Phase 4: Move fitness pages
+
+- [x] 24.1 Move PersonalFitness to fitness/
 
   - Move PersonalFitness.tsx and PersonalFitness.css to fitness/
   - Update route in App.tsx
   - _Requirements: 4.4, 4.5, 4.6, 6.2_
 
-- [ ] 24.2 Move WorkoutPlanner to fitness/
+- [x] 24.2 Move WorkoutPlanner to fitness/
 
   - Move WorkoutPlanner.tsx and WorkoutPlanner.css to fitness/
   - Update route in App.tsx
   - _Requirements: 4.4, 4.5, 4.6, 6.2_
 
-- [ ] 24.3 Move WorkoutRecommendations to fitness/
+- [x] 24.3 Move WorkoutRecommendations to fitness/
 
   - Move WorkoutRecommendations.tsx and WorkoutRecommendations.css to fitness/
   - Update route in App.tsx

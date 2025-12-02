@@ -1,5 +1,5 @@
 /* Macro Calculator - Specific styles only */
-@import "../styles/CalculatorBase.css";
+@import "../../styles/CalculatorBase.css";
 
 /* Scoped macro calculator variables */
 .macro-calculator-page {

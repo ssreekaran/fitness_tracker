@@ -350,7 +350,7 @@
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid var(--login-input-border);
 }
@@ -380,18 +380,35 @@
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 /* Dark mode overrides are now scoped to .login-page */
@@ -418,16 +435,16 @@
     padding: 30px 20px;
     margin: 0 10px;
   }
-  
+
   .login-header h2 {
     font-size: 22px;
   }
-  
+
   .login-header .icon-container {
     width: 60px;
     height: 60px;
   }
-  
+
   .login-header .lock-icon {
     font-size: 28px;
   }

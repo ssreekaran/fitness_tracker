@@ -1,5 +1,5 @@
 /* One Rep Max Calculator - Specific styles only */
-@import "../styles/CalculatorBase.css";
+@import "../../styles/CalculatorBase.css";
 
 /* Hero Section */
 .calculator-hero.orm-hero {

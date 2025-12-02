@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaArrowLeft, FaEnvelope, FaCheckCircle } from 'react-icons/fa';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../firebase';
-import './ForgotPasswordPage.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaArrowLeft, FaEnvelope, FaCheckCircle } from "react-icons/fa";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../firebase";
+import "./ForgotPasswordPage.css";
 
 const ForgotPasswordPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setSuccess(false);
-    
+
     if (!email) {
-      setError('Please enter your email address.');
+      setError("Please enter your email address.");
       return;
     }
 
@@ -27,7 +27,7 @@ const ForgotPasswordPage: React.FC = () => {
       setSuccess(true);
     } catch (error: unknown) {
       const err = error as { message?: string };
-      setError(err.message || 'Failed to send password reset email');
+      setError(err.message || "Failed to send password reset email");
     } finally {
       setIsLoading(false);
     }
@@ -40,13 +40,15 @@ const ForgotPasswordPage: React.FC = () => {
           <Link to="/login" className="back-button">
             <FaArrowLeft /> Back to Login
           </Link>
-          
+
           <div className="forgot-password-header">
             <div className="icon-container">
               <FaEnvelope className="envelope-icon" />
             </div>
             <h2>Forgot Password?</h2>
-            <p className="subtitle">No worries, we'll send you reset instructions</p>
+            <p className="subtitle">
+              No worries, we'll send you reset instructions
+            </p>
           </div>
 
           {!success ? (
@@ -59,7 +61,7 @@ const ForgotPasswordPage: React.FC = () => {
                     id="email"
                     type="email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     autoFocus
                     required
@@ -69,15 +71,15 @@ const ForgotPasswordPage: React.FC = () => {
 
               {error && <div className="error-message">{error}</div>}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="reset-button"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <span className="button-loader"></span>
                 ) : (
-                  'Send Reset Link'
+                  "Send Reset Link"
                 )}
               </button>
             </form>
@@ -86,12 +88,17 @@ const ForgotPasswordPage: React.FC = () => {
               <FaCheckCircle className="success-icon" />
               <h3>Email Sent!</h3>
               <p className="success-message">
-                We've sent instructions to reset your password to <strong>{email}</strong>.
-                Please check your inbox and follow the link provided. If you don't see the email,
-                please check your spam or junk folder as it may have been filtered there.
+                We've sent instructions to reset your password to{" "}
+                <strong>{email}</strong>. Please check your inbox and follow the
+                link provided. If you don't see the email, please check your
+                spam or junk folder as it may have been filtered there.
               </p>
               <p className="check-spam">
-                Didn't receive the email? Check your spam folder or <button type="button" onClick={handleSubmit}>resend</button>.
+                Didn't receive the email? Check your spam folder or{" "}
+                <button type="button" onClick={handleSubmit}>
+                  resend
+                </button>
+                .
               </p>
             </div>
           )}

@@ -1,5 +1,5 @@
 /* TDEE Calculator - Specific styles only */
-@import "../styles/CalculatorBase.css";
+@import "../../styles/CalculatorBase.css";
 
 /* Hero Section */
 .tdee-hero {
