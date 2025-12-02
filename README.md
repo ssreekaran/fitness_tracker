@@ -9,6 +9,7 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 ## 🚀 Features
 
 ### 📊 Health & Fitness Calculators
+
 - **BMI Calculator**: Calculate your Body Mass Index with detailed category classification
 - **Body Fat Percentage Calculator**: Advanced calculator using multiple measurement methods
 - **TDEE Calculator**: Determine your Total Daily Energy Expenditure
@@ -18,6 +19,7 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 - **Macro Calculator**: Determine your ideal macronutrient distribution
 
 ### 💪 Workout Management
+
 - **Workout Planner**: Create and manage custom workout routines
 - **Exercise Library**: Comprehensive collection of exercises with detailed instructions
 - **Workout Tracker**: Log and track your workout sessions
@@ -25,6 +27,7 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 - **Progress Tracking**: Monitor your strength and fitness improvements over time
 
 ### 🥗 Nutrition & Diet
+
 - **Calorie Tracker**: Monitor your daily caloric intake
 - **Macro Tracker**: Track protein, carbs, and fat consumption
 - **Food Database**: Search and log nutritional information
@@ -33,6 +36,7 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 - **Meal Planning**: Plan your meals for optimal nutrition
 
 ### 👤 User Experience
+
 - **Dark/Light Theme**: Built-in theme support with smooth transitions
 - **Responsive Design**: Fully functional on mobile, tablet, and desktop
 - **Offline Support**: Access your data without an internet connection
@@ -41,6 +45,7 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 - **User Profile**: Manage your personal information and preferences
 
 ### 🔄 Account Features
+
 - **Secure Sign Up/Login**: Email/password and social authentication
 - **Password Recovery**: Easy account recovery options
 - **Profile Management**: Update your personal information and fitness goals
@@ -49,8 +54,9 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework**: React 18 with TypeScript
-- **Build Tools**: 
+- **Build Tools**:
   - Vite (Build Tool)
   - Capacitor (Cross-platform native runtime)
 - **UI/UX**:
@@ -72,21 +78,25 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 ## 🎨 UI/UX Strategy
 
 ### Design Principles
+
 - **Component-Based Architecture**: Reusable, self-contained components
 - **Responsive First**: Mobile-optimized layouts that adapt to any screen size
 - **Accessibility**: Built with WCAG guidelines in mind
 - **Performance**: Optimized assets and lazy loading for fast load times
 
 ### Theming System
+
 - **Dynamic Theme Support**: Toggle between light and dark modes
 - **Consistent Styling**: CSS variables for theming and design tokens
 - **Responsive Typography**: Readable text across all devices
 
 ### Backend & Infrastructure
+
 - **Hosting**: Firebase Hosting
 - **Authentication**: Firebase Authentication
 - **Database**: Firebase Firestore
 - **CI/CD**: GitHub Actions
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -99,12 +109,14 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/ssreekaran/fitness-tracker.git
    cd fitness-tracker
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -112,6 +124,7 @@ A comprehensive health and fitness companion built with React, TypeScript, and C
    ```
 
 3. Set up Firebase:
+
    - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
    - Enable Authentication (Email/Password, Google Sign-In)
    - Set up Firestore Database
@@ -166,27 +179,44 @@ npx cap open ios
 
 ```
 src/
-├── assets/           # Static assets (images, fonts, etc.)
-├── components/       # Reusable UI components
-│   ├── common/       # Common components (buttons, inputs, etc.)
-│   ├── layout/       # Layout components (header, footer, etc.)
-│   └── features/     # Feature-specific components
-├── config/          # Application configuration
-├── contexts/        # React contexts
-├── hooks/           # Custom React hooks
-├── pages/           # Page components
-│   ├── auth/        # Authentication pages
-│   ├── dashboard/   # Main dashboard pages
-│   └── settings/    # User settings pages
-├── services/        # API and business logic
-│   ├── api/         # API clients
-│   └── firebase/    # Firebase services
-├── styles/          # Global styles and themes
-├── types/           # TypeScript type definitions
-├── utils/           # Utility functions and helpers
-├── App.tsx          # Main application component
-├── main.tsx         # Application entry point
-└── firebase.ts      # Firebase configuration
+├── components/           # Reusable UI components
+│   ├── common/          # Shared UI components (LoadingSpinner, Footer, ProtectedRoute)
+│   ├── calculators/     # Calculator-specific components (CalculatorLayout)
+│   ├── chatbots/        # Chatbot components (FitnessChatbot, NutritionChatbot)
+│   ├── fitness/         # Fitness tracking components (WorkoutTracker, GoalsManager, etc.)
+│   ├── Navbar/          # Navigation bar component
+│   └── __tests__/       # Component tests
+├── pages/               # Page components
+│   ├── auth/           # Authentication pages (Login, SignUp, ForgotPassword)
+│   ├── calculators/    # Calculator pages (BMI, BodyFat, TDEE, Macro, etc.)
+│   ├── fitness/        # Fitness pages (PersonalFitness, WorkoutPlanner, etc.)
+│   ├── nutrition/      # Nutrition pages (CalorieTracker, FoodDatabase, etc.)
+│   ├── legal/          # Legal pages (PrivacyPolicy, TermsOfService)
+│   └── ...             # Other pages (Home, About, ContactUs, Profile, Settings)
+├── services/           # API and business logic
+│   ├── analyticsService.ts    # Analytics and progress tracking
+│   ├── chatbotService.ts      # Chatbot functionality
+│   ├── fitnessService.ts      # Fitness tracking services
+│   ├── foodService.ts         # Food database services
+│   ├── goalsService.ts        # Goals management
+│   ├── notificationService.ts # Notification system
+│   └── workoutService.ts      # Workout management
+├── utils/              # Utility functions and helpers
+│   ├── __tests__/     # Utility tests
+│   └── ...            # Helper functions
+├── styles/            # Global styles and themes
+├── mocks/             # MSW API mocks for testing
+├── __tests__/         # Integration tests
+├── App.tsx            # Main application component
+├── main.tsx           # Application entry point
+└── firebase.ts        # Firebase configuration
+
+docs/
+├── INDEX.md           # Documentation index
+├── setup/             # Setup documentation (Firebase, Chromatic, Android)
+├── features/          # Feature documentation (Mobile Auth, Goals System, etc.)
+├── guides/            # Development guides (Testing, Deployment, Codebase)
+└── archive/           # Archived/outdated documentation
 ```
 
 ## 🧪 Testing
@@ -194,11 +224,13 @@ src/
 The project follows a comprehensive testing strategy:
 
 ### Unit Testing
+
 - Test individual components and utility functions in isolation
 - Mock external dependencies
 - Focus on business logic and rendering
 
 ### Integration Testing
+
 - Test component interactions
 - Verify API calls and state management
 - Test routing and navigation
@@ -223,6 +255,7 @@ npm test -- -u
 ```
 
 ### Testing Libraries
+
 - **Vitest**: Fast test runner
 - **React Testing Library**: Component testing utilities
 - **MSW**: API mocking
@@ -235,6 +268,7 @@ The application can be deployed to multiple platforms:
 ### Web Deployment (Firebase Hosting)
 
 1. Build the application:
+
    ```bash
    npm run build
    ```
@@ -248,6 +282,7 @@ The application can be deployed to multiple platforms:
 ### Mobile App Deployment
 
 #### Android
+
 1. Build the Android app:
    ```bash
    npx cap sync android
@@ -256,6 +291,7 @@ The application can be deployed to multiple platforms:
 2. Follow Android Studio's build and deployment process
 
 #### iOS
+
 1. Build the iOS app:
    ```bash
    npx cap sync ios
@@ -264,6 +300,7 @@ The application can be deployed to multiple platforms:
 2. Follow Xcode's build and deployment process
 
 ### CI/CD
+
 - Automated deployments on push to `main` branch
 - Automated testing on pull requests
 - Preview deployments for feature branches

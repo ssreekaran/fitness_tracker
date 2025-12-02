@@ -351,7 +351,7 @@
   - Update any other integration test imports
   - _Requirements: 6.4_
 
-- [-] 28. Phase 4: Verify page reorganization
+- [x] 28. Phase 4: Verify page reorganization
 
   - Run TypeScript compiler
   - Run full test suite
@@ -360,7 +360,8 @@
   - Commit changes with message "Phase 4: Reorganize pages by feature"
   - _Requirements: 6.5, 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 29. Final verification and cleanup
+- [-] 29. Final verification and cleanup
+
   - Run full test suite one final time
   - Run production build
   - Verify all routes work correctly
