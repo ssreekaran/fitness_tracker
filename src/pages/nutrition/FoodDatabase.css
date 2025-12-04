@@ -9,7 +9,11 @@
 
 /* Hero Section */
 .food-db-hero {
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(129, 140, 248, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.1),
+    rgba(129, 140, 248, 0.08)
+  );
   border-radius: 16px;
   padding: 3rem 1.5rem;
   margin: 0 auto 2rem;
@@ -155,6 +159,95 @@
   font-size: 1rem;
 }
 
+/* Pagination Info */
+.pagination-info {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--dropdown-bg);
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--dropdown-bg);
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--link-color);
+  color: white;
+  border-color: var(--link-color);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination-number {
+  min-width: 40px;
+  height: 40px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-number:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+  border-color: var(--link-color);
+}
+
+.pagination-number.active {
+  background-color: var(--link-color);
+  color: white;
+  border-color: var(--link-color);
+}
+
+.pagination-ellipsis {
+  padding: 0.5rem;
+  color: var(--text-color);
+  opacity: 0.6;
+  font-weight: 500;
+}
+
 /* Data Source Info */
 .data-source {
   display: flex;
@@ -179,21 +272,21 @@
   .page-container {
     padding: 0 0.75rem 1.5rem;
   }
-  
+
   .food-db-hero {
     padding: 2rem 1rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .food-db-hero h1 {
     font-size: 2rem;
   }
-  
+
   .food-db-hero p {
     font-size: 1rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .food-db-table th,
   .food-db-table td {
     padding: 0.75rem 0.5rem;
@@ -204,9 +297,13 @@
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   .food-db-hero {
-    background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(129, 140, 248, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(74, 144, 226, 0.15),
+      rgba(129, 140, 248, 0.1)
+    );
   }
-  
+
   .food-search-input {
     background-color: var(--dropdown-bg);
     border-color: var(--border-color);
@@ -225,12 +322,12 @@ body.dark .food-db-table tr:hover,
   .page-container {
     padding: 0.5rem 0.25rem;
   }
-  
+
   .food-db-container {
     padding: 0;
     margin: 0;
   }
-  .food-db-table th, 
+  .food-db-table th,
   .food-db-table td {
     font-size: 0.75rem;
     padding: 4px 6px;
@@ -247,3 +344,22 @@ body.dark .food-db-table tr:hover,
 }
 
 /* Dark mode handled by variables, no additional selectors needed */
+
+/* Mobile Pagination Styles */
+@media (max-width: 768px) {
+  .pagination-controls {
+    padding: 1rem 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .pagination-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination-number {
+    min-width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+}

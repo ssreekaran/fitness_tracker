@@ -23,6 +23,8 @@ const FoodDatabase: React.FC = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [nutrientList, setNutrientList] = useState<Nutrient[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
 
   useEffect(() => {
     async function fetchFoods() {
@@ -57,6 +59,59 @@ const FoodDatabase: React.FC = () => {
         : !Number.isNaN(Number(search)) && Number(f.FoodID) === Number(search);
     return descMatch || codeMatch;
   });
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedFoods = filteredFoods
+    .slice()
+    .sort((a, b) => Number(a.FoodID) - Number(b.FoodID))
+    .slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisiblePages = 7;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 4) {
+        for (let i = 1; i <= 5; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+    }
+    return pages;
+  };
 
   return (
     <div className="page-container">
@@ -109,33 +164,78 @@ const FoodDatabase: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredFoods
-                    .slice()
-                    .sort((a, b) => Number(a.FoodID) - Number(b.FoodID))
-                    .map((food) => (
-                      <tr key={food.FoodID}>
-                        <td>{food.FoodID}</td>
-                        <td>{food.FoodDescription}</td>
-                        {nutrientList.map((nutrient) => {
-                          const found = (food.Nutrients || []).find(
-                            (n) => n.NutrientID === nutrient.NutrientID
-                          );
-                          return (
-                            <td key={nutrient.NutrientID}>
-                              {found ? found.NutrientValue : ""}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
+                  {paginatedFoods.map((food) => (
+                    <tr key={food.FoodID}>
+                      <td>{food.FoodID}</td>
+                      <td>{food.FoodDescription}</td>
+                      {nutrientList.map((nutrient) => {
+                        const found = (food.Nutrients || []).find(
+                          (n) => n.NutrientID === nutrient.NutrientID
+                        );
+                        return (
+                          <td key={nutrient.NutrientID}>
+                            {found ? found.NutrientValue : ""}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
+            <div className="pagination-info">
+              <span>
+                Showing {startIndex + 1}-
+                {Math.min(endIndex, filteredFoods.length)} of{" "}
+                {filteredFoods.length} foods
+              </span>
+            </div>
+
+            {totalPages > 1 && (
+              <div className="pagination-controls">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="pagination-btn"
+                >
+                  Previous
+                </button>
+
+                <div className="pagination-numbers">
+                  {getPageNumbers().map((page, index) =>
+                    typeof page === "number" ? (
+                      <button
+                        key={index}
+                        onClick={() => handlePageChange(page)}
+                        className={`pagination-number ${
+                          currentPage === page ? "active" : ""
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ) : (
+                      <span key={index} className="pagination-ellipsis">
+                        {page}
+                      </span>
+                    )
+                  )}
+                </div>
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="pagination-btn"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+
             <div className="data-source">
               <FaInfoCircle className="info-icon" />
               <span>
-                Showing all filtered foods and 10 nutrients for performance.
-                Data: Canadian Nutrient File, Health Canada.
+                Showing 10 nutrients for performance. Data: Canadian Nutrient
+                File, Health Canada.
               </span>
             </div>
           </div>
