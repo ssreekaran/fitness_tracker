@@ -80,19 +80,34 @@ const loadFoodItems = async (): Promise<void> => {
       try {
         const data = doc.data();
 
-        // The transferred data should have the food information
+        // Extract nutritional values from the Nutrients array
+        const nutrients = data.Nutrients || [];
+
+        // Helper function to find nutrient value by ID
+        const getNutrientValue = (nutrientId: string): number => {
+          const nutrient = nutrients.find(
+            (n: any) => n.NutrientID === nutrientId
+          );
+          return nutrient ? parseFloat(nutrient.NutrientValue || "0") : 0;
+        };
+
+        // Map nutrient IDs to their values
+        // Common Canadian Nutrient File IDs:
+        // 208 = Energy (kcal)
+        // 203 = Protein
+        // 205 = Carbohydrate
+        // 204 = Total Fat
+
+        // Convert FoodID to string (it's stored as a number in Firestore)
+        const foodCode = String(data.FoodID || doc.id);
+
         const foodItem: FoodItem = {
-          foodCode: data.foodCode || data.FoodCode || doc.id,
-          foodName:
-            data.foodName || data.FoodName || data.name || "Unknown Food",
-          calories: parseFloat(
-            data.calories || data.Calories || data.energy || "0"
-          ),
-          protein: parseFloat(data.protein || data.Protein || "0"),
-          carbs: parseFloat(
-            data.carbs || data.Carbs || data.carbohydrates || "0"
-          ),
-          fat: parseFloat(data.fat || data.Fat || data.totalFat || "0"),
+          foodCode: foodCode,
+          foodName: data.FoodDescription || "Unknown Food",
+          calories: getNutrientValue("208"), // Energy in kcal
+          protein: getNutrientValue("203"), // Protein
+          carbs: getNutrientValue("205"), // Carbohydrate
+          fat: getNutrientValue("204"), // Total Fat
         };
 
         if (foodItem.foodCode && foodItem.foodName) {
