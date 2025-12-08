@@ -72,12 +72,6 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 const FoodDatabase = lazy(() => import("./pages/nutrition/FoodDatabase"));
 const HealthyFood = lazy(() => import("./pages/nutrition/HealthyFood"));
-const DietRecommendations = lazy(
-  () => import("./pages/nutrition/DietRecommendations")
-);
-const WorkoutRecommendations = lazy(
-  () => import("./pages/fitness/WorkoutRecommendations")
-);
 
 // Protected pages (authentication required)
 const PersonalFitness = lazy(() => import("./pages/fitness/PersonalFitness"));
@@ -266,14 +260,6 @@ const AppContent = () => {
             <Route
               path="/legal/terms-of-service"
               element={<TermsOfService />}
-            />
-            <Route
-              path="/diet-recommendations"
-              element={<DietRecommendations />}
-            />
-            <Route
-              path="/workout-recommendations"
-              element={<WorkoutRecommendations />}
             />
             <Route
               path="/personal-fitness"
