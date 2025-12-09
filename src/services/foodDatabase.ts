@@ -10,6 +10,11 @@ interface FoodItem {
   fat: number;
 }
 
+interface Nutrient {
+  NutrientID: string;
+  NutrientValue: string;
+}
+
 // Cache for food items
 let foodItemsCache: Map<string, FoodItem> | null = null;
 
@@ -86,7 +91,7 @@ const loadFoodItems = async (): Promise<void> => {
         // Helper function to find nutrient value by ID
         const getNutrientValue = (nutrientId: string): number => {
           const nutrient = nutrients.find(
-            (n: any) => n.NutrientID === nutrientId
+            (n: Nutrient) => n.NutrientID === nutrientId
           );
           return nutrient ? parseFloat(nutrient.NutrientValue || "0") : 0;
         };

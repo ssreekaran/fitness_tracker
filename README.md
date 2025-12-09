@@ -1,337 +1,327 @@
 # Fitness Tracker
 
-A comprehensive health and fitness companion built with React, TypeScript, and Capacitor, designed to help users track their workouts, monitor nutrition, and achieve their fitness goals. This project showcases modern web development practices and responsive design.
+A comprehensive health and fitness companion built with React, TypeScript, and Capacitor. Track workouts, monitor nutrition, and achieve your fitness goals with a modern, responsive interface that works seamlessly across web and mobile platforms.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
 
-## 🚀 Features
+## ✨ Features
 
 ### 📊 Health & Fitness Calculators
 
-- **BMI Calculator**: Calculate your Body Mass Index with detailed category classification
-- **Body Fat Percentage Calculator**: Advanced calculator using multiple measurement methods
-- **TDEE Calculator**: Determine your Total Daily Energy Expenditure
-- **Weight Loss Calculator**: Set and track weight loss goals with calorie targets
-- **Heart Rate Zone Calculator**: Find your optimal heart rate zones for different training intensities
-- **One-Rep Max Calculator**: Calculate your 1RM for strength training
-- **Macro Calculator**: Determine your ideal macronutrient distribution
+- **BMI Calculator** - Body Mass Index with detailed category classification
+- **Body Fat Percentage Calculator** - Multiple measurement methods for accurate results
+- **TDEE Calculator** - Total Daily Energy Expenditure estimation
+- **Weight Loss Calculator** - Goal setting with calorie targets
+- **Heart Rate Zone Calculator** - Optimal training intensity zones
+- **One-Rep Max Calculator** - Strength training calculations
+- **Macro Calculator** - Personalized macronutrient distribution
 
-### 💪 Workout Management
+### 💪 Fitness Tracking
 
-- **Workout Planner**: Create and manage custom workout routines
-- **Exercise Library**: Comprehensive collection of exercises with detailed instructions
-- **Workout Tracker**: Log and track your workout sessions
-- **Workout Recommendations**: Get personalized workout suggestions
-- **Progress Tracking**: Monitor your strength and fitness improvements over time
+- **Personal Fitness Dashboard** - Comprehensive fitness profile with body metrics and analytics
+- **Workout Tracker** - Log workouts with automatic calorie calculation using MET values
+- **Workout Calendar Planner** - Schedule and plan workouts with calendar view
+- **Analytics Dashboard** - Visualize progress with charts and insights
+- **Goals Manager** - Set, track, and achieve fitness goals
+- **Notification Center** - Stay motivated with reminders and achievements
 
 ### 🥗 Nutrition & Diet
 
-- **Calorie Tracker**: Monitor your daily caloric intake
-- **Macro Tracker**: Track protein, carbs, and fat consumption
-- **Food Database**: Search and log nutritional information
-- **Healthy Food Recommendations**: Discover nutritious food options
-- **Diet Recommendations**: Get personalized diet plans based on your goals
-- **Meal Planning**: Plan your meals for optimal nutrition
+- **Calorie Tracker** - Daily caloric intake monitoring with meal logging
+- **Food Database** - Search comprehensive nutritional information powered by Canadian Nutrient File
+- **Healthy Food Resources** - Curated links to trusted nutrition resources from health organizations
 
 ### 👤 User Experience
 
-- **Dark/Light Theme**: Built-in theme support with smooth transitions
-- **Responsive Design**: Fully functional on mobile, tablet, and desktop
-- **Offline Support**: Access your data without an internet connection
-- **Secure Authentication**: Protected user accounts with Firebase Authentication
-- **Personalized Dashboard**: Track your fitness journey in one place
-- **User Profile**: Manage your personal information and preferences
-
-### 🔄 Account Features
-
-- **Secure Sign Up/Login**: Email/password and social authentication
-- **Password Recovery**: Easy account recovery options
-- **Profile Management**: Update your personal information and fitness goals
-- **Settings**: Customize your app experience
+- **Secure Authentication** - Email/password authentication with Firebase
+- **Password Recovery** - Easy account recovery via email
+- **User Profile** - Manage personal information and fitness data
+- **Settings** - Customize app preferences
+- **Dark/Light Theme** - Seamless theme switching with system preference detection
+- **Responsive Design** - Fully optimized for mobile, tablet, and desktop
+- **Cross-Platform** - Available as web app and native mobile apps (Android/iOS)
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 
-- **Framework**: React 18 with TypeScript
-- **Build Tools**:
-  - Vite (Build Tool)
-  - Capacitor (Cross-platform native runtime)
-- **UI/UX**:
-  - React Bootstrap v2.9.0
-  - Bootstrap v5.3.2
-  - Custom CSS Modules
-  - React Icons
-- **State Management**:
-  - React Hooks
-  - Context API
-- **Routing**: React Router v6
-- **Form Handling**: React Hook Form
-- **Testing**:
-  - Vitest (Test Runner)
-  - React Testing Library
-  - @vitest/coverage-v8 (Code Coverage)
-  - MSW (API Mocking)
+- **React 18** with TypeScript for type-safe development
+- **Vite** - Lightning-fast build tool and dev server
+- **React Router v6** - Client-side routing
+- **React Bootstrap** - UI component library
+- **Ant Design** - Additional UI components and icons
+- **Ionic React** - Mobile-optimized components
 
-## 🎨 UI/UX Strategy
+### Mobile
 
-### Design Principles
+- **Capacitor** - Cross-platform native runtime
+- **Android & iOS** - Native mobile app support
 
-- **Component-Based Architecture**: Reusable, self-contained components
-- **Responsive First**: Mobile-optimized layouts that adapt to any screen size
-- **Accessibility**: Built with WCAG guidelines in mind
-- **Performance**: Optimized assets and lazy loading for fast load times
+### Backend & Services
 
-### Theming System
+- **Firebase Authentication** - Secure user management
+- **Firebase Firestore** - Real-time NoSQL database
+- **Firebase Hosting** - Fast, secure web hosting
 
-- **Dynamic Theme Support**: Toggle between light and dark modes
-- **Consistent Styling**: CSS variables for theming and design tokens
-- **Responsive Typography**: Readable text across all devices
+### Testing & Quality
 
-### Backend & Infrastructure
+- **Vitest** - Fast unit and integration testing
+- **Playwright** - End-to-end testing
+- **React Testing Library** - Component testing utilities
+- **MSW** - API mocking for tests
+- **ESLint** - Code quality and consistency
+- **TypeScript** - Static type checking
 
-- **Hosting**: Firebase Hosting
-- **Authentication**: Firebase Authentication
-- **Database**: Firebase Firestore
-- **CI/CD**: GitHub Actions
+### DevOps
+
+- **GitHub Actions** - CI/CD automation
+- **Storybook** - Component development and documentation
+- **Chromatic** - Visual regression testing
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm (v9 or higher) or yarn
+- Node.js v18 or higher
+- npm v9 or higher
 - Firebase CLI (for deployment)
-- Android Studio / Xcode (for mobile builds)
+- Android Studio (for Android builds)
+- Xcode (for iOS builds, macOS only)
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository**
 
    ```bash
    git clone https://github.com/ssreekaran/fitness-tracker.git
    cd fitness-tracker
    ```
 
-2. Install dependencies:
+2. **Install dependencies**
 
    ```bash
    npm install
-   # or
-   yarn
    ```
 
-3. Set up Firebase:
+3. **Configure Firebase**
 
-   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Enable Authentication (Email/Password, Google Sign-In)
-   - Set up Firestore Database
-   - Create a `.env` file in the root directory with your Firebase config:
-     ```
-     VITE_FIREBASE_API_KEY=your_api_key
-     VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-     VITE_FIREBASE_PROJECT_ID=your-project-id
-     VITE_FIREBASE_STORAGE_BUCKET=your-bucket.appspot.com
-     VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-     VITE_FIREBASE_APP_ID=your-app-id
-     ```
+   Create a `.env` file in the root directory:
 
-4. Start the development server:
+   ```env
+   VITE_FIREBASE_API_KEY=your_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your-project-id
+   VITE_FIREBASE_STORAGE_BUCKET=your-bucket.appspot.com
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   VITE_FIREBASE_APP_ID=your-app-id
+   ```
+
+4. **Start development server**
+
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
+
+   The app will be available at `http://localhost:5173`
 
 ### Building for Production
 
+**Web Application**
+
 ```bash
-# Build the web application
 npm run build
-
-# Build for Android
-npx cap add android
-npx cap open android
-
-# Build for iOS
-npx cap add ios
-npx cap open ios
+npm run preview  # Preview production build locally
 ```
 
-### 📋 Available Scripts
+**Android**
 
-- `dev` - Start development server
-- `build` - Build for production
-- `preview` - Preview production build locally
-- `test` - Run tests
-- `test:watch` - Run tests in watch mode
-- `test:coverage` - Generate test coverage report
-- `test:ui` - Launch test UI
-- `lint` - Run ESLint
-- `format` - Format code with Prettier
-- `android` - Open Android project in Android Studio
-- `ios` - Open iOS project in Xcode
-- `cap:sync` - Sync web code with native projects
+```bash
+npx cap sync android
+npx cap open android
+```
+
+**iOS**
+
+```bash
+npx cap sync ios
+npx cap open ios
+```
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/           # Reusable UI components
-│   ├── common/          # Shared UI components (LoadingSpinner, Footer, ProtectedRoute)
-│   ├── calculators/     # Calculator-specific components (CalculatorLayout)
-│   ├── chatbots/        # Chatbot components (FitnessChatbot, NutritionChatbot)
-│   ├── fitness/         # Fitness tracking components (WorkoutTracker, GoalsManager, etc.)
-│   ├── Navbar/          # Navigation bar component
-│   └── __tests__/       # Component tests
-├── pages/               # Page components
-│   ├── auth/           # Authentication pages (Login, SignUp, ForgotPassword)
-│   ├── calculators/    # Calculator pages (BMI, BodyFat, TDEE, Macro, etc.)
-│   ├── fitness/        # Fitness pages (PersonalFitness, WorkoutPlanner, etc.)
-│   ├── nutrition/      # Nutrition pages (CalorieTracker, FoodDatabase, etc.)
-│   ├── legal/          # Legal pages (PrivacyPolicy, TermsOfService)
-│   └── ...             # Other pages (Home, About, ContactUs, Profile, Settings)
-├── services/           # API and business logic
-│   ├── analyticsService.ts    # Analytics and progress tracking
-│   ├── chatbotService.ts      # Chatbot functionality
-│   ├── fitnessService.ts      # Fitness tracking services
-│   ├── foodService.ts         # Food database services
-│   ├── goalsService.ts        # Goals management
-│   ├── notificationService.ts # Notification system
-│   └── workoutService.ts      # Workout management
-├── utils/              # Utility functions and helpers
-│   ├── __tests__/     # Utility tests
-│   └── ...            # Helper functions
-├── styles/            # Global styles and themes
-├── mocks/             # MSW API mocks for testing
-├── __tests__/         # Integration tests
-├── App.tsx            # Main application component
-├── main.tsx           # Application entry point
-└── firebase.ts        # Firebase configuration
+fitness-tracker/
+├── src/
+│   ├── components/              # Reusable UI components
+│   │   ├── calculators/        # Calculator-specific components
+│   │   ├── common/             # Shared components (LoadingSpinner, Footer, etc.)
+│   │   ├── fitness/            # Fitness tracking components
+│   │   ├── Navbar/             # Navigation components
+│   │   └── __tests__/          # Component unit tests
+│   ├── pages/                   # Page components
+│   │   ├── auth/               # Authentication pages
+│   │   ├── calculators/        # Calculator pages
+│   │   ├── fitness/            # Fitness tracking pages
+│   │   ├── legal/              # Legal pages (Privacy, Terms)
+│   │   ├── nutrition/          # Nutrition tracking pages
+│   │   └── *.tsx               # Other pages (Home, About, Profile, Settings)
+│   ├── services/                # Business logic and API services
+│   │   ├── analyticsService.ts # Progress tracking and analytics
+│   │   ├── fitnessService.ts   # Fitness data management
+│   │   ├── foodDatabase.ts     # Food database integration
+│   │   ├── foodService.ts      # Nutrition services
+│   │   ├── goalsService.ts     # Goal management
+│   │   ├── notificationService.ts # Notification system
+│   │   └── workoutService.ts   # Workout management
+│   ├── utils/                   # Utility functions and helpers
+│   │   ├── __tests__/          # Utility tests
+│   │   ├── logger.ts           # Logging utilities
+│   │   └── test-*.tsx          # Testing utilities
+│   ├── mocks/                   # MSW API mocks for testing
+│   ├── styles/                  # Global styles and themes
+│   ├── __tests__/              # Integration tests
+│   ├── App.tsx                  # Main application component
+│   ├── main.tsx                 # Application entry point
+│   └── firebase.ts              # Firebase configuration
+├── tests/                       # End-to-end tests
+│   └── e2e/                    # Playwright E2E tests
+├── docs/                        # Project documentation
+│   ├── INDEX.md                # Documentation index
+│   ├── setup/                  # Setup guides
+│   ├── features/               # Feature documentation
+│   ├── guides/                 # Development guides
+│   └── archive/                # Archived documentation
+├── android/                     # Android native project
+├── ios/                         # iOS native project
+├── public/                      # Static assets
+├── .storybook/                  # Storybook configuration
+├── .github/                     # GitHub Actions workflows
+├── vite.config.ts              # Vite configuration
+├── vitest.config.ts            # Vitest configuration
+├── playwright.config.ts        # Playwright configuration
+├── capacitor.config.ts         # Capacitor configuration
+└── package.json                # Project dependencies
 
-docs/
-├── INDEX.md           # Documentation index
-├── setup/             # Setup documentation (Firebase, Chromatic, Android)
-├── features/          # Feature documentation (Mobile Auth, Goals System, etc.)
-├── guides/            # Development guides (Testing, Deployment, Codebase)
-└── archive/           # Archived/outdated documentation
 ```
 
 ## 🧪 Testing
 
-The project follows a comprehensive testing strategy:
-
-### Unit Testing
-
-- Test individual components and utility functions in isolation
-- Mock external dependencies
-- Focus on business logic and rendering
-
-### Integration Testing
-
-- Test component interactions
-- Verify API calls and state management
-- Test routing and navigation
-
-### Running Tests
+### Run Tests
 
 ```bash
+# Unit and integration tests
+npm test                    # Run once
+npm run test:watch         # Watch mode
+npm run test:coverage      # With coverage report
+npm run test:ui            # Interactive UI
+
+# End-to-end tests
+npm run test:e2e           # Headless mode
+npm run test:e2e:headed    # Headed mode
+npm run test:e2e:ui        # Interactive UI
+
 # Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate coverage report
-npm run test:coverage
-
-# Run specific test file
-npm test path/to/test.tsx
-
-# Update snapshots
-npm test -- -u
+npm run test:all
 ```
 
-### Testing Libraries
+### Testing Strategy
 
-- **Vitest**: Fast test runner
-- **React Testing Library**: Component testing utilities
-- **MSW**: API mocking
-- **@testing-library/user-event**: User interaction simulation
+- **Unit Tests** - Individual components and utilities
+- **Integration Tests** - Component interactions and workflows
+- **E2E Tests** - Full user journeys with Playwright
+- **Visual Tests** - Component snapshots with Storybook
+
+## 📦 Available Scripts
+
+| Script                    | Description                |
+| ------------------------- | -------------------------- |
+| `npm run dev`             | Start development server   |
+| `npm run build`           | Build for production       |
+| `npm run preview`         | Preview production build   |
+| `npm test`                | Run unit tests             |
+| `npm run test:e2e`        | Run E2E tests              |
+| `npm run lint`            | Lint code with ESLint      |
+| `npm run storybook`       | Start Storybook dev server |
+| `npm run build-storybook` | Build Storybook            |
 
 ## 🚀 Deployment
 
-The application can be deployed to multiple platforms:
+### Web (Firebase Hosting)
 
-### Web Deployment (Firebase Hosting)
+```bash
+npm run build
+firebase login
+firebase deploy --only hosting
+```
 
-1. Build the application:
+### Mobile Apps
 
-   ```bash
-   npm run build
-   ```
+Follow the standard deployment process for Android (Google Play) and iOS (App Store) after building with Capacitor.
 
-2. Deploy to Firebase:
-   ```bash
-   firebase login
-   firebase deploy --only hosting
-   ```
+## 🏗️ Architecture
 
-### Mobile App Deployment
+### Component Architecture
 
-#### Android
+- **Atomic Design** - Components organized by complexity
+- **Composition** - Reusable, composable components
+- **Props Interface** - Strongly typed component APIs
 
-1. Build the Android app:
-   ```bash
-   npx cap sync android
-   npx cap open android
-   ```
-2. Follow Android Studio's build and deployment process
+### State Management
 
-#### iOS
+- **React Hooks** - Local component state
+- **Context API** - Global state (auth, theme)
+- **Service Layer** - Business logic separation
 
-1. Build the iOS app:
-   ```bash
-   npx cap sync ios
-   npx cap open ios
-   ```
-2. Follow Xcode's build and deployment process
+### Code Quality
 
-### CI/CD
-
-- Automated deployments on push to `main` branch
-- Automated testing on pull requests
-- Preview deployments for feature branches
+- **TypeScript** - Type safety throughout
+- **ESLint** - Code quality enforcement
+- **Testing** - Comprehensive test coverage
+- **Documentation** - Inline comments and docs
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+Please ensure:
+
+- All tests pass
+- Code follows ESLint rules
+- TypeScript types are properly defined
+- New features include tests
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Firebase](https://firebase.google.com/)
-- [Capacitor](https://capacitorjs.com/)
-- And all the amazing open-source libraries used in this project
-
 ## 📧 Contact
 
-Sarmilan Sreekaran - [fitness.tracker.00001@gmail.com](mailto:fitness.tracker.00001@gmail.com)
+**Sarmilan Sreekaran**
 
-Project Link: [https://github.com/ssreekaran/fitness-tracker](https://github.com/ssreekaran/fitness-tracker)
+- Email: [fitness.tracker.00001@gmail.com](mailto:fitness.tracker.00001@gmail.com)
+- GitHub: [@ssreekaran](https://github.com/ssreekaran)
+- Project: [https://github.com/ssreekaran/fitness-tracker](https://github.com/ssreekaran/fitness-tracker)
+
+## 🙏 Acknowledgments
+
+Built with these amazing technologies:
+
+- [React](https://reactjs.org/) - UI framework
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+- [Vite](https://vitejs.dev/) - Build tool
+- [Firebase](https://firebase.google.com/) - Backend services
+- [Capacitor](https://capacitorjs.com/) - Mobile runtime
+- [Vitest](https://vitest.dev/) - Testing framework
+- [Playwright](https://playwright.dev/) - E2E testing
 
 ---
 
