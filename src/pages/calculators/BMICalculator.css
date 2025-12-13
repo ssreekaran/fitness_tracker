@@ -34,9 +34,11 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hero Section */
+/* Hero Section - Override base calculator styles with high specificity */
+.page-container .bmi-hero,
+.bmi-calculator-page .bmi-hero,
 .bmi-hero {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
   color: white;
   padding: 3rem 2rem;
   border-radius: var(--bmi-border-radius, 12px);

@@ -1,9 +1,21 @@
 /* TDEE Calculator - Specific styles only */
 @import "../../styles/CalculatorBase.css";
 
-/* Hero Section */
+/* Hero Section - Override base calculator styles with high specificity */
+.page-container .calculator-hero.tdee-hero,
+.calculator-hero.tdee-hero,
 .tdee-hero {
-  background: linear-gradient(135deg, #f39c12, #e67e22);
+  background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* Results Grid */

@@ -1,9 +1,21 @@
 /* Heart Rate Zone Calculator - Specific styles only */
 @import "../../styles/CalculatorBase.css";
 
-/* Hero Section */
+/* Hero Section - Override base calculator styles with high specificity */
+.page-container .calculator-hero.hr-hero,
+.calculator-hero.hr-hero,
 .hr-hero {
-  background: linear-gradient(135deg, #e91e63, #ad1457);
+  background: linear-gradient(135deg, #e91e63, #ad1457) !important;
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* Method Options */
