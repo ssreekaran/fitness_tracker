@@ -11,13 +11,16 @@
  * The app supports both web and mobile platforms using Capacitor
  */
 
-import { lazy, Suspense, useEffect, useCallback } from "react";
+import { lazy, Suspense, useEffect, useCallback, useContext } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
   useLocation,
+  UNSAFE_NavigationContext as NavigationContext,
+  To,
+  NavigateOptions
 } from "react-router-dom";
 import { Navbar } from "./components";
 import Footer from "./components/common/Footer";
@@ -301,9 +304,47 @@ const AppContent = () => {
   );
 };
 
+// Custom navigation handler to force full page reloads
+function NavigationHandler() {
+  const { navigator } = useContext(NavigationContext);
+  
+  useEffect(() => {
+    // Override the push method to force a full page reload
+    const originalPush = navigator.push;
+    navigator.push = (to: To, options?: NavigateOptions) => {
+      if (typeof to === 'string') {
+        window.location.href = to;
+      } else {
+        window.location.href = to.pathname || '/';
+      }
+      return originalPush.call(navigator, to, options);
+    };
+    
+    // Override the replace method as well for consistency
+    const originalReplace = navigator.replace;
+    navigator.replace = (to: To, options?: NavigateOptions) => {
+      if (typeof to === 'string') {
+        window.location.replace(to);
+      } else {
+        window.location.replace(to.pathname || '/');
+      }
+      return originalReplace.call(navigator, to, options);
+    };
+    
+    return () => {
+      // Restore original methods on cleanup
+      navigator.push = originalPush;
+      navigator.replace = originalReplace;
+    };
+  }, [navigator]);
+  
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <NavigationHandler />
       <AppWithLocation />
     </Router>
   );

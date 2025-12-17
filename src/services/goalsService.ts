@@ -990,6 +990,8 @@ export const checkAchievements = async (
   try {
     const currentGoals = await getUserGoals();
     const newlyUnlocked: Achievement[] = [];
+    const notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
+    const { notification } = await import('antd');
 
     for (const achievement of currentGoals.achievements) {
       if (achievement.isUnlocked) continue;
@@ -1023,6 +1025,16 @@ export const checkAchievements = async (
       if (shouldUnlock) {
         await unlockAchievement(achievement.id);
         newlyUnlocked.push(achievement);
+        
+        // Only show notification if enabled
+        if (notificationsEnabled) {
+          notification.success({
+            message: 'Achievement Unlocked! 🎉',
+            description: `You've earned "${achievement.name}" (${achievement.points} points)`,
+            placement: 'topRight',
+            duration: 5,
+          });
+        }
       }
     }
 

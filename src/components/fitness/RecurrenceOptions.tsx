@@ -26,7 +26,7 @@ const RecurrenceOptions: React.FC<RecurrenceOptionsProps> = ({ value, onChange }
   const [recurring, setRecurring] = useState(!!value);
   const [frequency, setFrequency] = useState<Frequency>(value?.frequency || 'weekly');
   const [interval, setInterval] = useState(value?.interval || 1);
-  const [endOption, setEndOption] = useState<'never' | 'count' | 'date'>('never');
+  const [endOption, setEndOption] = useState<'count' | 'date'>(value?.count ? 'count' : 'date');
   const [count, setCount] = useState<number>(value?.count || 5);
   const [endDate, setEndDate] = useState<Date>(
     value?.endDate ? new Date(value.endDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -63,8 +63,8 @@ const RecurrenceOptions: React.FC<RecurrenceOptionsProps> = ({ value, onChange }
     const rule: RecurrenceRule = {
       frequency,
       interval,
-      ...(endOption === 'count' && { count }),
-      ...(endOption === 'date' && { endDate }),
+      count: endOption === 'count' ? count : undefined,
+      endDate: endOption === 'date' ? endDate : undefined,
       ...(frequency === 'weekly' && { weekdays }),
       ...(frequency === 'monthly' && { monthDay }),
       ...(frequency === 'custom' && { 
@@ -75,6 +75,11 @@ const RecurrenceOptions: React.FC<RecurrenceOptionsProps> = ({ value, onChange }
       ...updates
     };
     
+    // Ensure we always have either a count or an end date
+    if (!rule.count && !rule.endDate) {
+      rule.count = 5; // Default to 5 occurrences if nothing is set
+    }
+    
     onChange(rule);
   };
 
@@ -84,10 +89,10 @@ const RecurrenceOptions: React.FC<RecurrenceOptionsProps> = ({ value, onChange }
     updateRecurrenceRule({ frequency: newFrequency });
   };
 
-  const handleEndOptionChange = (option: 'never' | 'count' | 'date') => {
+  const handleEndOptionChange = (option: 'count' | 'date') => {
     setEndOption(option);
     
-    const updates: Partial<RecurrenceRule> = {};
+    const updates: Partial<RecurrenceRule> = { count: undefined, endDate: undefined };
     if (option === 'count') updates.count = count;
     if (option === 'date') updates.endDate = endDate;
     
@@ -277,14 +282,6 @@ const RecurrenceOptions: React.FC<RecurrenceOptionsProps> = ({ value, onChange }
           <Form.Group className="mb-3">
             <Form.Label>Ends</Form.Label>
             <div className="d-flex flex-column gap-2">
-              <Form.Check
-                type="radio"
-                id="end-never"
-                name="end-option"
-                label="Never"
-                checked={endOption === 'never'}
-                onChange={() => handleEndOptionChange('never')}
-              />
               <div className="d-flex align-items-center">
                 <Form.Check
                   type="radio"

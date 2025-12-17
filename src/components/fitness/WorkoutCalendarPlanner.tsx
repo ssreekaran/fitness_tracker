@@ -12,7 +12,9 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Calendar, dateFnsLocalizer, View, Event } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay, addDays, addWeeks, addMonths, isAfter } from "date-fns";
+import { format, parse, startOfWeek, getDay, addDays, addWeeks, addMonths, isAfter, isSameDay } from "date-fns";
+import { notification } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { enUS } from "date-fns/locale";
 import {
   Card,
@@ -35,6 +37,7 @@ import {
   FaRunning,
   FaHeart,
   FaCalendarAlt,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import {
   saveWorkout,
@@ -60,7 +63,7 @@ interface WorkoutEvent extends Event {
   title: string;
   exercise: string;
   duration: number;
-  intensity: "low" | "medium" | "high";
+  intensity: "low" | "moderate" | "high";
   caloriesBurned?: number;
   notes?: string;
   category: "cardio" | "strength" | "flexibility" | "sports" | "other";
@@ -76,7 +79,7 @@ interface WorkoutTemplate {
   name: string;
   exercises: string[];
   duration: number;
-  intensity: "low" | "medium" | "high";
+  intensity: "low" | "moderate" | "high";
   category: "cardio" | "strength" | "flexibility" | "sports" | "other";
   color: string;
 }
@@ -87,7 +90,7 @@ const workoutTemplates: WorkoutTemplate[] = [
     name: "Morning Cardio",
     exercises: ["Running (6 mph/9.7 kmh, 10:00 min/mi)", "Walking (brisk)"],
     duration: 30,
-    intensity: "medium",
+    intensity: "moderate",
     category: "cardio",
     color: "#ff6b6b",
   },
@@ -123,7 +126,7 @@ const workoutTemplates: WorkoutTemplate[] = [
     name: "Sports Activity",
     exercises: ["Basketball", "Tennis (singles)", "Soccer"],
     duration: 60,
-    intensity: "medium",
+    intensity: "moderate",
     category: "sports",
     color: "#6c5ce7",
   },
@@ -131,7 +134,7 @@ const workoutTemplates: WorkoutTemplate[] = [
 
 const intensityColors = {
   low: "#95e1d3",
-  medium: "#f38ba8",
+  moderate: "#f38ba8",
   high: "#e74c3c",
 };
 
@@ -152,6 +155,8 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
 }) => {
   const [events, setEvents] = useState<WorkoutEvent[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const notificationsEnabled = true;
   const [selectedEvent, setSelectedEvent] = useState<WorkoutEvent | null>(null);
   const [currentView, setCurrentView] = useState<View>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -166,7 +171,7 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
     start: new Date(),
     end: new Date(),
     duration: 30,
-    intensity: "medium" as "low" | "medium" | "high",
+    intensity: "moderate" as const,
     category: "cardio" as "cardio" | "strength" | "flexibility" | "sports" | "other",
     notes: "",
     isRecurring: false,
@@ -194,7 +199,7 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
           start: workoutDate,
           end: new Date(workoutDate.getTime() + workout.duration * 60000),
           duration: workout.duration,
-          intensity: "medium" as const, // Default intensity
+          intensity: "moderate" as const, // Default intensity
           caloriesBurned: workout.caloriesBurned,
           category: getCategoryFromExercise(workout.exercise),
           notes: "",
@@ -256,21 +261,36 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
     return "other";
   };
 
-  const calculateCalories = (_exercise: string, duration: number): number => {
+  const calculateCalories = useCallback((exercise: string, duration: number): number => {
     // Simplified MET calculation - you can expand this with your existing MET values
     const baseMET = 5; // Default MET value
     const hours = duration / 60;
     return Math.round(baseMET * userWeight * hours);
+  }, [userWeight]);
+
+  const cleanRecurrenceRule = (rule: RecurrenceRule | null | undefined): RecurrenceRule | undefined => {
+    if (!rule) return undefined;
+    
+    const cleaned: Partial<RecurrenceRule> = { ...rule };
+    
+    // Remove undefined values
+    (Object.keys(cleaned) as Array<keyof RecurrenceRule>).forEach(key => {
+      if (cleaned[key] === undefined) {
+        delete cleaned[key];
+      }
+    });
+    
+    return cleaned as RecurrenceRule;
   };
 
-  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
+  const handleSelectSlot = ({ start }: { start: Date; end: Date }) => {
     setFormData({
       title: "",
       exercise: "",
       start,
       end: new Date(start.getTime() + 30 * 60000), // Default 30 min duration
       duration: 30,
-      intensity: "medium",
+      intensity: "moderate",
       category: "cardio",
       notes: "",
       isRecurring: false,
@@ -298,15 +318,67 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
   };
 
   const generateRecurringEvents = (startDate: Date, rule: RecurrenceRule): Date[] => {
-    const events: Date[] = [startDate];
+    if (!rule) return [];
     
-    if (!rule) return events;
-    
-    const { frequency, interval, count, endDate } = rule;
+    const { frequency, interval, count, endDate, weekdays } = rule;
     const endCondition = endDate ? new Date(endDate) : null;
     const maxOccurrences = count || 365; // Prevent infinite loops
+    const events: Date[] = [];
+    const dayMap: Record<string, number> = {
+      sunday: 0,
+      monday: 1,
+      tuesday: 2,
+      wednesday: 3,
+      thursday: 4,
+      friday: 5,
+      saturday: 6
+    };
     
+    if (frequency === 'weekly' && weekdays?.length) {
+      // For weekly with specific weekdays, we need to generate occurrences differently
+      const currentDate = new Date(startDate);
+      let occurrences = 0;
+      let weeksProcessed = 0;
+      
+      // Start from the beginning of the week of the start date
+      const startOfWeekDate = startOfWeek(currentDate);
+      
+      while (occurrences < maxOccurrences) {
+        // For each week in the interval
+        const weekStart = addWeeks(startOfWeekDate, weeksProcessed * interval);
+        
+        // Check each selected weekday in this week
+        for (const weekday of weekdays) {
+          const targetDay = dayMap[weekday];
+          const eventDate = addDays(weekStart, targetDay);
+          
+          // Only add if it's not before the start date and meets the end condition
+          if (
+            (eventDate >= startDate || isSameDay(eventDate, startDate)) &&
+            (!endCondition || eventDate <= endCondition)
+          ) {
+            events.push(new Date(eventDate));
+            occurrences++;
+            
+            if (occurrences >= maxOccurrences) break;
+          }
+        }
+        
+        weeksProcessed++;
+        
+        // Safety check to prevent infinite loops
+        if (weeksProcessed > 1000) break;
+      }
+      
+      // Sort all events by date and limit to maxOccurrences
+      return events
+        .sort((a, b) => a.getTime() - b.getTime())
+        .slice(0, maxOccurrences);
+    } 
+    
+    // Original logic for other frequency types
     let currentDate = new Date(startDate);
+    events.push(new Date(currentDate));
     
     for (let i = 1; i < maxOccurrences; i++) {
       let nextDate: Date;
@@ -317,32 +389,16 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
           break;
         case 'weekly':
           nextDate = addWeeks(currentDate, interval);
-          // Adjust for specific weekdays if specified
-          if (rule.weekdays?.length) {
-            // This is simplified - in a real app, you'd need to handle multiple weekdays per week
-            const dayOfWeek = currentDate.getDay();
-            const nextDayIndex = rule.weekdays.findIndex(d => {
-              const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
-              return dayMap[d as keyof typeof dayMap] > dayOfWeek;
-            });
-            
-            if (nextDayIndex >= 0) {
-              const nextDay = rule.weekdays[nextDayIndex];
-              const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
-              const daysToAdd = (dayMap[nextDay as keyof typeof dayMap] - dayOfWeek + 7) % 7 || 7;
-              nextDate = addDays(currentDate, daysToAdd);
-            }
-          }
           break;
         case 'monthly':
           nextDate = addMonths(currentDate, interval);
           // Adjust for specific day of month if specified
           if (rule.monthDay) {
-            nextDate.setDate(Math.min(rule.monthDay, new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0).getDate()));
+            const lastDayOfMonth = new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0).getDate();
+            nextDate.setDate(Math.min(rule.monthDay, lastDayOfMonth));
           }
           break;
         case 'custom':
-          // Handle custom recurrence (simplified)
           nextDate = new Date(currentDate);
           if (rule.customDays) nextDate = addDays(nextDate, rule.customDays * interval);
           if (rule.customWeeks) nextDate = addWeeks(nextDate, rule.customWeeks * interval);
@@ -357,12 +413,35 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
         break;
       }
       
-      events.push(nextDate);
+      events.push(new Date(nextDate));
       currentDate = nextDate;
     }
     
     return events;
   };
+
+  const showWorkoutNotification = (exercise: string, duration: number) => {
+    // Use the component's state instead of localStorage directly
+    if (!notificationsEnabled) return;
+
+    // Desktop notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('Workout Logged', {
+        body: `Great job! You've logged ${duration} minutes of ${exercise}`,
+        icon: '/fitness_tracker_logo6.png'
+      });
+    }
+
+    // In-app notification
+    notification.success({
+      message: 'Workout Logged',
+      description: `Great job! You've logged ${duration} minutes of ${exercise}`,
+      icon: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
+      placement: 'topRight',
+    });
+  };
+
+
 
   const handleSaveWorkout = async () => {
     try {
@@ -372,25 +451,36 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
       const seriesId = selectedEvent?.seriesId || `series-${Date.now()}`;
       const workoutPromises = [];
       
+      // Clean up the recurrence rule
+      const cleanedRecurrenceRule = cleanRecurrenceRule(formData.recurrenceRule || undefined);
+      
       // If this is a recurring event, generate all occurrences
-      const eventDates = formData.isRecurring && formData.recurrenceRule
-        ? generateRecurringEvents(formData.start, formData.recurrenceRule)
+      const eventDates = formData.isRecurring && cleanedRecurrenceRule
+        ? generateRecurringEvents(formData.start, cleanedRecurrenceRule)
         : [formData.start];
 
       // Create a workout for each date
       for (const eventDate of eventDates) {
-        const workoutData = {
+        const workoutData: Omit<WorkoutEvent, 'id'> & { date: Date } = {
+          title: formData.title,
           exercise: formData.exercise || formData.title,
           duration: formData.duration,
           date: eventDate,
+          intensity: formData.intensity || 'medium', // Default to 'medium' if not provided
+          category: formData.category || 'other', // Default to 'other' if not provided
           caloriesBurned: calculateCalories(
             formData.exercise || formData.title,
             formData.duration
           ),
           isRecurring: formData.isRecurring,
-          recurrenceRule: formData.recurrenceRule,
-          seriesId: formData.isRecurring ? seriesId : undefined,
+          notes: formData.notes || '' // Add empty string as default for optional notes
         };
+        
+        // Only add seriesId and recurrenceRule for recurring events
+        if (formData.isRecurring && cleanedRecurrenceRule) {
+          workoutData.seriesId = seriesId;
+          workoutData.recurrenceRule = cleanedRecurrenceRule;
+        }
 
         // If editing an existing event in a series, delete it first
         if (selectedEvent?.id && !formData.isRecurring) {
@@ -402,6 +492,12 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
 
       // Wait for all workouts to be saved
       await Promise.all(workoutPromises);
+      
+      // Show notification for the saved workout
+      if (formData.exercise || formData.title) {
+        const exerciseName = formData.exercise || formData.title || 'workout';
+        showWorkoutNotification(exerciseName, formData.duration);
+      }
       
       // Reload all workouts
       await loadWorkouts();
@@ -415,22 +511,38 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
     }
   };
 
-  const handleDeleteWorkout = async () => {
-    if (!selectedEvent?.id) return;
+  const handleDeleteWorkout = async (id: string) => {
+    try {
+      setLoading(true);
+      await deleteWorkout(id);
+      await loadWorkouts();
+      notification.success({
+        message: 'Workout Deleted',
+        description: 'The workout has been successfully deleted.',
+        placement: 'topRight',
+      });
+    } catch (err) {
+      setError("Failed to delete workout");
+      console.error("Error deleting workout:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (window.confirm("Are you sure you want to delete this workout?")) {
-      try {
-        setLoading(true);
-        await deleteWorkout(selectedEvent.id);
-        await loadWorkouts();
-        setShowModal(false);
-        resetForm();
-      } catch (err) {
-        setError("Failed to delete workout");
-        console.error("Error deleting workout:", err);
-      } finally {
-        setLoading(false);
-      }
+  const handleDeleteAllWorkouts = async () => {
+    try {
+      setLoading(true);
+      const allWorkouts = await getUserWorkouts();
+      await Promise.all(allWorkouts.map(workout => 
+        workout.id ? deleteWorkout(workout.id) : Promise.resolve()
+      ));
+      await loadWorkouts();
+      setShowDeleteConfirm(false);
+    } catch (err) {
+      setError("Failed to delete all workouts");
+      console.error("Error deleting all workouts:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -463,7 +575,7 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
       start: new Date(),
       end: new Date(),
       duration: 30,
-      intensity: "medium",
+      intensity: "moderate",
       category: "cardio",
       notes: "",
       isRecurring: false,
@@ -554,8 +666,18 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
                   });
                   setShowModal(true);
                 }}
+                className="me-2"
               >
                 <FaPlus /> Add Workout
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={events.length === 0 || loading}
+                className="delete-all-btn"
+              >
+                <FaTrash /> Delete All
               </Button>
             </div>
           </div>
@@ -701,12 +823,12 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        intensity: e.target.value as "low" | "medium" | "high",
+                        intensity: e.target.value as "low" | "moderate" | "high",
                       })
                     }
                   >
                     <option value="low">Low</option>
-                    <option value="medium">Medium</option>
+                    <option value="moderate">Moderate</option>
                     <option value="high">High</option>
                   </Form.Select>
                 </Form.Group>
@@ -820,6 +942,47 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
               </Button>
             </div>
           </div>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        show={showDeleteConfirm}
+        onHide={() => !loading && setShowDeleteConfirm(false)}
+        centered
+      >
+        <Modal.Header closeButton closeVariant={loading ? 'white' : undefined}>
+          <Modal.Title className="text-danger">
+            <FaExclamationTriangle className="me-2" />
+            Delete All Workouts
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete <strong>all</strong> your workouts? This action cannot be undone.</p>
+          <p className="text-muted">This will remove {events.length} workout{events.length !== 1 ? 's' : ''} from your calendar.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="outline-secondary"
+            onClick={() => setShowDeleteConfirm(false)}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleDeleteAllWorkouts}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Deleting...
+              </>
+            ) : (
+              'Delete All Workouts'
+            )}
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

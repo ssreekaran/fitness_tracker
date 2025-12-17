@@ -30,7 +30,10 @@ import {
   CalendarOutlined,
   DeleteOutlined,
   SettingOutlined,
+  BellOutlined,
+  BellFilled
 } from "@ant-design/icons";
+import { Switch } from "antd";
 import { User } from "firebase/auth";
 import "./ProfilePage.css";
 
@@ -49,6 +52,13 @@ const ProfilePage: React.FC = () => {
   const [success, setSuccess] = useState<string>("");
   const [deleting, setDeleting] = useState(false);
   const [showGoalsManager, setShowGoalsManager] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('notificationsEnabled');
+      return saved !== null ? JSON.parse(saved) : true;
+    }
+    return true;
+  });
   const navigate = useNavigate();
 
   const loadActivityData = async () => {
@@ -67,6 +77,20 @@ const ProfilePage: React.FC = () => {
 
   const handleGoalsUpdate = () => {
     loadActivityData(); // Refresh activity data when goals are updated
+  };
+
+  const handleNotificationToggle = (checked: boolean) => {
+    setNotificationsEnabled(checked);
+    localStorage.setItem('notificationsEnabled', JSON.stringify(checked));
+    
+    // Request notification permission if enabling
+    if (checked && 'Notification' in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'denied') {
+          console.warn('Notification permission was denied');
+        }
+      });
+    }
   };
 
   useEffect(() => {
@@ -344,13 +368,28 @@ const ProfilePage: React.FC = () => {
                 </Space>
               }
               extra={
-                <Button
-                  type="link"
-                  icon={<SettingOutlined />}
-                  onClick={() => setShowGoalsManager(!showGoalsManager)}
-                >
-                  {showGoalsManager ? "Hide" : "Customize"} Goals
-                </Button>
+                <Space>
+                  <div className="notification-toggle">
+                    {notificationsEnabled ? (
+                      <BellFilled style={{ color: '#1890ff', marginRight: 8 }} />
+                    ) : (
+                      <BellOutlined style={{ color: '#8c8c8c', marginRight: 8 }} />
+                    )}
+                    <Switch
+                      checked={notificationsEnabled}
+                      onChange={handleNotificationToggle}
+                      checkedChildren="On"
+                      unCheckedChildren="Off"
+                    />
+                  </div>
+                  <Button
+                    type="link"
+                    icon={<SettingOutlined />}
+                    onClick={() => setShowGoalsManager(!showGoalsManager)}
+                  >
+                    {showGoalsManager ? "Hide" : "Customize"} Goals
+                  </Button>
+                </Space>
               }
             >
               {activityError ? (
