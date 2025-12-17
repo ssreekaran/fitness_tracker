@@ -8,7 +8,6 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-// Using a generic icon since SiBluesky might not be available in this version
 import "./ContactUs.css";
 
 const ContactUs: React.FC = () => {

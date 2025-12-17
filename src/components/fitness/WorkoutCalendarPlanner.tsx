@@ -12,7 +12,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Calendar, dateFnsLocalizer, View, Event } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
+import { format, parse, startOfWeek, getDay, addDays, addWeeks, addMonths, isAfter } from "date-fns";
 import { enUS } from "date-fns/locale";
 import {
   Card,
@@ -64,7 +64,12 @@ interface WorkoutEvent extends Event {
   caloriesBurned?: number;
   notes?: string;
   category: "cardio" | "strength" | "flexibility" | "sports" | "other";
+  isRecurring?: boolean;
+  recurrenceRule?: RecurrenceRule;
+  seriesId?: string; // Unique ID to group recurring events
 }
+
+import RecurrenceOptions, { RecurrenceRule } from './RecurrenceOptions';
 
 interface WorkoutTemplate {
   id: string;
@@ -162,13 +167,10 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
     end: new Date(),
     duration: 30,
     intensity: "medium" as "low" | "medium" | "high",
-    category: "cardio" as
-      | "cardio"
-      | "strength"
-      | "flexibility"
-      | "sports"
-      | "other",
+    category: "cardio" as "cardio" | "strength" | "flexibility" | "sports" | "other",
     notes: "",
+    isRecurring: false,
+    recurrenceRule: null as RecurrenceRule | null,
   });
 
   // Load workouts from service
@@ -262,18 +264,17 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
   };
 
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    const duration = Math.round(
-      (end.getTime() - start.getTime()) / (1000 * 60)
-    );
     setFormData({
       title: "",
       exercise: "",
       start,
-      end,
-      duration: duration > 0 ? duration : 30,
+      end: new Date(start.getTime() + 30 * 60000), // Default 30 min duration
+      duration: 30,
       intensity: "medium",
       category: "cardio",
       notes: "",
+      isRecurring: false,
+      recurrenceRule: null,
     });
     setSelectedEvent(null);
     setShowModal(true);
@@ -290,30 +291,119 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
       intensity: event.intensity,
       category: event.category,
       notes: event.notes || "",
+      isRecurring: !!event.isRecurring,
+      recurrenceRule: event.recurrenceRule || null,
     });
     setShowModal(true);
+  };
+
+  const generateRecurringEvents = (startDate: Date, rule: RecurrenceRule): Date[] => {
+    const events: Date[] = [startDate];
+    
+    if (!rule) return events;
+    
+    const { frequency, interval, count, endDate } = rule;
+    const endCondition = endDate ? new Date(endDate) : null;
+    const maxOccurrences = count || 365; // Prevent infinite loops
+    
+    let currentDate = new Date(startDate);
+    
+    for (let i = 1; i < maxOccurrences; i++) {
+      let nextDate: Date;
+      
+      switch (frequency) {
+        case 'daily':
+          nextDate = addDays(currentDate, interval);
+          break;
+        case 'weekly':
+          nextDate = addWeeks(currentDate, interval);
+          // Adjust for specific weekdays if specified
+          if (rule.weekdays?.length) {
+            // This is simplified - in a real app, you'd need to handle multiple weekdays per week
+            const dayOfWeek = currentDate.getDay();
+            const nextDayIndex = rule.weekdays.findIndex(d => {
+              const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
+              return dayMap[d as keyof typeof dayMap] > dayOfWeek;
+            });
+            
+            if (nextDayIndex >= 0) {
+              const nextDay = rule.weekdays[nextDayIndex];
+              const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
+              const daysToAdd = (dayMap[nextDay as keyof typeof dayMap] - dayOfWeek + 7) % 7 || 7;
+              nextDate = addDays(currentDate, daysToAdd);
+            }
+          }
+          break;
+        case 'monthly':
+          nextDate = addMonths(currentDate, interval);
+          // Adjust for specific day of month if specified
+          if (rule.monthDay) {
+            nextDate.setDate(Math.min(rule.monthDay, new Date(nextDate.getFullYear(), nextDate.getMonth() + 1, 0).getDate()));
+          }
+          break;
+        case 'custom':
+          // Handle custom recurrence (simplified)
+          nextDate = new Date(currentDate);
+          if (rule.customDays) nextDate = addDays(nextDate, rule.customDays * interval);
+          if (rule.customWeeks) nextDate = addWeeks(nextDate, rule.customWeeks * interval);
+          if (rule.customMonths) nextDate = addMonths(nextDate, rule.customMonths * interval);
+          break;
+        default:
+          return events;
+      }
+      
+      // Stop if we've reached or passed the end date
+      if (endCondition && isAfter(nextDate, endCondition)) {
+        break;
+      }
+      
+      events.push(nextDate);
+      currentDate = nextDate;
+    }
+    
+    return events;
   };
 
   const handleSaveWorkout = async () => {
     try {
       setLoading(true);
+      setError("");
 
-      const workoutData = {
-        exercise: formData.exercise || formData.title,
-        duration: formData.duration,
-        date: formData.start,
-        caloriesBurned: calculateCalories(
-          formData.exercise || formData.title,
-          formData.duration
-        ),
-      };
+      const seriesId = selectedEvent?.seriesId || `series-${Date.now()}`;
+      const workoutPromises = [];
+      
+      // If this is a recurring event, generate all occurrences
+      const eventDates = formData.isRecurring && formData.recurrenceRule
+        ? generateRecurringEvents(formData.start, formData.recurrenceRule)
+        : [formData.start];
 
-      if (selectedEvent?.id) {
-        // Update existing workout
-        await deleteWorkout(selectedEvent.id);
+      // Create a workout for each date
+      for (const eventDate of eventDates) {
+        const workoutData = {
+          exercise: formData.exercise || formData.title,
+          duration: formData.duration,
+          date: eventDate,
+          caloriesBurned: calculateCalories(
+            formData.exercise || formData.title,
+            formData.duration
+          ),
+          isRecurring: formData.isRecurring,
+          recurrenceRule: formData.recurrenceRule,
+          seriesId: formData.isRecurring ? seriesId : undefined,
+        };
+
+        // If editing an existing event in a series, delete it first
+        if (selectedEvent?.id && !formData.isRecurring) {
+          await deleteWorkout(selectedEvent.id);
+        }
+
+        workoutPromises.push(saveWorkout(workoutData));
       }
 
-      await saveWorkout(workoutData);
+      // Wait for all workouts to be saved
+      await Promise.all(workoutPromises);
+      
+      // Reload all workouts
       await loadWorkouts();
       setShowModal(false);
       resetForm();
@@ -358,6 +448,8 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
       intensity: template.intensity,
       category: template.category,
       notes: `${template.name} workout session`,
+      isRecurring: false,
+      recurrenceRule: null,
     });
 
     setSelectedEvent(null); // Clear any selected event
@@ -374,6 +466,8 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
       intensity: "medium",
       category: "cardio",
       notes: "",
+      isRecurring: false,
+      recurrenceRule: null,
     });
     setSelectedEvent(null);
   };
@@ -689,6 +783,17 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
                 placeholder="Add any notes about this workout..."
               />
             </Form.Group>
+
+            <RecurrenceOptions
+              value={formData.recurrenceRule || null}
+              onChange={(rule) => {
+                setFormData(prev => ({
+                  ...prev,
+                  isRecurring: rule !== null,
+                  recurrenceRule: rule
+                }));
+              }}
+            />
           </Form>
         </Modal.Body>
         <Modal.Footer>
