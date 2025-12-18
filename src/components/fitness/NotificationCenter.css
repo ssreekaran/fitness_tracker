@@ -2,6 +2,34 @@
  * Notification Center Styles
  */
 
+/* Theme variables */
+:root {
+  --nc-card-bg: rgba(255, 255, 255, 0.95);
+  --nc-header-bg: rgba(255, 255, 255, 0.95);
+  --nc-title: #262626;
+  --nc-text: #595959;
+  --nc-border: #e6e6e6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --nc-card-bg: rgba(30, 30, 30, 0.95);
+    --nc-header-bg: rgba(20, 20, 20, 0.95);
+    --nc-title: #f0f0f0;
+    --nc-text: #d9d9d9;
+    --nc-border: #2a2a2a;
+  }
+}
+
+/* Explicit dark theme class override (app uses .dark on html/body) */
+.dark {
+  --nc-card-bg: #141414;
+  --nc-header-bg: #0f0f0f;
+  --nc-title: #ffffff;
+  --nc-text: #e6e6e6;
+  --nc-border: #2a2a2a;
+}
+
 .notification-center {
   position: fixed;
   top: 80px;
@@ -18,12 +46,26 @@
 }
 
 .notification-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: #111111;
+  color: #ffffff;
   backdrop-filter: blur(10px);
   padding: 12px 16px;
   border-radius: 8px 8px 0 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #2a2a2a;
   margin-bottom: 8px;
+}
+
+.notification-header * {
+  color: #ffffff !important;
+}
+
+.notification-header .ant-btn {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.notification-header .ant-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .notification-list {
@@ -34,11 +76,13 @@
 
 .notification-item {
   animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   overflow: hidden;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  background: var(--nc-card-bg) !important;
+  border: 1px solid var(--nc-border);
 }
 
 .notification-item:hover {
@@ -48,6 +92,20 @@
 
 .notification-content {
   padding: 4px 0;
+}
+
+/* Ant Design card body inside our item */
+.notification-item .ant-card-body {
+  background: var(--nc-card-bg);
+  padding: 14px 18px;
+  color: var(--nc-text);
+}
+
+.notification-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
 }
 
 .notification-header {
@@ -63,14 +121,15 @@
 }
 
 .notification-title {
-  font-size: 0.9rem;
-  color: #262626;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--nc-title);
 }
 
 .notification-message {
-  font-size: 0.85rem;
-  color: #595959;
-  line-height: 1.4;
+  font-size: 1rem;
+  color: var(--nc-text);
+  line-height: 1.5;
   display: block;
 }
 
@@ -117,6 +176,28 @@
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* Progress bar for auto-dismiss notifications */
+.notification-progress {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(to right, #91caff, #1677ff);
+  transform-origin: left center;
+  animation-name: nc-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@media (prefers-color-scheme: dark) {
+  .notification-progress {
+    background: linear-gradient(to right, #5b8c00, #52c41a);
+  }
+}
+
+@keyframes nc-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
 }
 
 @keyframes bounce {
@@ -204,20 +285,7 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .notification-header {
-    background: rgba(20, 20, 20, 0.95);
     border-bottom-color: #303030;
-  }
-
-  .notification-item {
-    background: rgba(30, 30, 30, 0.95) !important;
-  }
-
-  .notification-title {
-    color: #f0f0f0;
-  }
-
-  .notification-message {
-    color: #d9d9d9;
   }
 }
 

@@ -13,8 +13,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Calendar, dateFnsLocalizer, View, Event } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay, addDays, addWeeks, addMonths, isAfter, isSameDay } from "date-fns";
+import { notificationService } from '../../services/notificationService';
 import { notification } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons';
 import { enUS } from "date-fns/locale";
 import {
   Card,
@@ -43,6 +43,7 @@ import {
   saveWorkout,
   getUserWorkouts,
   deleteWorkout,
+  WorkoutLog,
 } from "../../services/workoutService";
 import { Timestamp } from "firebase/firestore";
 import "./WorkoutCalendarPlanner.css";
@@ -156,7 +157,13 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
   const [events, setEvents] = useState<WorkoutEvent[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const notificationsEnabled = true;
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('notificationsEnabled');
+      return saved !== null ? JSON.parse(saved) : true;
+    }
+    return true;
+  });
   const [selectedEvent, setSelectedEvent] = useState<WorkoutEvent | null>(null);
   const [currentView, setCurrentView] = useState<View>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -165,17 +172,30 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   // Form state
-  const [formData, setFormData] = useState({
+  type PlannerFormData = {
+    title: string;
+    exercise: string;
+    start: Date;
+    end: Date;
+    duration: number;
+    intensity: "low" | "moderate" | "high";
+    category: "cardio" | "strength" | "flexibility" | "sports" | "other";
+    notes: string;
+    isRecurring: boolean;
+    recurrenceRule: RecurrenceRule | null;
+  };
+
+  const [formData, setFormData] = useState<PlannerFormData>({
     title: "",
     exercise: "",
     start: new Date(),
     end: new Date(),
     duration: 30,
-    intensity: "moderate" as const,
-    category: "cardio" as "cardio" | "strength" | "flexibility" | "sports" | "other",
+    intensity: "moderate",
+    category: "cardio",
     notes: "",
     isRecurring: false,
-    recurrenceRule: null as RecurrenceRule | null,
+    recurrenceRule: null,
   });
 
   // Load workouts from service
@@ -219,6 +239,21 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
     loadWorkouts();
   }, [loadWorkouts]);
 
+  // Keep notificationsEnabled in sync with Profile toggle
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'notificationsEnabled' && e.newValue !== null) {
+        try {
+          setNotificationsEnabled(JSON.parse(e.newValue));
+        } catch {
+          // ignore parse errors
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const getCategoryFromExercise = (
     exercise: string
   ): "cardio" | "strength" | "flexibility" | "sports" | "other" => {
@@ -261,7 +296,7 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
     return "other";
   };
 
-  const calculateCalories = useCallback((exercise: string, duration: number): number => {
+  const calculateCalories = useCallback((_exercise: string, duration: number): number => {
     // Simplified MET calculation - you can expand this with your existing MET values
     const baseMET = 5; // Default MET value
     const hours = duration / 60;
@@ -421,23 +456,23 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
   };
 
   const showWorkoutNotification = (exercise: string, duration: number) => {
-    // Use the component's state instead of localStorage directly
-    if (!notificationsEnabled) return;
-
-    // Desktop notification
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Workout Logged', {
-        body: `Great job! You've logged ${duration} minutes of ${exercise}`,
-        icon: '/fitness_tracker_logo6.png'
-      });
+    // Check the latest setting (covers case where Profile toggled while this page is open)
+    let enabled = notificationsEnabled;
+    try {
+      const saved = localStorage.getItem('notificationsEnabled');
+      if (saved !== null) enabled = JSON.parse(saved);
+    } catch {
+      // ignore parse errors
     }
+    if (!enabled) return;
 
-    // In-app notification
-    notification.success({
-      message: 'Workout Logged',
-      description: `Great job! You've logged ${duration} minutes of ${exercise}`,
-      icon: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
-      placement: 'topRight',
+    // Use in-app Notification Center for consistent styling
+    notificationService.show({
+      title: 'Workout Logged',
+      message: `Great job! You've logged ${duration} minutes of ${exercise}`,
+      type: 'celebration',
+      icon: '✅',
+      duration: 4000,
     });
   };
 
@@ -448,7 +483,6 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
       setLoading(true);
       setError("");
 
-      const seriesId = selectedEvent?.seriesId || `series-${Date.now()}`;
       const workoutPromises = [];
       
       // Clean up the recurrence rule
@@ -461,33 +495,24 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
 
       // Create a workout for each date
       for (const eventDate of eventDates) {
-        const workoutData: Omit<WorkoutEvent, 'id'> & { date: Date } = {
-          title: formData.title,
+        // Prepare the payload that matches WorkoutLog requirements
+        const workoutToSave: Omit<WorkoutLog, "id" | "userId" | "createdAt"> = {
           exercise: formData.exercise || formData.title,
           duration: formData.duration,
-          date: eventDate,
-          intensity: formData.intensity || 'medium', // Default to 'medium' if not provided
-          category: formData.category || 'other', // Default to 'other' if not provided
+          intensity: formData.intensity || "moderate",
           caloriesBurned: calculateCalories(
             formData.exercise || formData.title,
             formData.duration
           ),
-          isRecurring: formData.isRecurring,
-          notes: formData.notes || '' // Add empty string as default for optional notes
+          date: eventDate,
         };
-        
-        // Only add seriesId and recurrenceRule for recurring events
-        if (formData.isRecurring && cleanedRecurrenceRule) {
-          workoutData.seriesId = seriesId;
-          workoutData.recurrenceRule = cleanedRecurrenceRule;
-        }
 
         // If editing an existing event in a series, delete it first
         if (selectedEvent?.id && !formData.isRecurring) {
           await deleteWorkout(selectedEvent.id);
         }
 
-        workoutPromises.push(saveWorkout(workoutData));
+        workoutPromises.push(saveWorkout(workoutToSave));
       }
 
       // Wait for all workouts to be saved
@@ -923,7 +948,11 @@ const WorkoutCalendarPlanner: React.FC<WorkoutCalendarPlannerProps> = ({
             {selectedEvent && (
               <Button
                 variant="danger"
-                onClick={handleDeleteWorkout}
+                onClick={() => {
+                  if (selectedEvent?.id) {
+                    handleDeleteWorkout(selectedEvent.id);
+                  }
+                }}
                 disabled={loading}
               >
                 <FaTrash /> Delete

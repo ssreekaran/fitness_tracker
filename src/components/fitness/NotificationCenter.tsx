@@ -30,32 +30,26 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       case "achievement":
         return {
           borderLeft: "4px solid #52c41a",
-          background: "linear-gradient(135deg, #f6ffed, #ffffff)",
         };
       case "goal":
         return {
           borderLeft: "4px solid #1890ff",
-          background: "linear-gradient(135deg, #f0f8ff, #ffffff)",
         };
       case "milestone":
         return {
           borderLeft: "4px solid #faad14",
-          background: "linear-gradient(135deg, #fffbe6, #ffffff)",
         };
       case "celebration":
         return {
           borderLeft: "4px solid #722ed1",
-          background: "linear-gradient(135deg, #f9f0ff, #ffffff)",
         };
       case "reminder":
         return {
           borderLeft: "4px solid #fa8c16",
-          background: "linear-gradient(135deg, #fff7e6, #ffffff)",
         };
       default:
         return {
           borderLeft: "4px solid #d9d9d9",
-          background: "#ffffff",
         };
     }
   };
@@ -87,7 +81,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       ].filter(Boolean)}
     >
       <div className="notification-content">
-        <div className="notification-header">
+        <div className="notification-item-header">
           {notification.icon && (
             <span className="notification-icon">{notification.icon}</span>
           )}
@@ -97,6 +91,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         </div>
         <Text className="notification-message">{notification.message}</Text>
       </div>
+      {notification.duration && notification.duration > 0 && (
+        <div
+          className="notification-progress"
+          style={{ animationDuration: `${notification.duration}ms` }}
+        />
+      )}
     </Card>
   );
 };

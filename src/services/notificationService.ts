@@ -31,6 +31,17 @@ class NotificationService {
    * Show a notification
    */
   show(config: NotificationConfig): void {
+    // Respect global notification toggle stored in localStorage
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('notificationsEnabled') : null;
+      const enabled = saved !== null ? JSON.parse(saved) : true;
+      if (!enabled) {
+        return;
+      }
+    } catch {
+      // If parsing fails, proceed with default behavior
+    }
+
     this.notifications.push(config);
     this.notifyListeners(config);
 
@@ -233,6 +244,17 @@ class NotificationService {
    * Show browser notification (requires permission)
    */
   async showBrowserNotification(config: NotificationConfig): Promise<void> {
+    // Respect global notification toggle
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('notificationsEnabled') : null;
+      const enabled = saved !== null ? JSON.parse(saved) : true;
+      if (!enabled) {
+        return;
+      }
+    } catch {
+      // ignore parse errors
+    }
+
     const hasPermission = await this.requestPermission();
 
     if (!hasPermission) {

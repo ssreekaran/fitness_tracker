@@ -959,16 +959,37 @@ export const unlockAchievement = async (
       level: newLevel,
     };
 
-    // Show achievement unlock notification
-    notificationService.showAchievementUnlock(
-      achievement.name,
-      achievement.points,
-      achievement.icon
-    );
+    // Show achievement unlock notification (respect global toggle)
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('notificationsEnabled') : null;
+      const enabled = saved !== null ? JSON.parse(saved) : true;
+      if (enabled) {
+        notificationService.showAchievementUnlock(
+          achievement.name,
+          achievement.points,
+          achievement.icon
+        );
+      }
+    } catch {
+      // Fallback to showing if parsing fails
+      notificationService.showAchievementUnlock(
+        achievement.name,
+        achievement.points,
+        achievement.icon
+      );
+    }
 
     // Show level up notification if applicable
     if (leveledUp) {
-      notificationService.showLevelUp(newLevel, newTotalPoints);
+      try {
+        const saved = typeof window !== 'undefined' ? localStorage.getItem('notificationsEnabled') : null;
+        const enabled = saved !== null ? JSON.parse(saved) : true;
+        if (enabled) {
+          notificationService.showLevelUp(newLevel, newTotalPoints);
+        }
+      } catch {
+        notificationService.showLevelUp(newLevel, newTotalPoints);
+      }
     }
 
     return await updateUserGoals(updates);
@@ -990,8 +1011,6 @@ export const checkAchievements = async (
   try {
     const currentGoals = await getUserGoals();
     const newlyUnlocked: Achievement[] = [];
-    const notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
-    const { notification } = await import('antd');
 
     for (const achievement of currentGoals.achievements) {
       if (achievement.isUnlocked) continue;
@@ -1025,16 +1044,7 @@ export const checkAchievements = async (
       if (shouldUnlock) {
         await unlockAchievement(achievement.id);
         newlyUnlocked.push(achievement);
-        
-        // Only show notification if enabled
-        if (notificationsEnabled) {
-          notification.success({
-            message: 'Achievement Unlocked! 🎉',
-            description: `You've earned "${achievement.name}" (${achievement.points} points)`,
-            placement: 'topRight',
-            duration: 5,
-          });
-        }
+        // We rely on notificationService via unlockAchievement to render in-app UI.
       }
     }
 
