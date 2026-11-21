@@ -58,6 +58,13 @@ h1 {
   flex-shrink: 0 !important;
 }
 
+/* Dark mode: use the theme hero gradient instead of the light one,
+   otherwise the page background stays light grey/teal in dark mode. */
+:root.dark .home-container .hero {
+  background: var(--hero-bg);
+  border-color: var(--hero-border);
+}
+
 .home-container .hero-inner {
   position: relative;
   z-index: 2;
