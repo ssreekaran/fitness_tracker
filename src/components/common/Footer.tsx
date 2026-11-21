@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
         </div>
         {/* Copyright notice with dynamic year */}
         <div className="footer-copyright">
-          © {new Date().getFullYear()} Fitness Tracker. All rights reserved.
+          {`© ${new Date().getFullYear()} Fitness Tracker. All rights reserved.`}
         </div>
       </div>
     </footer>

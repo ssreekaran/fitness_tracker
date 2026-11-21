@@ -184,16 +184,8 @@
   text-decoration: underline;
 }
 
-.about-container .feature-link::after {
-  content: "→";
-  margin-left: 0.5rem;
-  transition: transform 0.2s ease;
-  pointer-events: none;
-}
-
-.about-container .feature-link:hover::after {
-  transform: translateX(3px);
-}
+/* The link text already ends with "→", so no ::after arrow is added —
+   it previously rendered as a doubled "→ →". */
 
 /* Dark Theme Overrides */
 :root.dark,
