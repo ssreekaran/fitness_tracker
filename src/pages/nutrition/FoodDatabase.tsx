@@ -22,29 +22,66 @@ const FoodDatabase: React.FC = () => {
   const [foods, setFoods] = useState<Food[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [nutrientList, setNutrientList] = useState<Nutrient[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
 
+  const collectNutrients = (foodsArr: Food[]) => {
+    const nutrientMap: { [nutrientID: string]: Nutrient } = {};
+    foodsArr.forEach((food) => {
+      (food.Nutrients || []).forEach((nut) => {
+        if (nut.NutrientID && !nutrientMap[nut.NutrientID]) {
+          nutrientMap[nut.NutrientID] = nut;
+        }
+      });
+    });
+    return Object.values(nutrientMap).slice(0, 10);
+  };
+
   useEffect(() => {
     async function fetchFoods() {
+      // The Canadian Nutrient File rarely changes, so cache it in
+      // sessionStorage: the first visit fetches ~5,700 foods from
+      // Firestore (several seconds), later visits render instantly.
+      try {
+        const cached = sessionStorage.getItem("fitness-tracker-foods-v1");
+        if (cached) {
+          const foodsArr: Food[] = JSON.parse(cached);
+          setFoods(foodsArr);
+          setNutrientList(collectNutrients(foodsArr));
+          setLoading(false);
+          return;
+        }
+      } catch {
+        // Corrupt / oversized cache — fall through to a fresh fetch.
+      }
       setLoading(true);
-      const foodsRef = collection(db, "foods");
-      const q = query(foodsRef);
-      const snapshot = await getDocs(q);
-      const foodsArr: Food[] = snapshot.docs.map((doc) => doc.data() as Food);
-      setFoods(foodsArr);
-      // Collect all unique nutrients for header
-      const nutrientMap: { [nutrientID: string]: Nutrient } = {};
-      foodsArr.forEach((food) => {
-        (food.Nutrients || []).forEach((nut) => {
-          if (nut.NutrientID && !nutrientMap[nut.NutrientID]) {
-            nutrientMap[nut.NutrientID] = nut;
-          }
-        });
-      });
-      setNutrientList(Object.values(nutrientMap).slice(0, 10));
-      setLoading(false);
+      setLoadError("");
+      try {
+        const foodsRef = collection(db, "foods");
+        const q = query(foodsRef);
+        const snapshot = await getDocs(q);
+        const foodsArr: Food[] = snapshot.docs.map((doc) => doc.data() as Food);
+        setFoods(foodsArr);
+        setNutrientList(collectNutrients(foodsArr));
+        try {
+          sessionStorage.setItem(
+            "fitness-tracker-foods-v1",
+            JSON.stringify(foodsArr)
+          );
+        } catch {
+          // Storage full / unavailable — the table still works, it just
+          // fetches again next visit.
+        }
+      } catch (error) {
+        console.error("Error loading food database:", error);
+        setLoadError(
+          "The food database could not be loaded. Please check your connection and try again."
+        );
+      } finally {
+        setLoading(false);
+      }
     }
     fetchFoods();
   }, []);
@@ -140,16 +177,35 @@ const FoodDatabase: React.FC = () => {
 
       <div className="food-db-container">
         {loading ? (
-          <div className="loading-state">Loading food database...</div>
+          <div className="loading-state">
+            Loading food database… this can take a few seconds on your first
+            visit; later visits load instantly from a cache on your device.
+          </div>
+        ) : loadError ? (
+          <div className="loading-state" role="alert">
+            <p>{loadError}</p>
+            <button
+              className="pagination-btn"
+              type="button"
+              onClick={() => window.location.reload()}
+            >
+              Try again
+            </button>
+          </div>
         ) : (
           <div className="table-responsive">
+            <p className="food-db-units">
+              Values are per 100&nbsp;g of food. Units are shown in each
+              column header; &ldquo;—&rdquo; means no value is listed for that
+              food.
+            </p>
             <div className="food-db-table-wrapper">
               <table className="food-db-table">
                 <colgroup>
-                  <col style={{ width: "80px" }} />
-                  <col style={{ minWidth: "200px" }} />
+                  <col style={{ width: "70px" }} />
+                  <col style={{ minWidth: "180px" }} />
                   {nutrientList.map((_, index) => (
-                    <col key={`col-${index}`} style={{ minWidth: "100px" }} />
+                    <col key={`col-${index}`} style={{ minWidth: "72px" }} />
                   ))}
                 </colgroup>
                 <thead>
@@ -159,6 +215,12 @@ const FoodDatabase: React.FC = () => {
                     {nutrientList.map((nutrient) => (
                       <th key={nutrient.NutrientID} className="sticky-header">
                         {nutrient.NutrientSymbol || nutrient.NutrientName}
+                        {nutrient.Unit ? (
+                          <span className="nutrient-unit">
+                            {" "}
+                            ({nutrient.Unit})
+                          </span>
+                        ) : null}
                       </th>
                     ))}
                   </tr>
@@ -174,7 +236,9 @@ const FoodDatabase: React.FC = () => {
                         );
                         return (
                           <td key={nutrient.NutrientID}>
-                            {found ? found.NutrientValue : ""}
+                            {found && found.NutrientValue !== ""
+                              ? found.NutrientValue
+                              : "—"}
                           </td>
                         );
                       })}

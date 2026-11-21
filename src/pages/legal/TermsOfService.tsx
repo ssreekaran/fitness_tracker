@@ -9,9 +9,8 @@ const TermsOfService: React.FC = () => {
 
         <p>
           Welcome to Fitness Tracker! These Terms and Conditions ("Terms")
-          govern your use of the Fitness Tracker website and mobile application
-          (collectively, the "Service") operated by Sarmilan Sreekaran ("us",
-          "we", or "our").
+          govern your use of the Fitness Tracker website (the "Service")
+          operated by Sarmilan Sreekaran ("us", "we", or "our").
         </p>
 
         <h2>1. Acceptance of Terms</h2>
