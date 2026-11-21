@@ -8,16 +8,16 @@ const PrivacyPolicy: React.FC = () => {
         <h1>Privacy Policy</h1>
 
         <p>
-          This privacy policy applies to the Fitness Tracker website and mobile
-          application (hereby referred to as "Service") operated by Sarmilan
+          This privacy policy applies to the Fitness Tracker website
+          (hereby referred to as "Service") operated by Sarmilan
           Sreekaran (hereby referred to as "Service Provider") as a Free
           service. This service is intended for use "AS IS".
         </p>
 
         <h2>Information Collection and Use</h2>
         <p>
-          The Service collects information when you visit our website or use our
-          mobile application. This information may include:
+          The Service collects information when you visit our website. This
+          information may include:
         </p>
         <ul>
           <li>Your device's Internet Protocol address (e.g., IP address)</li>
@@ -34,17 +34,10 @@ const PrivacyPolicy: React.FC = () => {
           <li>Fitness and health data you choose to input</li>
         </ul>
 
-        <div>
-          <p>
-            The Service collects your device's location, which helps us provide
-            features such as:
-          </p>
-          <ul>
-            <li>Personalized content and relevant recommendations</li>
-            <li>Location-based services and features</li>
-            <li>Analytics to improve our Service</li>
-          </ul>
-        </div>
+        <p>
+          The Service does not collect your device&apos;s location. No
+          location-based features are offered on the website.
+        </p>
 
         <p>
           The Service Provider may use the information you provide to contact
@@ -69,29 +62,11 @@ const PrivacyPolicy: React.FC = () => {
         <ul>
           <li>
             <a
-              href="https://policies.google.com/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Google Play Services
-            </a>
-          </li>
-          <li>
-            <a
               href="https://firebase.google.com/support/privacy"
               target="_blank"
               rel="noopener noreferrer"
             >
               Google Analytics for Firebase
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://firebase.google.com/terms/crashlytics"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Firebase Crashlytics
             </a>
           </li>
         </ul>

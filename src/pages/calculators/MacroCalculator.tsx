@@ -8,6 +8,7 @@ import {
   FaBullseye,
 } from "react-icons/fa";
 import "./MacroCalculator.css";
+import { calculateMacros as calculateMacroSplit } from "../../utils/macroCalculator";
 
 const activityLevels = [
   { label: "Sedentary (little or no exercise)", value: 1.2 },
@@ -98,22 +99,18 @@ const MacroCalculator: React.FC = () => {
     const goalData = goals.find((g) => g.value === goal);
     const targetCalories = Math.round(tdee * (goalData?.deficit || 1.0));
 
-    // Calculate macros based on selected split
+    // Calculate macros based on selected split. Grams are rounded to
+    // whole grams and reconciled in calculateMacroSplit so the macro
+    // calories add up exactly to the displayed total (see
+    // src/utils/macroCalculator.ts).
     const split = macroSplits[macroSplit];
-    const proteinCalories = Math.round(targetCalories * (split.protein / 100));
-    const carbCalories = Math.round(targetCalories * (split.carbs / 100));
-    const fatCalories = Math.round(targetCalories * (split.fat / 100));
+    const result = calculateMacroSplit(targetCalories, split);
 
-    // Convert to grams (protein: 4 cal/g, carbs: 4 cal/g, fat: 9 cal/g)
-    const proteinGrams = Math.round(proteinCalories / 4);
-    const carbGrams = Math.round(carbCalories / 4);
-    const fatGrams = Math.round(fatCalories / 9);
-
-    setCalories(targetCalories);
+    setCalories(result.calories);
     setMacros({
-      protein: proteinGrams,
-      carbs: carbGrams,
-      fat: fatGrams,
+      protein: result.protein,
+      carbs: result.carbs,
+      fat: result.fat,
     });
   };
 
@@ -451,6 +448,11 @@ const MacroCalculator: React.FC = () => {
                 <p>
                   <strong>Fat:</strong> 9 calories per gram. Important for
                   hormone production and nutrient absorption.
+                </p>
+                <p>
+                  Grams are rounded to whole grams, and the total shown is
+                  the sum of the three macro calories, so the parts always
+                  add up to the total.
                 </p>
                 <p>
                   These are starting recommendations. Adjust based on your

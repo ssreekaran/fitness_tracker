@@ -246,7 +246,8 @@ const BodyFatCalculator: React.FC = () => {
               />
             </div>
             <div className="input-hint">
-              Measure at the narrowest point for men, or at the navel for women
+              Measure at the navel for men, or at the narrowest point for
+              women (U.S. Navy method)
             </div>
           </div>
 
