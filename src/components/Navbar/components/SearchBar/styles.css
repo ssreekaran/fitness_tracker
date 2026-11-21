@@ -166,6 +166,17 @@
   transform: translateX(3px);
 }
 
+.search-no-results {
+  cursor: default;
+  white-space: normal;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.search-no-results:hover {
+  background: transparent;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
