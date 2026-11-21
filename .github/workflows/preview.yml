@@ -1,0 +1,58 @@
+name: Preview Deploy to Firebase
+
+# Deploys pull requests to a temporary Firebase Hosting preview channel
+# (e.g. https://fitness-tracker-clean--pr-4-XXXX.web.app) so changes can be
+# checked in a browser without touching the live site.
+# The live deploy workflow (deploy.yml) only runs on pushes to main.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+
+      - name: Check if Firebase service account is available
+        id: check-firebase-secret
+        run: |
+          if [ -n "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN }}" ]; then
+            echo "firebase-available=true" >> $GITHUB_OUTPUT
+          else
+            echo "firebase-available=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Firebase service account secret not found. Skipping preview deployment."
+            echo "To enable preview (and live) deployment, add FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN to your repository secrets."
+          fi
+
+      - name: Deploy preview to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        if: steps.check-firebase-secret.outputs.firebase-available == 'true'
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FITNESS_TRACKER_CLEAN }}
+          projectId: fitness-tracker-clean
+          channelId: pr-${{ github.event.pull_request.number }}
