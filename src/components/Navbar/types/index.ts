@@ -30,6 +30,7 @@ export interface SearchBarProps {
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearchSubmit: (e: React.FormEvent) => void;
   showSuggestions: boolean;
+  noResults?: boolean;
   suggestions: Suggestion[];
   onSuggestionClick: (suggestion: Suggestion) => void;
 }

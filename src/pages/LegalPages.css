@@ -1,13 +1,17 @@
 .legal-page-content {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Use the theme background, not a fixed purple gradient — the gradient
+     left an empty blue/purple band above the content card, and stayed
+     bright in dark mode. */
+  background: var(--background-color);
   padding: 2rem 0;
 }
 
 .legal-container {
   max-width: 800px;
   margin: 0 auto;
-  background: white;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   padding: 3rem;
@@ -15,7 +19,7 @@
 }
 
 .legal-container h1 {
-  color: #2d3748;
+  color: var(--text-color);
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 2rem;
@@ -25,7 +29,7 @@
 }
 
 .legal-container h2 {
-  color: #4a5568;
+  color: var(--text-color);
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: 2.5rem;
@@ -35,7 +39,7 @@
 }
 
 .legal-container p {
-  color: #2d3748;
+  color: var(--text-color);
   font-size: 1rem;
   margin-bottom: 1.5rem;
   text-align: justify;
@@ -43,7 +47,7 @@
 
 .legal-container ul {
   margin: 1rem 0 1.5rem 2rem;
-  color: #2d3748;
+  color: var(--text-color);
 }
 
 .legal-container li {

@@ -75,7 +75,7 @@ const Home: React.FC = () => {
         <div className="links">
           <Link to="/workout-planner" className="link-tile">Plan a workout</Link>
           <Link to="/food-database" className="link-tile">Search foods</Link>
-          <Link to="/healthy-food" className="link-tile">Healthy recipes</Link>
+          <Link to="/healthy-food" className="link-tile">Healthy food</Link>
           <Link to="/about" className="link-tile">About the app</Link>
         </div>
       </section>

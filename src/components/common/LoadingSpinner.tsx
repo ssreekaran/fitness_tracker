@@ -14,8 +14,8 @@
 import React, { useEffect, useState } from "react";
 import "./LoadingSpinner.css";
 
-// App logo from public directory
-const fitnessLogo = "/fitness_tracker_logo6.png";
+// App logo from public directory (HD version, so it stays legible)
+const fitnessLogo = "/fitness_tracker_logo6_hd.png";
 
 const LoadingSpinner: React.FC = () => {
   const [progress, setProgress] = useState(0);

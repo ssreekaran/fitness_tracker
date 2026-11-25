@@ -15,11 +15,18 @@ const AVAILABLE_PAGES = [
   { title: "About", path: "/about" },
   { title: "Contact Us", path: "/contact" },
   { title: "Personal Fitness", path: "/personal-fitness" },
+  { title: "Calorie Tracker", path: "/calorie-tracker" },
+  { title: "Workout Planner", path: "/workout-planner" },
+  { title: "Profile", path: "/profile" },
+  { title: "Settings", path: "/settings" },
+  { title: "Terms of Service", path: "/legal/terms-of-service" },
+  { title: "Privacy Policy", path: "/legal/privacy-policy" },
 ];
 
 const useSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [noResults, setNoResults] = useState(false);
   const [suggestions, setSuggestions] = useState<
     { title: string; path: string }[]
   >([]);
@@ -41,9 +48,11 @@ const useSearch = () => {
       setShowSuggestions(true);
       const results = getSuggestions(searchQuery);
       setSuggestions(results);
+      setNoResults(results.length === 0);
     } else {
       setShowSuggestions(false);
       setSuggestions([]);
+      setNoResults(false);
     }
   }, [searchQuery, getSuggestions]);
 
@@ -64,15 +73,25 @@ const useSearch = () => {
     if (exactMatch) {
       // Navigate to the matching page
       navigate(exactMatch.path);
-    } else {
-      // Fall back to Google search
-      window.open(
-        `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-        "_blank"
-      );
+      setShowSuggestions(false);
+      setNoResults(false);
+      return;
     }
 
-    setShowSuggestions(false);
+    // Otherwise go to the best partial match on this site.
+    const partialMatches = getSuggestions(query);
+    if (partialMatches.length > 0) {
+      navigate(partialMatches[0].path);
+      setShowSuggestions(false);
+      setNoResults(false);
+      return;
+    }
+
+    // No match on this site: stay here and say so in the suggestions
+    // dropdown instead of leaving the site for an external search engine.
+    setSuggestions([]);
+    setNoResults(true);
+    setShowSuggestions(true);
   };
 
   const handleSuggestionClick = (suggestion: {
@@ -82,11 +101,13 @@ const useSearch = () => {
     navigate(suggestion.path);
     setSearchQuery("");
     setShowSuggestions(false);
+    setNoResults(false);
   };
 
   return {
     searchQuery,
     showSuggestions,
+    noResults,
     suggestions,
     handleSearchChange,
     handleSearchSubmit,

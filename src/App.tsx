@@ -4,23 +4,24 @@
  * This is the root component that handles:
  * - Routing configuration for all pages
  * - Authentication state management
- * - Lazy loading of page components for better performance
- * - Deep link handling for mobile OAuth redirects
  * - Theme management across route changes
  *
- * The app supports both web and mobile platforms using Capacitor
+ * The app supports both web and mobile platforms using Capacitor.
+ *
+ * Performance note (Nov 2026 audit): navigation previously forced a full
+ * page reload on every route change (see removed NavigationHandler), which
+ * re-downloaded lazy chunks, re-initialised Firebase and left every page
+ * on "Loading..." for several seconds. Navigation is now plain client-side
+ * React Router navigation, and the public pages (Home + calculators) are
+ * imported eagerly so they render immediately.
  */
 
-import { lazy, Suspense, useEffect, useCallback, useContext } from "react";
+import { lazy, Suspense, useEffect, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
-  useLocation,
-  UNSAFE_NavigationContext as NavigationContext,
-  To,
-  NavigateOptions
 } from "react-router-dom";
 import { Navbar } from "./components";
 import Footer from "./components/common/Footer";
@@ -37,33 +38,23 @@ import { Capacitor } from "@capacitor/core";
 import { App as CapApp } from "@capacitor/app";
 import "./App.css";
 
-// Lazy load all page components for code splitting and better performance
-// This reduces the initial bundle size and loads pages only when needed
+// Public pages (no authentication required) — imported eagerly so
+// navigating to them does not wait on a lazy chunk download.
+import Home from "./pages/Home";
+import About from "./pages/About";
+import BMICalculator from "./pages/calculators/BMICalculator";
+import BodyFatCalculator from "./pages/calculators/BodyFatCalculator";
+import WeightLossCalculator from "./pages/calculators/WeightLossCalculator";
+import TDEECalculator from "./pages/calculators/TDEECalculator";
+import MacroCalculator from "./pages/calculators/MacroCalculator";
+import OneRepMaxCalculator from "./pages/calculators/OneRepMaxCalculator";
+import HeartRateZoneCalculator from "./pages/calculators/HeartRateZoneCalculator";
+import ContactUs from "./pages/ContactUs";
+import FoodDatabase from "./pages/nutrition/FoodDatabase";
+import HealthyFood from "./pages/nutrition/HealthyFood";
+import NotFound from "./pages/NotFound";
 
-// Public pages (no authentication required)
-const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/About"));
-
-// Health calculators (public access)
-const BMICalculator = lazy(() => import("./pages/calculators/BMICalculator"));
-const BodyFatCalculator = lazy(
-  () => import("./pages/calculators/BodyFatCalculator")
-);
-const WeightLossCalculator = lazy(
-  () => import("./pages/calculators/WeightLossCalculator")
-);
-const TDEECalculator = lazy(() => import("./pages/calculators/TDEECalculator"));
-const MacroCalculator = lazy(
-  () => import("./pages/calculators/MacroCalculator")
-);
-const OneRepMaxCalculator = lazy(
-  () => import("./pages/calculators/OneRepMaxCalculator")
-);
-const HeartRateZoneCalculator = lazy(
-  () => import("./pages/calculators/HeartRateZoneCalculator")
-);
-
-// Authentication pages
+// Authentication pages — lazy-loaded, only needed when signing in/up.
 const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const ForgotPasswordPage = lazy(
@@ -71,12 +62,7 @@ const ForgotPasswordPage = lazy(
 );
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
-// Information and database pages
-const ContactUs = lazy(() => import("./pages/ContactUs"));
-const FoodDatabase = lazy(() => import("./pages/nutrition/FoodDatabase"));
-const HealthyFood = lazy(() => import("./pages/nutrition/HealthyFood"));
-
-// Protected pages (authentication required)
+// Protected pages (authentication required) — lazy-loaded.
 const PersonalFitness = lazy(() => import("./pages/fitness/PersonalFitness"));
 const CalorieTracker = lazy(() => import("./pages/nutrition/CalorieTracker"));
 const WorkoutPlanner = lazy(() => import("./pages/fitness/WorkoutPlanner"));
@@ -226,7 +212,6 @@ const AppContent = () => {
           fallback={
             <div className="page-loading">
               <LoadingSpinner />
-              <p>Loading...</p>
             </div>
           }
         >
@@ -296,6 +281,8 @@ const AppContent = () => {
                 </ProtectedRoute>
               }
             />
+            {/* Unknown URLs show a helpful 404 page instead of a blank page. */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
@@ -304,69 +291,12 @@ const AppContent = () => {
   );
 };
 
-// Custom navigation handler to force full page reloads
-function NavigationHandler() {
-  const { navigator } = useContext(NavigationContext);
-  
-  useEffect(() => {
-    // Override the push method to force a full page reload
-    const originalPush = navigator.push;
-    navigator.push = (to: To, options?: NavigateOptions) => {
-      if (typeof to === 'string') {
-        window.location.href = to;
-      } else {
-        window.location.href = to.pathname || '/';
-      }
-      return originalPush.call(navigator, to, options);
-    };
-    
-    // Override the replace method as well for consistency
-    const originalReplace = navigator.replace;
-    navigator.replace = (to: To, options?: NavigateOptions) => {
-      if (typeof to === 'string') {
-        window.location.replace(to);
-      } else {
-        window.location.replace(to.pathname || '/');
-      }
-      return originalReplace.call(navigator, to, options);
-    };
-    
-    return () => {
-      // Restore original methods on cleanup
-      navigator.push = originalPush;
-      navigator.replace = originalReplace;
-    };
-  }, [navigator]);
-  
-  return null;
-}
-
 function App() {
   return (
     <Router>
-      <NavigationHandler />
-      <AppWithLocation />
+      <AppContent />
     </Router>
   );
-}
-
-/**
- * AppWithLocation Component
- *
- * Wrapper component that handles theme management across route changes
- * Ensures consistent theming when navigating between pages
- */
-function AppWithLocation() {
-  const location = useLocation();
-
-  useEffect(() => {
-    // Apply appropriate theme colors when route changes
-    // This ensures consistent background colors across all pages
-    const isDark = document.documentElement.classList.contains("dark");
-    document.body.style.backgroundColor = isDark ? "#1a1a1a" : "#ffffff";
-  }, [location.pathname]);
-
-  return <AppContent />;
 }
 
 export default App;

@@ -8,6 +8,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onSearchChange,
   onSearchSubmit,
   showSuggestions,
+  noResults,
   suggestions,
   onSuggestionClick,
 }) => {
@@ -55,6 +56,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
               <FaArrowRight className="suggestion-arrow" />
             </div>
           ))}
+        </div>
+      )}
+
+      {showSuggestions && noResults && suggestions.length === 0 && (
+        <div className="search-suggestions">
+          <div className="search-suggestion search-no-results">
+            No pages on this site match &ldquo;{searchQuery}&rdquo;. Try
+            &ldquo;BMI&rdquo;, &ldquo;TDEE&rdquo; or &ldquo;Food Database&rdquo;.
+          </div>
         </div>
       )}
     </div>

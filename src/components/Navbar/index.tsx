@@ -73,6 +73,7 @@ const Navbar: React.FC = () => {
   const {
     searchQuery,
     showSuggestions,
+    noResults,
     suggestions,
     handleSearchChange,
     handleSearchSubmit,
@@ -94,10 +95,11 @@ const Navbar: React.FC = () => {
         <div className="navbar-header">
           <Link to="/" className="logo">
             <img
-              src="/fitness_tracker_logo6.png"
-              alt="Fitness Tracker"
+              src="/fitness_tracker_logo6_hd.png"
+              alt=""
               className="logo-img"
             />
+            <span className="logo-text">Fitness Tracker</span>
           </Link>
 
           <button
@@ -123,6 +125,7 @@ const Navbar: React.FC = () => {
                 onSearchChange={handleSearchChange}
                 onSearchSubmit={handleSearchSubmit}
                 showSuggestions={showSuggestions}
+                noResults={noResults}
                 suggestions={suggestions}
                 onSuggestionClick={handleSuggestionClick}
               />

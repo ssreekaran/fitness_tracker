@@ -181,6 +181,25 @@
   opacity: 0.2;
   z-index: 1;
   color: white;
+  pointer-events: none;
+}
+
+/* Keep the decorative icon clear of the hero text — it previously
+   overlapped the subtitle ("and track your progress") at mid widths. */
+.calculator-hero-content,
+.bmi-hero-content {
+  padding-right: 6rem;
+}
+
+@media (max-width: 900px) {
+  .calculator-icon {
+    display: none;
+  }
+
+  .calculator-hero-content,
+  .bmi-hero-content {
+    padding-right: 0;
+  }
 }
 
 /* Form Styles - Shared across calculators */

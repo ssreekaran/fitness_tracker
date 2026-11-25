@@ -92,7 +92,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Table Styles */
+/* Table Styles — keep all 12 columns inside the viewport: narrow
+   nutrient columns, wrap long headers, and scroll only as a last resort. */
 .food-db-table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -101,19 +102,37 @@
   border: 1px solid var(--border-color);
 }
 
+.food-db-units {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.nutrient-unit {
+  font-weight: 400;
+  font-size: 0.75rem;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
 .food-db-table {
   width: 100%;
+  min-width: 0;
+  table-layout: auto;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .food-db-table th,
 .food-db-table td {
-  padding: 1rem;
+  padding: 0.6rem 0.5rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-color);
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .food-db-table thead th {
@@ -123,7 +142,8 @@
   top: 0;
   z-index: 10;
   border-bottom: 2px solid var(--border-color);
-  padding: 1rem;
+  padding: 0.6rem 0.5rem;
+  vertical-align: bottom;
 }
 
 .food-db-table tbody tr {
