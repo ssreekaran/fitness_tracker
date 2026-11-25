@@ -8,6 +8,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
+// Bootstrap CSS bundled locally (replaces the former jsDelivr CDN link)
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 // Create the root element and render the app with React.StrictMode
